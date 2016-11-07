@@ -44,7 +44,7 @@ if ($conn) {
 		$img = ($_POST['insImage']);
 		$desc = ($_POST['insDescr']);
 
-		if (ctype_alpha($name) && ctype_digit($price) && ctype_alpha($desc)) {
+		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($price))) {
 			
 			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."'");
 
@@ -70,18 +70,24 @@ if ($conn) {
 	if (!empty($_POST['delName'])) {
 
 		$name = ($_POST['delName']);
-		$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' ");
 
-		if($checkname->num_rows == 0) {
-			echo "<script type='text/javascript'>alert('Menu Item does not exist!')</script>";
-		}
-		else {
-			$delmenuquery = $conn->query("UPDATE MenuItem SET m_deleted = 'T' WHERE name = '".$name."'");
+		if (ctype_alpha(preg_replace('/\s+/', '', $name))) {
 
-			if ($delmenuquery) {
-				echo "<script type='text/javascript'>alert('Menu Item deleted successfully!')</script>";
+			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' ");
+
+			if($checkname->num_rows == 0) {
+				echo "<script type='text/javascript'>alert('Menu Item does not exist!')</script>";
 			}
+			else {
+				$delmenuquery = $conn->query("UPDATE MenuItem SET m_deleted = 'T' WHERE name = '".$name."'");
 
+				if ($delmenuquery) {
+					echo "<script type='text/javascript'>alert('Menu Item deleted successfully!')</script>";
+				}
+
+			}
+		} else {
+			echo "<script type='text/javascript'>alert('Inputs are not valid, please try again')</script>";
 		}
 
 //Edit an existing Menu Item 
@@ -93,23 +99,28 @@ if ($conn) {
 		$img = ($_POST['edImage']);
 		$desc = ($_POST['edDescr']);
 
-		$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' ");
+		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($price))) {
 
-		if($checkname->num_rows == 0) {
-			echo "<script type='text/javascript'>alert('Menu Item does not exist!')</script>";
-		}
+			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' ");
 
-		else {
-			$editmenuquery = $conn->query("UPDATE MenuItem SET price = '".$price."', imagepath = '".$img."', description = '".$desc."' WHERE name = '".$name."'");
-
-			if ($editmenuquery) {
-				echo "<script type='text/javascript'>alert('Menu Item edited successfully!')</script>";
+			if($checkname->num_rows == 0) {
+				echo "<script type='text/javascript'>alert('Menu Item does not exist!')</script>";
 			}
 
+			else {
+				$editmenuquery = $conn->query("UPDATE MenuItem SET price = '".$price."', imagepath = '".$img."', description = '".$desc."' WHERE name = '".$name."'");
+
+				if ($editmenuquery) {
+					echo "<script type='text/javascript'>alert('Menu Item edited successfully!')</script>";
+				}
+
+			}
+		}else {
+			echo "<script type='text/javascript'>alert('Inputs are not valid, please try again')</script>";
 		}
 	}
-
 }
+
 
 
 // Query database for all Menu Items
@@ -139,10 +150,10 @@ $conn->close();
 	<p> Edit MenuItem: </p>
 	<form method="POST" action="admin_menu.php">
 		<!--refresh page when submit-->
-		<p><input type="text" name="edName"  size="18" placeholder="Name of Item to edit">
-			<input type="text" name="edPrice" size="18" placeholder="New Price">
+		<p><input type="text" name="edName"  size="18" pattern="*[A-Za-z]" placeholder="Name of Item to edit" required>
+			<input type="text" name="edPrice" size="18" pattern="*[0-9]" placeholder="New Price" required>
 			<input type="text" name="edImage" size="18" placeholder="New Image">
-			<input type="text" name="edDescr" size="18" placeholder="New Description">
+			<input type="text" name="edDescr" size="18" pattern="*[A-Za-z]" placeholder="New Description">
 			<!--define two variables to pass the value-->
 			<input type="submit" value="update" name="updatesubmit"></p>
 		</form>
@@ -150,7 +161,7 @@ $conn->close();
 		<p> Delete a Menu Item</p>
 		<form method="POST" action="admin_menu.php">
 			<!--refresh page when submit-->
-			<p><input type="text" name="delName" size="18" placeholder="Name">
+			<p><input type="text" name="delName" size="18" pattern="*[A-Za-z]" placeholder="Name" required>
 				<!--define two variables to pass the value-->
 				<input type="submit" value="delete" name="deletesubmit"></p>
 			</form>
