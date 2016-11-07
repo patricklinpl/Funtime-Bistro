@@ -21,7 +21,7 @@ if(!empty($_SESSION['LoggedIn']) && !empty($_SESSION['Username']))
     	<h2>Menu</h2>
     	<p>
     	Thanks for logging in! You are <code><?=$_SESSION['Username']?></code> and your Name is <code><?=$_SESSION['Name']?></code>.</p>
-     
+        This is what you can do:
     	<a href="logout.php"> Logout
     	<?php
  	}
@@ -45,7 +45,7 @@ if(!empty($_SESSION['LoggedIn']) && !empty($_SESSION['Username']))
     	<h2>Hi Chef, this is your control panel</h2>
     	<p>
     	Thanks for logging in! You are <code><?=$_SESSION['Username']?></code> and your Name is <code><?=$_SESSION['Name']?></code>.</p>
-     
+        <p><a href='editmenu.php'> Edit Menu</p>
     	<a href="logout.php"> Logout
     	<?php
  	}
