@@ -150,6 +150,8 @@ $conn->close();
 				<!--define two variables to pass the value-->
 				<input type="submit" value="Delete" name="deletesubmit"></p>
 			</form>
+	
+	<a href="index.php"> Back to control panel
 
 		</body>
 		</html>
