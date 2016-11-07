@@ -146,6 +146,8 @@ if ($conn) {
 <input type="submit" value="delete" name="deletesubmit"></p>
 </form>
 
+<a href="index.php"> Back to control panel
+
 </body>
 </html>
 
