@@ -6,7 +6,7 @@
 </head>  
 <body>
 
-<p> <font size = "20" color = maroon >  Fun Time Bistro Menu</font></p>
+<p> <font size = "20" color = maroon >  Edit Menu</font></p>
 
 <?php
 
@@ -102,7 +102,7 @@ if ($conn) {
 		}
 	}
 
-		echo "Admin View";
+		
 		// Query database for all Menu Items
 		$menu_sql = "SELECT * FROM MenuItem";
 		$menu_result = $conn->query($menu_sql);
