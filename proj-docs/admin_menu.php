@@ -115,7 +115,7 @@ if ($conn) {
 
 <p>Create a new Menu Item below:</p>
 
-<form method="POST" action="menu.php">
+<form method="POST" action="admin_menu.php">
 <!--refresh page when submit-->
 <!--Input box text change-->
    <p>
@@ -128,7 +128,7 @@ if ($conn) {
 </form>
 
 <p> Edit MenuItem: </p>
-<form method="POST" action="menu.php">
+<form method="POST" action="admin_menu.php">
 <!--refresh page when submit-->
    <p><input type="text" name="edName"  size="18" placeholder="Name of Item to edit">
    <input type="text" name="edPrice" size="18" placeholder="New Price">
@@ -139,7 +139,7 @@ if ($conn) {
 </form>
 
 <p> Delete a Menu Item</p>
-<form method="POST" action="menu.php">
+<form method="POST" action="admin_menu.php">
 <!--refresh page when submit-->
    <p><input type="text" name="delName" size="18" placeholder="Name">
 <!--define two variables to pass the value-->
