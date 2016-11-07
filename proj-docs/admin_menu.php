@@ -10,7 +10,7 @@
 
 <?php
 
-require "connect.php";
+require "base.php";
 
 function printResult($menu_result) { //prints results from a select 
 	 echo "<table><tr>
