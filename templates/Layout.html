@@ -1,6 +1,50 @@
-{% for item in menuItems %}
-   <a href="{{ item.href }}">{{ item.text }}</a><br>
-{% endfor %}
-<hr>
-{% block content %}
-{% endblock %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FunTime Bistro</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">  
+    <!--<![endif]-->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="/css/layouts/marketing-old-ie.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="/css/layouts/marketing.css">
+    <!--<![endif]-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body style="padding: 59px 0; position: absolute; top: 0; bottom: 0; left: 0; right: 0;">
+<div class="header" style="height: 59px; margin-top: -59px;">
+    <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+<!--        <a class="pure-menu-heading" href="">Your Site</a> -->
+    <a href="/"><img src="/img/test.png" style="position: fixed;" /></a>
+
+        <ul class="pure-menu-list">
+          {% for item in menuItems %}
+             <li class="pure-menu-item"><a href="{{ item.href }}" class="pure-menu-link">{{ item.text }}</a></li>
+          {% endfor %}
+            <li class="pure-menu-item"><a href="/login" class="pure-menu-link">Login</a></li>
+        </ul>
+    </div>
+</div>
+
+<div style="height: 100%;">
+  {% block content %}
+  {% endblock %}
+</div>
+
+<div class="footer l-box is-center" style="height: 59px; margin-bottom: -59px;">
+  Styling: Purecss. Project by: Harry Zhi, Patrick Lin, Eric Wu, Paul Tran
+</div>
+
+</body>
+</html>
+
