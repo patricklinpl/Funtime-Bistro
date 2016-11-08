@@ -4,5 +4,5 @@ namespace ProjectFunTime\Menu;
 
 interface MenuReader
 {
-   public function readMenu() : array;
+   public function readMenu($accType) : array;
 }

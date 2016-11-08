@@ -23,7 +23,7 @@ class FrontendTwigRenderer implements FrontendRenderer
       $accType = $this->session->getValue('accType');
 
       $data = array_merge($data, [
-         'menuItems' => $this->menuReader->readMenu(),
+         'menuItems' => $this->menuReader->readMenu($accType),
          'accType' => $accType
       ]);
 

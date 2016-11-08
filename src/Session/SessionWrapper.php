@@ -5,4 +5,6 @@ namespace ProjectFunTime\Session;
 interface SessionWrapper
 {
    public function getValue($key);
+
+   public function setValue($key, $value);
 }

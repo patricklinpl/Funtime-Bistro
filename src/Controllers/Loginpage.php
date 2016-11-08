@@ -6,6 +6,7 @@ use Http\Request;
 use Http\Response;
 use ProjectFunTime\Template\FrontendRenderer;
 use ProjectFunTime\Database\DatabaseProvider;
+use ProjectFunTime\Session\SessionWrapper;
 use ProjectFunTime\Exceptions\EntityExistsException;
 use ProjectFunTime\Exceptions\UnknownException;
 use \InvalidArgumentException;
@@ -16,17 +17,20 @@ class Loginpage
    private $response;
    private $renderer;
    private $dbProvider;
+   private $session;
 
    public function __construct(
       Request $request,
       Response $response,
       FrontendRenderer $renderer,
-      DatabaseProvider $dbProvider)
+      DatabaseProvider $dbProvider,
+      SessionWrapper $session)
    {
       $this->request = $request;
       $this->response = $response;
       $this->renderer = $renderer;
       $this->dbProvider = $dbProvider;
+      $this->session = $session;
    }
 
    public function show()
@@ -56,8 +60,8 @@ class Loginpage
          throw new InvalidArgumentException('invalid credentials provided.');
       }
       else {
-         $_SESSION["name"] = $result["name"];
-         $_SESSION["accType"] = $accType;
+         $this->session->setValue('name', $result["name"]);
+         $this->session->setValue('accType', $accType);
       }
    }
 

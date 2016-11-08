@@ -13,4 +13,9 @@ class PHPSessionWrapper implements SessionWrapper
          return null;
       }
    }
+
+   public function setValue($key, $value)
+   {
+      $_SESSION[$key] = $value;
+   }
 }
