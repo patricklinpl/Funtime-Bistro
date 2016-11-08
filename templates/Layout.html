@@ -31,7 +31,12 @@
           {% for item in menuItems %}
              <li class="pure-menu-item"><a href="{{ item.href }}" class="pure-menu-link">{{ item.text }}</a></li>
           {% endfor %}
+
+          {% if accType == null %}
             <li class="pure-menu-item"><a href="/login" class="pure-menu-link">Login</a></li>
+          {% else %}
+            <li class="pure-menu-item"><a href="#" id="signout-link" class="pure-menu-link">Signout</a></li>
+          {% endif %}
         </ul>
     </div>
 </div>
@@ -45,6 +50,18 @@
   Styling: Purecss. Project by: Harry Zhi, Patrick Lin, Eric Wu, Paul Tran
 </div>
 
+<script>
+$("#signout-link").click(function () {
+   console.log("sign out now!");
+   $.ajax({
+      url: "/signout",
+      type: "POST",
+      success: function () {
+         window.location.replace("/");
+      }
+   });
+});
+</script>
 </body>
 </html>
 

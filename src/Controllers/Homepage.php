@@ -28,11 +28,8 @@ class Homepage
        $this->response->setContent($html);
     }
 
-// how to use route parameters defined in Routes.php
-/**
-    public function test($routeParams)
+    public function signout()
     {
-       $this->response->setContent($routeParams['id']);
+       session_destroy();
     }
-*/
 }

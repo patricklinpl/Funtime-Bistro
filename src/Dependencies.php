@@ -30,4 +30,6 @@ $injector->share('ProjectFunTime\Menu\ArrayMenuReader');
 $injector->alias('ProjectFunTime\Database\DatabaseProvider', 'ProjectFunTime\Database\MySQLDatabaseProvider');
 $injector->share('ProjectFunTime\Database\MySQLDatabaseProvider');
 
+$injector->alias('ProjectFunTime\Session\SessionWrapper', 'ProjectFunTime\Session\PHPSessionWrapper');
+
 return $injector;

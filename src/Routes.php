@@ -5,6 +5,7 @@ return [
 
 // home
     ['GET', '/', ['ProjectFunTime\Controllers\Homepage', 'show']],
+    ['POST', '/signout', ['ProjectFunTime\Controllers\Homepage', 'signout']],
 
 // login page
     ['GET', '/login', ['ProjectFunTime\Controllers\Loginpage', 'show']],
