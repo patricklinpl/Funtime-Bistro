@@ -14,7 +14,7 @@
 	//prints results from a select 
 	function printResult($menu_result) { 
 		echo "<table><tr>
-		<th>NAME</th>
+		<th>Name</th>
 		<th>Price</th>
 		<th>ImagePath</th>
 		<th>Description</th>
