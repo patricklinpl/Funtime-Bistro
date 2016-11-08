@@ -6,6 +6,9 @@ use Http\Request;
 use Http\Response;
 use ProjectFunTime\Template\FrontendRenderer;
 use ProjectFunTime\Database\DatabaseProvider;
+use ProjectFunTime\Exceptions\EntityExistsException;
+use ProjectFunTime\Exceptions\UnknownException;
+use \InvalidArgumentException;
 
 class Loginpage
 {
@@ -28,17 +31,6 @@ class Loginpage
 
    public function show()
    {
-/**
-      $test = $this->dbProvider->query("SELECT userName FROM Users WHERE userName = 'quanbao'");
-      var_dump($test);
-
-      $data = [];
-      $data = array_merge($data, [
-         'test' => 'hello world'
-      ]);
-*/
-
-
       $html = $this->renderer->render('Loginpage');
       $this->response->setContent($html);
    }
@@ -50,9 +42,7 @@ class Loginpage
       $accType = $this->request->getParameter('login-acc-type');
 
       if (is_null($username) || is_null($password) || is_null($accType)) {
-      // error message handled by frontend, need to pass error message and extend Exception for
-      // more specific cases like nullparameter exception etc
-         throw new \Exception;
+         throw new InvalidArgumentException('required form input missing. Either username, password, or accType.');
       }
 
       $queryStr = "SELECT * FROM Users " .
@@ -63,8 +53,7 @@ class Loginpage
       $result = $this->dbProvider->selectQuery($queryStr);
 
       if (empty($result)) {
-      // need to display error message. incorrect credentials
-         throw new \Exception;
+         throw new InvalidArgumentException('invalid credentials provided.');
       }
 
       // need to remember username (fk)
@@ -72,7 +61,7 @@ class Loginpage
 
    public function createAccount()
    {
-      // need frontend validation on password and repeat password
+      // if want to be really careful. limit character size on inputs..
       // needs disclaimer about password being saved as plaintext
       $name = $this->request->getParameter('reg-name');
       $username = $this->request->getParameter('reg-username');
@@ -81,16 +70,14 @@ class Loginpage
       $address = $this->request->getParameter('reg-address');
 
       if (!is_string($name) || !is_string($username) || !is_string($password)) {
-      // similar to above
-         throw new \Exception;
+         throw new InvalidArgumentException('required form input missing. Either name, username, or password.');
       }
 
       $usernameQueryStr = "SELECT * FROM Users WHERE userName = '$username'";
       $usernameQueryResult = $this->dbProvider->selectQuery($usernameQueryStr);
 
       if (!empty($usernameQueryResult)) {
-      // similar to above
-         throw new \Exception;
+         throw new EntityExistsException('User exists with userName $username');
       }
 
       $registerQueryStr = "INSERT INTO Users " .
@@ -101,8 +88,7 @@ class Loginpage
       $created = $this->dbProvider->insertQuery($registerQueryStr);
       
       if (!$created) {
-      // display error
-         throw new \Exception;
+         throw new UnknownException("Failed to create User with $name, $username, $password");
       }
    }
 }

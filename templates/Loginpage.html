@@ -31,7 +31,7 @@
               </div>
           
               <div class="pure-u-1 pure-u-md-1-3">
-                <label for="login-username">Username</label>
+                <label for="login-username">Username <b style="color: red;">*</b></label>
                 <input id="login-username" class="pure-u-20-24" name="login-username" type="text" placeholder="Username">
               </div>
           
@@ -53,7 +53,7 @@
               </div>
 
               <div class="pure-u-1 pure-u-md-1-3">
-                <label for="login-password">Password</label>
+                <label for="login-password">Password <b style="color: red;">*</b></label>
                 <input id="login-password" class="pure-u-20-24" name="login-password" type="password" placeholder="Password">
               </div>
 
@@ -196,6 +196,12 @@ $("#login-link").click(function () {
 });
 
 $("#login-btn").click(function () {
+   if ($("#login-username").val().trim() === '' ||
+       $("#login-password").val().trim() === '') {
+      alert("A required field is missing. Try again.");
+      return;
+   }
+
    $.ajax({
       url: "/login",
       type: "POST",
@@ -214,7 +220,19 @@ $("#login-btn").click(function () {
 });
 
 $("#create-btn").click(function () {
-   // validate required fields and same passwords
+   if ($("#reg-name").val().trim() === '' ||
+       $("#reg-username").val().trim() === '' ||
+       $("#reg-password").val().trim() === '' ||
+       $("#reg-confirm-password").val().trim() === '') {
+      alert("A required field is missing. Try again.");
+      return;
+   }
+
+   if ($("#reg-password").val() !== $("#reg-confirm-password").val()) {
+      alert("Passwords differ. Try again.");
+      return;
+   }
+
    $.ajax({
       url: "/account/customer/create",
       type: "POST",
@@ -226,8 +244,8 @@ $("#create-btn").click(function () {
          "reg-address": $("#reg-address").val()
       },
       success: function () {
-         // alert account created
          window.location.replace("/login");
+         alert('Account creation succeeded. You may now log in.');
       },
       error: function () {
          alert('Account creation failed. Try again.');
