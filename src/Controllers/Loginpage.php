@@ -55,8 +55,10 @@ class Loginpage
       if (empty($result)) {
          throw new InvalidArgumentException('invalid credentials provided.');
       }
-
-      // need to remember username (fk)
+      else {
+         $_SESSION["name"] = $result["name"];
+         $_SESSION["accType"] = $accType;
+      }
    }
 
    public function createAccount()

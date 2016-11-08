@@ -13,6 +13,11 @@ $request = $injector->make('Http\HttpRequest');
 $response = $injector->make('Http\HttpResponse');
 
 /**
+* Start session (for global vars)
+*/
+session_start();
+
+/**
 * Register the error handler
 */
 $whoops = new \Whoops\Run;

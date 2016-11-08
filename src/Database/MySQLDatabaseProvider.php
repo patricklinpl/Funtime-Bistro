@@ -8,8 +8,6 @@ class MySQLDatabaseProvider implements DatabaseProvider
 
    public function __construct()
    {
-      session_start();
-
 // change to match your environment
       $dbhost = "localhost";
       $dbuser = "FTBistro";
