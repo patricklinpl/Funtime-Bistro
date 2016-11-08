@@ -27,4 +27,7 @@ $injector->alias('ProjectFunTime\Template\FrontendRenderer', 'ProjectFunTime\Tem
 $injector->alias('ProjectFunTime\Menu\MenuReader', 'ProjectFunTime\Menu\ArrayMenuReader');
 $injector->share('ProjectFunTime\Menu\ArrayMenuReader');
 
+$injector->alias('ProjectFunTime\Database\DatabaseProvider', 'ProjectFunTime\Database\MySQLDatabaseProvider');
+$injector->share('ProjectFunTime\Database\MySQLDatabaseProvider');
+
 return $injector;

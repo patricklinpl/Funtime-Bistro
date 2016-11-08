@@ -19,9 +19,10 @@
     <div id="first-panel">
       <div class="content">
         <h2 class="content-head is-center">Login to make orders and more!</h2>
+<!--        <h1>Test: {{ test }}</h1> -->
         <hr>
 
-        <form class="pure-form pure-form-stacked">
+        <form class="pure-form pure-form-stacked" action="/login" method="post">
           <fieldset>
         
             <div class="pure-g">
@@ -31,12 +32,12 @@
           
               <div class="pure-u-1 pure-u-md-1-3">
                 <label for="login-username">Username</label>
-                <input id="login-username" class="pure-u-20-24" type="text" placeholder="Username">
+                <input id="login-username" class="pure-u-20-24" name="login-username" type="text" placeholder="Username">
               </div>
           
               <div class="pure-u-1 pure-u-md-1-3">
                 <label for="login-acc-type">Account type</label>
-                <select id="login-acc-type" class="pure-u-1-2">
+                <select id="login-acc-type" name="login-acc-type" class="pure-u-1-2">
                   <option>Customer</option>
                   <option>Chef</option>
                   <option>Admin</option>
@@ -53,7 +54,7 @@
 
               <div class="pure-u-1 pure-u-md-1-3">
                 <label for="login-password">Password</label>
-                <input id="login-password" class="pure-u-20-24" type="password" placeholder="Password">
+                <input id="login-password" class="pure-u-20-24" name="login-password" type="password" placeholder="Password">
               </div>
 
               <!-- other row -->
@@ -87,7 +88,7 @@
         <h2 class="content-head is-center">Registration</h2>
         <hr>
 
-        <form class="pure-form pure-form-stacked">
+        <form class="pure-form pure-form-stacked" action="/account/customer/create" method="post">
           <fieldset>
         
             <div class="pure-g">
@@ -97,7 +98,7 @@
 
               <div class="pure-u-1 pure-u-md-1-3">
                 <label for="reg-name">Name <b style="color: red;">*</b></label>
-                <input id="reg-name" class="pure-u-20-24" type="text" placeholder="Name">
+                <input id="reg-name" class="pure-u-20-24" name="reg-name" type="text" placeholder="Name">
               </div>
 
               <div class="pure-u-1 pure-u-md-10-24">
@@ -110,7 +111,7 @@
           
               <div class="pure-u-1 pure-u-md-1-3">
                 <label for="reg-username">Username <b style="color: red;">*</b></label>
-                <input id="reg-username" class="pure-u-20-24" type="text" placeholder="Username">
+                <input id="reg-username" class="pure-u-20-24" name="reg-username" type="text" placeholder="Username">
               </div>
           
               <div class="pure-u-1 pure-u-md-1-3">
@@ -132,12 +133,12 @@
 
               <div class="pure-u-1 pure-u-md-1-3">
                 <label for="reg-password">Password <b style="color: red;">*</b></label>
-                <input id="reg-password" class="pure-u-20-24" type="password" placeholder="Password">
+                <input id="reg-password" class="pure-u-20-24" name="reg-password" type="password" placeholder="Password">
               </div>
 
               <div class="pure-u-1 pure-u-md-1-3">
                 <label for="reg-phone">Phone</label>
-                <input id="reg-phone" class="pure-u-20-24" type="text" placeholder="Phone">
+                <input id="reg-phone" class="pure-u-20-24" name="reg-phone" type="text" placeholder="Phone">
               </div>
 
 
@@ -153,7 +154,7 @@
 
               <div class="pure-u-1 pure-u-md-1-3">
                 <label for="reg-address">Address</label>
-                <input id="reg-address" class="pure-u-20-24" type="text" placeholder="Address">
+                <input id="reg-address" class="pure-u-20-24" name="reg-address" type="text" placeholder="Address">
               </div>
 
             </div>
