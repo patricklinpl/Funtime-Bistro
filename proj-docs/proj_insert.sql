@@ -42,7 +42,7 @@ insert into Invoice values
 insert into Menuitem values
 ('Shrimp Fried Rice', 11.00, 'http://', 'Egg fried rice with shrimps', 'F');
 
-insert into MenuItem values
+insert into Menuitem values
 ('Deluxe Burger', 8.95, 'http://', 'Hamburger with lettuce, tomato, pickles, and 
 	a beef patty', 'F');
 
