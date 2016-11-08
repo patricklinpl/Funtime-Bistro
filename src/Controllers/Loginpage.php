@@ -49,14 +49,18 @@ class Loginpage
       $password = $this->request->getParameter('login-password');
       $accType = $this->request->getParameter('login-acc-type');
 
-      if (!is_string($username) || !is_string($password) || !is_string($accType)) {
-      // need to display error page, with layout (header + footer) and possibly link
+      if (is_null($username) || is_null($password) || is_null($accType)) {
+      // error message handled by frontend, need to pass error message and extend Exception for
+      // more specific cases like nullparameter exception etc
          throw new \Exception;
       }
 
-      // need to consider accType
-      $queryStr = "SELECT * FROM Users WHERE userName = '$username' AND password = '$password' AND u_deleted = 'F'";
-      $result = $this->dbProvider->query($queryStr);
+      $queryStr = "SELECT * FROM Users " .
+                  "WHERE userName = '$username' AND " .
+                  "password = '$password' AND " .
+                  "type = '$accType' AND " .
+                  "u_deleted = 'F'";
+      $result = $this->dbProvider->selectQuery($queryStr);
 
       if (empty($result)) {
       // need to display error message. incorrect credentials
@@ -64,13 +68,41 @@ class Loginpage
       }
 
       // need to remember username (fk)
-
-       $html = $this->renderer->render('Homepage');
-       $this->response->setContent($html);
    }
 
    public function createAccount()
    {
+      // need frontend validation on password and repeat password
+      // needs disclaimer about password being saved as plaintext
+      $name = $this->request->getParameter('reg-name');
+      $username = $this->request->getParameter('reg-username');
+      $password = $this->request->getParameter('reg-password');
+      $phone = $this->request->getParameter('reg-phone');
+      $address = $this->request->getParameter('reg-address');
 
+      if (!is_string($name) || !is_string($username) || !is_string($password)) {
+      // similar to above
+         throw new \Exception;
+      }
+
+      $usernameQueryStr = "SELECT * FROM Users WHERE userName = '$username'";
+      $usernameQueryResult = $this->dbProvider->selectQuery($usernameQueryStr);
+
+      if (!empty($usernameQueryResult)) {
+      // similar to above
+         throw new \Exception;
+      }
+
+      $registerQueryStr = "INSERT INTO Users " .
+                          "(userName, password, type, name, phone, address, createDate, u_deleted) " .
+                          "VALUE " .
+                          "('$username', '$password', 'customer', '$name', '$phone', '$address', now(), 'F')";
+
+      $created = $this->dbProvider->insertQuery($registerQueryStr);
+      
+      if (!$created) {
+      // display error
+         throw new \Exception;
+      }
    }
 }

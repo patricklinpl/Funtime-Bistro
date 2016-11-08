@@ -4,5 +4,5 @@ namespace ProjectFunTime\Database;
 
 interface DatabaseProvider
 {
-   public function query($queryStr) : array;
+
 }

@@ -19,7 +19,7 @@ class MySQLDatabaseProvider implements DatabaseProvider
       $this->dbProvider = new \mysqli($dbhost, $dbuser, $dbpass, $dbname);
    }
 
-   public function query($query) : array
+   public function selectQuery($query) : array
    {
       $queryResult = $this->dbProvider->query($query);
       $queryArr = \mysqli_fetch_array($queryResult);
@@ -30,5 +30,11 @@ class MySQLDatabaseProvider implements DatabaseProvider
       else {
          return $queryArr;
       }
+   }
+
+   public function insertQuery($query)
+   {
+      $queryResult = $this->dbProvider->query($query);
+      return $queryResult;
    }
 }

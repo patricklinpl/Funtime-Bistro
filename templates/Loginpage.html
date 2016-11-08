@@ -22,7 +22,7 @@
 <!--        <h1>Test: {{ test }}</h1> -->
         <hr>
 
-        <form class="pure-form pure-form-stacked" action="/login" method="post">
+        <form class="pure-form pure-form-stacked">
           <fieldset>
         
             <div class="pure-g">
@@ -70,7 +70,7 @@
                 <div style="display: block; margin-bottom: 10px;">
                   <a id="register-link" href="#" style="font-size: 0.9em;">Don't have an account? Register here.</a>
                 </div>
-                <button type="submit" class="pure-button pure-button-primary">Login</button>
+                <button id="login-btn" class="pure-button pure-button-primary" type="button">Login</button>
               </div>
             </div>
 
@@ -88,7 +88,7 @@
         <h2 class="content-head is-center">Registration</h2>
         <hr>
 
-        <form class="pure-form pure-form-stacked" action="/account/customer/create" method="post">
+        <form class="pure-form pure-form-stacked">
           <fieldset>
         
             <div class="pure-g">
@@ -168,7 +168,7 @@
                 <div style="display: block; margin-bottom: 10px;">
                   <a id="login-link" href="#" style="font-size: 0.9em;">Already have an account? Login here.</a>
                 </div>
-                <button type="submit" class="pure-button pure-button-primary">Create</button>
+                <button id="create-btn" class="pure-button pure-button-primary" type="button">Create</button>
               </div>
             </div>
 
@@ -194,6 +194,48 @@ $("#login-link").click(function () {
    $("#first-panel").fadeIn(600);
    $("#second-panel").fadeOut(800);
 });
+
+$("#login-btn").click(function () {
+   $.ajax({
+      url: "/login",
+      type: "POST",
+      data: {
+         "login-username": $("#login-username").val(),
+         "login-password": $("#login-password").val(),
+         "login-acc-type": $("#login-acc-type").val()
+      },
+      success: function () {
+         window.location.replace("/");
+      },
+      error: function () {
+         alert('Login failed. Try again.');
+      }
+   });
+});
+
+$("#create-btn").click(function () {
+   // validate required fields and same passwords
+   $.ajax({
+      url: "/account/customer/create",
+      type: "POST",
+      data: {
+         "reg-name": $("#reg-name").val(),
+         "reg-username": $("#reg-username").val(),
+         "reg-password": $("#reg-password").val(),
+         "reg-phone": $("#reg-phone").val(),
+         "reg-address": $("#reg-address").val()
+      },
+      success: function () {
+         // alert account created
+         window.location.replace("/login");
+      },
+      error: function () {
+         alert('Account creation failed. Try again.');
+      }
+   });
+
+});
+
 
 </script>
 
