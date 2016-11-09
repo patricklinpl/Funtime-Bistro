@@ -33,9 +33,11 @@ return [
     ['POST', '/purchase/order/{id:\d+}', ['ProjectFunTime\Controllers\Homepage', 'purchase']],
 
 // account page
-    ['GET', '/account/all', ['ProjectFunTime\Controllers\Accountpage', 'show']],
+    ['GET', '/account', ['ProjectFunTime\Controllers\Accountpage', 'show']],
+    ['POST', '/account/update', ['ProjectFunTime\Controllers\Accountpage', 'update']],
+    ['GET', '/account/all', ['ProjectFunTime\Controllers\Accountpage', 'showAllAccounts']],
     ['POST', '/account/chef/create', ['ProjectFunTime\Controllers\Accountpage', 'create']],
-    ['POST', '/account/{id:\d+}/chef/update', ['ProjectFunTime\Controllers\Accountpage', 'update']],
-    ['POST', '/account/{id:\d+}/chef/delete', ['ProjectFunTime\Controllers\Accountpage', 'delete']],
+    ['POST', '/account/{id:\d+}/chef/update', ['ProjectFunTime\Controllers\Accountpage', 'updateChefAccount']],
+    ['POST', '/account/{id:\d+}/chef/delete', ['ProjectFunTime\Controllers\Accountpage', 'deleteChefAccount']],
 
 ];

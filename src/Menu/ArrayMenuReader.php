@@ -14,13 +14,13 @@ class ArrayMenuReader implements MenuReader
             ['href' => '/menuItems', 'text' => 'Menu'],
             ['href' => '/ingredients', 'text' => 'Ingredients'],
             ['href' => '/orders', 'text' => 'Orders'],
-            ['href' => '/account/all', 'text' => 'Accounts']
+            ['href' => '/account', 'text' => 'Account']
          ];
       }
       else {
          return [
          // not sure what else at the moment
-            ['href' => '/account/all', 'text' => 'Accounts']
+            ['href' => '/account', 'text' => 'Account']
          ];
       }
    }

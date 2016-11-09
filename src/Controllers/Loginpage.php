@@ -60,8 +60,9 @@ class Loginpage
          throw new InvalidArgumentException('invalid credentials provided.');
       }
       else {
-         $this->session->setValue('name', $result["name"]);
          $this->session->setValue('accType', $accType);
+         $this->session->setValue('name', $result["name"]);
+         $this->session->setValue('userName', $result["userName"]);
       }
    }
 
@@ -75,15 +76,15 @@ class Loginpage
       $phone = $this->request->getParameter('reg-phone');
       $address = $this->request->getParameter('reg-address');
 
-      if (!is_string($name) || !is_string($username) || !is_string($password)) {
-         throw new InvalidArgumentException('required form input missing. Either name, username, or password.');
+      if (is_null($name) || is_null($username) || is_null($password)) {
+         throw new InvalidArgumentException("required form input missing. Either name, username, or password.");
       }
 
       $usernameQueryStr = "SELECT * FROM Users WHERE userName = '$username'";
       $usernameQueryResult = $this->dbProvider->selectQuery($usernameQueryStr);
 
       if (!empty($usernameQueryResult)) {
-         throw new EntityExistsException('User exists with userName $username');
+         throw new EntityExistsException("User exists with userName $username");
       }
 
       $registerQueryStr = "INSERT INTO Users " .

@@ -35,4 +35,9 @@ class MySQLDatabaseProvider implements DatabaseProvider
       $queryResult = $this->dbProvider->query($query);
       return $queryResult;
    }
+
+   public function updateQuery($query)
+   {
+      return $this->insertQuery($query);
+   }
 }
