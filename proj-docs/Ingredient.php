@@ -16,14 +16,12 @@
 	function printResult($ing_result) {  
 		echo "<table><tr>
 		<th>Name</th>
-		<th>Quantity</th>
 		<th>Deleted?</th>
 	</tr>";
 	 // output data of each row
 	while($row = $ing_result->fetch_assoc()) {
 		echo "<tr>
-		<td>" . $row["name"] . "</td>
-		<td>" . $row["qty"] . "</td>    
+		<td>" . $row["name"] . "</td> 
 		<td>" . $row["i_deleted"] . "</td>
 	</tr>";
 }  
@@ -34,12 +32,11 @@ echo "</table>";
 if ($conn) {
 
 //Insert new Ingredient
-	if (!empty($_POST['insName']) && !empty($_POST['insqty'])) {
+	if (!empty($_POST['insName'])) {
 
 		$name = ($_POST['insName']);
-		$qty = ($_POST['insqty']);
 		
-		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($qty))) {
+		if (ctype_alpha(preg_replace('/\s+/', '', $name))) {
 
 			$checkname = $conn->query("SELECT * FROM Ingredient WHERE name = '".$name."'");
 
@@ -48,7 +45,7 @@ if ($conn) {
 			}
 
 			else {
-				$insingquery = $conn->query("INSERT INTO Ingredient (name, qty, i_deleted) VALUES('".$name."', '".$qty."', 'F' )");
+				$insingquery = $conn->query("INSERT INTO Ingredient (name, i_deleted) VALUES('".$name."', 'F' )");
 
 				if ($insingquery) {
 					echo "<script type='text/javascript'>alert('Ingredient was added successfully!')</script>";
@@ -84,32 +81,6 @@ if ($conn) {
 		} else {
 			echo "<script type='text/javascript'>alert('Inputs are not valid, please try again')</script>";
 		}
-
-//Edit an existing Ingredient
-	} else  
-	if (!empty($_POST['edName'])) {
-
-		$name = ($_POST['edName']);
-		$qty = ($_POST['edqty']);
-
-		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($qty))) {
-
-			$checkname = $conn->query("SELECT * FROM Ingredient WHERE name = '".$name."' AND i_deleted = 'F' ");
-
-			if($checkname->num_rows == 0) {
-				echo "<script type='text/javascript'>alert('Ingredient does not exist!')</script>";
-			}
-
-			else {
-				$editmenuquery = $conn->query("UPDATE Ingredient SET qty = '".$qty."' WHERE name = '".$name."'");
-
-				if ($editmenuquery) {
-					echo "<script type='text/javascript'>alert('Ingredient was edited successfully!')</script>";
-				}
-			}
-		}else {
-			echo "<script type='text/javascript'>alert('Inputs are not valid, please try again')</script>";
-		}
 	}
 }
 
@@ -129,29 +100,19 @@ $conn->close();
 	<!--Input box text change-->
 	<p>
 		<input type="text" name="insName" size="18" pattern="*[A-Za-z]" placeholder="Name" required>
-		<input type="text" name="insqty" size="18" pattern="*[0-9]" placeholder="Quantity" required>
 		<!--define two variables to pass the value--> 
 		<input type="submit" value="Insert" name="insertsubmit"></p>
 	</form>
 
-	<p> Edit an Ingredient: </p>
+	<p> Delete an Ingredient</p>
 	<form method="POST" action="ingredient.php">
 		<!--refresh page when submit-->
-		<p><input type="text" name="edName"   size="18" pattern="*[A-Za-z]" placeholder="Name of Item" required>
-			<input type="text" name="edqty" size="18" pattern="*[0-9]" placeholder="New Quantity" required>
+		<p><input type="text" name="delName" size="18" pattern="*[A-Za-z]" placeholder="Name" required>
 			<!--define two variables to pass the value-->
-			<input type="submit" value="Edit" name="updatesubmit"></p>
+			<input type="submit" value="Delete" name="deletesubmit"></p>
 		</form>
 
-		<p> Delete an Ingredient</p>
-		<form method="POST" action="ingredient.php">
-			<!--refresh page when submit-->
-			<p><input type="text" name="delName" size="18" pattern="*[A-Za-z]" placeholder="Name" required>
-				<!--define two variables to pass the value-->
-				<input type="submit" value="Delete" name="deletesubmit"></p>
-			</form>
-	
-	<a href="index.php"> Back to control panel
+		<a href="index.php"> Back to control panel
 
 		</body>
 		</html>
