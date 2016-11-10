@@ -24,8 +24,7 @@ CREATE TABLE Chef
 	employee_id INT NOT NULL,	
 	ssNum INT(9) NULL,
 	PRIMARY KEY (chef_userName),
-	FOREIGN KEY (chef_userName) REFERENCES Users(userName) 
-	ON DELETE CASCADE,
+	FOREIGN KEY (chef_userName) REFERENCES Users(userName),
 	FOREIGN KEY (admin_userName) REFERENCES Users(userName)); 
 
 CREATE TABLE Orders
@@ -46,12 +45,8 @@ CREATE TABLE Invoice
 	createdate DATE NULL,
 	paymentType VARCHAR(20) NULL,
 	PRIMARY KEY (order_id),
-	FOREIGN KEY (order_id) 
-		REFERENCES Orders(order_id) 
-		ON DELETE CASCADE,
-	FOREIGN KEY (customer_userName) 
-		REFERENCES Users(userName) 
-		ON DELETE CASCADE);
+	FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+	FOREIGN KEY (customer_userName) REFERENCES Users(userName));
 
 CREATE TABLE Menuitem
 	(name VARCHAR(80),
@@ -72,19 +67,13 @@ CREATE TABLE Contains
 	name VARCHAR(80) NOT NULL,
 	qty INT NOT NULL,
 	PRIMARY KEY (order_id, name),
-	FOREIGN KEY (order_id) 
-		REFERENCES Orders(order_id) 
-		ON DELETE CASCADE,
-	FOREIGN KEY (name) 
-		REFERENCES Menuitem(name)
-		ON DELETE CASCADE);
+	FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+	FOREIGN KEY (name) REFERENCES Menuitem(name));
 
 CREATE TABLE MadeOf
 	(menuItem_name VARCHAR(80) NOT NULL,
 	ingredient_name VARCHAR(80) NOT NULL,
 	PRIMARY KEY (menuItem_name, ingredient_name),
-	FOREIGN KEY (ingredient_name) REFERENCES Ingredient(name)
-	ON DELETE CASCADE,
-	FOREIGN KEY (menuItem_name) REFERENCES Menuitem(name) 
-	ON DELETE CASCADE);
+	FOREIGN KEY (ingredient_name) REFERENCES Ingredient(name),
+	FOREIGN KEY (menuItem_name) REFERENCES Menuitem(name));
 
