@@ -26,8 +26,9 @@
     if(isset($_POST['NewOrder'])) {
       $mName = $_POST["NewOrder"];
 
-  // NEED new OrderID & dynamic Date
+  // NEED dynamic Date
       $makeneworder = $conn->query("INSERT INTO Orders (customer_userName, chef_userName, orderdate, cookeddate, status) VALUES('".$uName."', 'chef1', DATE '2016-11-01', NULL, 'open')");
+
       if ($makeneworder) {
         echo "<script type='text/javascript'>alert('New Order opened')</script>";
         header( "refresh:0;" );
@@ -36,12 +37,16 @@
        echo "<script type='text/javascript'>alert('Failed to create new Order')</script>";
      }
    }
-   $orderid = '1';
  }
  else {
     // Case 2: SELECT AN ORDER ID
 
-$orderid = '1';   
+$oid_sql = "SELECT order_id FROM Orders WHERE customer_userName = '".$uName."' AND status = 'open'";
+ $oid_result = $conn->query($oid_sql);
+ // $orderid = mysql_fetch_assoc($oid_sql);
+ $row = $oid_result->fetch_array(MYSQLI_ASSOC);
+ $orderid = $row['order_id'];
+
   function printResult($contains_result) { //prints results from a select 
     echo "<table><tr>
     <th>OrderID</th>
