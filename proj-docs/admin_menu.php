@@ -14,6 +14,7 @@
 	//prints results from a select 
 	function printResult($menu_result) { 
 		echo "<table><tr>
+		<th>MenuItem ID</th>
 		<th>Name</th>
 		<th>Price</th>
 		<th>ImagePath</th>
@@ -24,11 +25,12 @@
 	 // output data of each row
 	while($row = $menu_result->fetch_assoc()) {
 		echo "<tr>
+		<td>" . $row["menu_id"] . "</td>
 		<td>" . $row["name"] . "</td>
 		<td>" . $row["price"] . "</td>
 		<td>" . $row["imagepath"] . "</td>
 		<td>" . $row["description"] . "</td>  
-		<td>" . $row["qty"] . "</td>        
+		<td>" . $row["quantity"] . "</td>        
 		<td>" . $row["m_deleted"] . "</td>
 	</tr>";
 }  
@@ -39,9 +41,9 @@ echo "</table>";
 if ($conn) {
 
 // Create a new Menu Item 
-	if (!empty($_POST['insName']) && !empty($_POST['insPrice']) && !empty($_POST['insPrice'])) {
+	if (!empty($_POST['insName']) && !empty($_POST['insPrice']) && !empty($_POST['insqty'])) {
 
-		$name = ($_POST['insName']);
+		$name = trim($_POST['insName']);
 		$price = ($_POST['insPrice']);
 		$img = ($_POST['insImage']);
 		$desc = ($_POST['insDescr']);
@@ -56,7 +58,7 @@ if ($conn) {
 			}
 
 			else {
-				$insmenuquery = $conn->query("INSERT INTO MenuItem (name, price, imagepath, description, qty, m_deleted) VALUES('".$name."', '".$price."', '".$img."', '".$desc."', '".$qty."', 'F' )");
+				$insmenuquery = $conn->query("INSERT INTO MenuItem (name, price, imagepath, description, quantity, m_deleted) VALUES('".$name."', '".$price."', '".$img."', '".$desc."', '".$qty."', 'F' )");
 
 				if ($insmenuquery) {
 					echo "<script type='text/javascript'>alert('Menu Item added successfully!')</script>";
@@ -65,7 +67,7 @@ if ($conn) {
 				}
 			}
 		} else {
-			echo "<script type='text/javascript'>alert('Menu Item cannot be added')</script>";
+			echo "<script type='text/javascript'>alert('Invalid fields, please try again')</script>";
 		}
 
 //Delete an existing Menu Item 
@@ -81,6 +83,7 @@ if ($conn) {
 			if($checkname->num_rows == 0) {
 				echo "<script type='text/javascript'>alert('Menu Item does not exist!')</script>";
 			}
+
 			else {
 				$delmenuquery = $conn->query("UPDATE MenuItem SET m_deleted = 'T' WHERE name = '".$name."'");
 
@@ -97,7 +100,7 @@ if ($conn) {
 	} else  
 	if (!empty($_POST['edName'])) {
 
-		$name = ($_POST['edName']);
+		$name = trim($_POST['edName']);
 		$price = ($_POST['edPrice']);
 		$img = ($_POST['edImage']);
 		$desc = ($_POST['edDescr']);
@@ -123,6 +126,38 @@ if ($conn) {
 		}else {
 			echo "<script type='text/javascript'>alert('Inputs are not valid, please try again')</script>";
 		}
+
+//Edit an existing Menu Item's name
+	}else  
+	if (!empty($_POST['oldname'])) {
+
+		$name = trim($_POST['oldname']);
+		$newname = trim($_POST['newname']);
+
+		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_alpha(preg_replace('/\s+/', '', $newname))) {
+
+			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' ");
+			$checkname2 = $conn->query("SELECT * FROM MenuItem WHERE name = '".$newname."' ");
+
+			if($checkname->num_rows == 0) {
+				echo "<script type='text/javascript'>alert('Menu Item does not exist!')</script>";
+			}
+
+			else if($checkname2->num_rows == 1) {
+				echo "<script type='text/javascript'>alert('Menu Item already exist, choose another name!')</script>";
+			}
+
+			else {
+				$editmenuquery = $conn->query("UPDATE MenuItem SET name = '".$newname."' WHERE name = '".$name."'");
+
+				if ($editmenuquery) {
+					echo "<script type='text/javascript'>alert('Menu Item edited successfully!')</script>";
+				}
+
+			}
+		}else {
+			echo "<script type='text/javascript'>alert('Inputs are not valid, please try again')</script>";
+		}
 	}
 }
 
@@ -136,6 +171,7 @@ printResult($menu_result);
 
 $conn->close();
 ?>  
+
 
 
 <p>Create a new Menu Item below:</p>
@@ -152,6 +188,15 @@ $conn->close();
 		<!--define two variables to pass the value--> 
 		<input type="submit" value="insert" name="insertsubmit"></p>
 	</form>
+
+	<p> Edit MenuItem Name: </p>
+	<form method="POST" action="admin_menu.php">
+		<!--refresh page when submit-->
+		<p><input type="text" name="oldname"  size="18" pattern="*[A-Za-z]" placeholder="Name of Item to edit" required>
+			<input type="text" name="newname" size="18" pattern="*[A-Za-z]" placeholder="New name" required>
+			<!--define two variables to pass the value-->
+			<input type="submit" value="edit" name="updatesubmit"></p>
+		</form>
 
 	<p> Edit MenuItem: </p>
 	<form method="POST" action="admin_menu.php">

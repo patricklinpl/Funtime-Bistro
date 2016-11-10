@@ -21,8 +21,10 @@ CREATE TABLE Users
 CREATE TABLE Chef
 	(chef_userName VARCHAR(20),
 	admin_userName VARCHAR(20) NOT NULL,
-	employee_id INT NOT NULL,	
+	employee_id INT AUTO_INCREMENT,	
 	ssNum INT(9) NULL,
+	UNIQUE (employee_id),
+	UNIQUE (ssNum),
 	PRIMARY KEY (chef_userName),
 	FOREIGN KEY (chef_userName) REFERENCES Users(userName),
 	FOREIGN KEY (admin_userName) REFERENCES Users(userName)); 
@@ -49,17 +51,21 @@ CREATE TABLE Invoice
 	FOREIGN KEY (customer_userName) REFERENCES Users(userName));
 
 CREATE TABLE Menuitem
-	(name VARCHAR(80),
+	(menu_id INT AUTO_INCREMENT,
+	name VARCHAR(80),
 	price DECIMAL(5, 2) NOT NULL,
 	imagepath VARCHAR(300) NULL,
 	description VARCHAR(300) NULL,
-	qty INT NOT NULL,
+	quantity INT NOT NULL,
 	m_deleted CHAR(1) NOT NULL,
+	UNIQUE (menu_id),
 	PRIMARY KEY (name));
 
 CREATE TABLE Ingredient
-	(name VARCHAR(20),
+	(ing_id INT AUTO_INCREMENT,
+	name VARCHAR(20),
 	i_deleted CHAR(1) NOT NULL,
+	UNIQUE (ing_id),
 	PRIMARY KEY(name));
 
 CREATE TABLE Contains
@@ -68,12 +74,12 @@ CREATE TABLE Contains
 	qty INT NOT NULL,
 	PRIMARY KEY (order_id, name),
 	FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-	FOREIGN KEY (name) REFERENCES Menuitem(name));
+	FOREIGN KEY (name) REFERENCES Menuitem(name) ON UPDATE CASCADE);
 
 CREATE TABLE MadeOf
 	(menuItem_name VARCHAR(80) NOT NULL,
 	ingredient_name VARCHAR(80) NOT NULL,
 	PRIMARY KEY (menuItem_name, ingredient_name),
-	FOREIGN KEY (ingredient_name) REFERENCES Ingredient(name),
-	FOREIGN KEY (menuItem_name) REFERENCES Menuitem(name));
+	FOREIGN KEY (ingredient_name) REFERENCES Ingredient(name) ON UPDATE CASCADE,
+	FOREIGN KEY (menuItem_name) REFERENCES Menuitem(name) ON UPDATE CASCADE);
 

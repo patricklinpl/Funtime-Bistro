@@ -72,7 +72,8 @@ printResult($contains_result);
 
 
 
-function printMenuResult($menu_result) { 
+function printMenuResult($result) { 
+
   echo "<table><tr>
   <th>NAME</th>
   <th>Price</th>
@@ -80,14 +81,14 @@ function printMenuResult($menu_result) {
   <th>Description</th>
   <thAdd</th>
 </tr>";
-while($row = $menu_result->fetch_array(MYSQLI_ASSOC)) {
+while($row = $result->fetch_array(MYSQLI_ASSOC)) {
   echo "<tr>";
   echo "<td>" . $row['name'] . "</td>";
   echo "<td>" . $row['price'] . "</td>";
   echo "<td>" . $row['imagepath'] . "</td>";
   echo "<td>" . $row['description'] . "</td>";
   echo '<td><form action="" method="post"><input type="hidden" name="mName" value="'.$row['name'].'"></td>';
-  echo '<td><input type="submit" name="AddItem" value="Add" /></form></td>"';
+  echo '<td><input type="submit" name="AddItem" value="Add" /></form></td>';
   echo "</tr>";
 }
 echo "</table>";
@@ -110,7 +111,7 @@ if(isset($_POST['AddItem'])) {
 
 echo "Available Items to Order";
     // Query database for all Menu Items
-$menu_sql = "SELECT * FROM MenuItem WHERE m_deleted = 'F'";
+$menu_sql = "SELECT * FROM MenuItem WHERE m_deleted = 'F' ";
 $menu_result = $conn->query($menu_sql);
 printMenuResult($menu_result);
 

@@ -23,6 +23,7 @@ if(!empty($_SESSION['LoggedIn']) && !empty($_SESSION['Username']))
     	Thanks for logging in! You are <code><?=$_SESSION['Username']?></code> and your Name is <code><?=$_SESSION['Name']?></code>.</p>
      	
      	<p><a href="payment.php?' .SID. '"> Order Payment </a></p>
+        <p><a href="order.php?' .SID. '"> Order </a></p>
     	<a href="logout.php"> Logout
     	<?php
  	}
