@@ -56,7 +56,7 @@ CREATE TABLE Menuitem
 	price DECIMAL(5, 2) NOT NULL,
 	imagepath VARCHAR(300) NULL,
 	description VARCHAR(300) NULL,
-	qty INT NOT NULL,
+	quantity INT NOT NULL,
 	m_deleted CHAR(1) NOT NULL,
 	UNIQUE (menu_id),
 	PRIMARY KEY (name));
