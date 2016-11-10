@@ -193,7 +193,7 @@ $conn->close();
 	<form method="POST" action="admin_menu.php">
 		<!--refresh page when submit-->
 		<p><input type="text" name="oldname"  size="18" pattern="*[A-Za-z]" placeholder="Name of Item to edit" required>
-			<input type="text" name="newname" size="18" pattern="*[0-9]" placeholder="New name" required>
+			<input type="text" name="newname" size="18" pattern="*[A-Za-z]" placeholder="New name" required>
 			<!--define two variables to pass the value-->
 			<input type="submit" value="edit" name="updatesubmit"></p>
 		</form>
