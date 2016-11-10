@@ -18,6 +18,7 @@
 		<th>Price</th>
 		<th>ImagePath</th>
 		<th>Description</th>
+		<th>Quantity</th>
 		<th>Deleted?</th>
 	</tr>";
 	 // output data of each row
@@ -26,7 +27,8 @@
 		<td>" . $row["name"] . "</td>
 		<td>" . $row["price"] . "</td>
 		<td>" . $row["imagepath"] . "</td>
-		<td>" . $row["description"] . "</td>       
+		<td>" . $row["description"] . "</td>  
+		<td>" . $row["qty"] . "</td>        
 		<td>" . $row["m_deleted"] . "</td>
 	</tr>";
 }  
@@ -37,14 +39,15 @@ echo "</table>";
 if ($conn) {
 
 // Create a new Menu Item 
-	if (!empty($_POST['insName']) && !empty($_POST['insPrice'])) {
+	if (!empty($_POST['insName']) && !empty($_POST['insPrice']) && !empty($_POST['insPrice'])) {
 
 		$name = ($_POST['insName']);
 		$price = ($_POST['insPrice']);
 		$img = ($_POST['insImage']);
 		$desc = ($_POST['insDescr']);
+		$qty = ($_POST['insqty']);
 
-		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($price))) {
+		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($price)) && ctype_digit(trim ($qty))) {
 			
 			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."'");
 
@@ -53,7 +56,7 @@ if ($conn) {
 			}
 
 			else {
-				$insmenuquery = $conn->query("INSERT INTO MenuItem (name, price, imagepath, description, m_deleted) VALUES('".$name."', '".$price."', '".$img."', '".$desc."', 'F' )");
+				$insmenuquery = $conn->query("INSERT INTO MenuItem (name, price, imagepath, description, qty, m_deleted) VALUES('".$name."', '".$price."', '".$img."', '".$desc."', '".$qty."', 'F' )");
 
 				if ($insmenuquery) {
 					echo "<script type='text/javascript'>alert('Menu Item added successfully!')</script>";
@@ -98,8 +101,10 @@ if ($conn) {
 		$price = ($_POST['edPrice']);
 		$img = ($_POST['edImage']);
 		$desc = ($_POST['edDescr']);
+		$qty = ($_POST['edqty']);
 
-		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($price))) {
+
+		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($price)) && ctype_digit(trim ($qty))) {
 
 			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' ");
 
@@ -108,7 +113,7 @@ if ($conn) {
 			}
 
 			else {
-				$editmenuquery = $conn->query("UPDATE MenuItem SET price = '".$price."', imagepath = '".$img."', description = '".$desc."' WHERE name = '".$name."'");
+				$editmenuquery = $conn->query("UPDATE MenuItem SET price = '".$price."', imagepath = '".$img."', description = '".$desc."', qty = '".$qty."' WHERE name = '".$name."'");
 
 				if ($editmenuquery) {
 					echo "<script type='text/javascript'>alert('Menu Item edited successfully!')</script>";
@@ -143,6 +148,7 @@ $conn->close();
 		<input type="text" name="insPrice" size="18" pattern="*[0-9]" placeholder="Price" required>
 		<input type="text" name="insImage" size="18" placeholder="Image">
 		<input type="text" name="insDescr" size="18" pattern="*[A-Za-z]" placeholder="Description">
+		<input type="text" name="insqty" size="18" pattern="*[0-9]" placeholder="Quantity">
 		<!--define two variables to pass the value--> 
 		<input type="submit" value="insert" name="insertsubmit"></p>
 	</form>
@@ -154,6 +160,7 @@ $conn->close();
 			<input type="text" name="edPrice" size="18" pattern="*[0-9]" placeholder="New Price" required>
 			<input type="text" name="edImage" size="18" placeholder="New Image">
 			<input type="text" name="edDescr" size="18" pattern="*[A-Za-z]" placeholder="New Description">
+			<input type="text" name="edqty" size="18" pattern="*[A-Za-z]" placeholder="Quantity">
 			<!--define two variables to pass the value-->
 			<input type="submit" value="update" name="updatesubmit"></p>
 		</form>

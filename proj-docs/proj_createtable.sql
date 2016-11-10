@@ -24,12 +24,11 @@ CREATE TABLE Chef
 	employee_id INT NOT NULL,	
 	ssNum INT(9) NULL,
 	PRIMARY KEY (chef_userName),
-	FOREIGN KEY (chef_userName) REFERENCES Users(userName) 
-	ON DELETE CASCADE,
+	FOREIGN KEY (chef_userName) REFERENCES Users(userName),
 	FOREIGN KEY (admin_userName) REFERENCES Users(userName)); 
 
 CREATE TABLE Orders
-	(order_id INT,
+	(order_id INT AUTO_INCREMENT,
 	customer_userName VARCHAR(20) NOT NULL,
 	chef_userName VARCHAR(20) NOT NULL,
 	orderdate DATE NOT NULL,
@@ -46,24 +45,20 @@ CREATE TABLE Invoice
 	createdate DATE NULL,
 	paymentType VARCHAR(20) NULL,
 	PRIMARY KEY (order_id),
-	FOREIGN KEY (order_id) 
-		REFERENCES Orders(order_id) 
-		ON DELETE CASCADE,
-	FOREIGN KEY (customer_userName) 
-		REFERENCES Users(userName) 
-		ON DELETE CASCADE);
+	FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+	FOREIGN KEY (customer_userName) REFERENCES Users(userName));
 
 CREATE TABLE Menuitem
 	(name VARCHAR(80),
 	price DECIMAL(5, 2) NOT NULL,
 	imagepath VARCHAR(300) NULL,
 	description VARCHAR(300) NULL,
+	qty INT NOT NULL,
 	m_deleted CHAR(1) NOT NULL,
 	PRIMARY KEY (name));
 
 CREATE TABLE Ingredient
 	(name VARCHAR(20),
-	qty INT NOT NULL,
 	i_deleted CHAR(1) NOT NULL,
 	PRIMARY KEY(name));
 
@@ -72,19 +67,13 @@ CREATE TABLE Contains
 	name VARCHAR(80) NOT NULL,
 	qty INT NOT NULL,
 	PRIMARY KEY (order_id, name),
-	FOREIGN KEY (order_id) 
-		REFERENCES Orders(order_id) 
-		ON DELETE CASCADE,
-	FOREIGN KEY (name) 
-		REFERENCES Menuitem(name)
-		ON DELETE CASCADE);
+	FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+	FOREIGN KEY (name) REFERENCES Menuitem(name));
 
 CREATE TABLE MadeOf
 	(menuItem_name VARCHAR(80) NOT NULL,
 	ingredient_name VARCHAR(80) NOT NULL,
 	PRIMARY KEY (menuItem_name, ingredient_name),
-	FOREIGN KEY (ingredient_name) REFERENCES Ingredient(name)
-	ON DELETE CASCADE,
-	FOREIGN KEY (menuItem_name) REFERENCES Menuitem(name) 
-	ON DELETE CASCADE);
+	FOREIGN KEY (ingredient_name) REFERENCES Ingredient(name),
+	FOREIGN KEY (menuItem_name) REFERENCES Menuitem(name));
 
