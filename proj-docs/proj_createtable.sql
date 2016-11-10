@@ -58,12 +58,12 @@ CREATE TABLE Menuitem
 	price DECIMAL(5, 2) NOT NULL,
 	imagepath VARCHAR(300) NULL,
 	description VARCHAR(300) NULL,
+	qty INT NOT NULL,
 	m_deleted CHAR(1) NOT NULL,
 	PRIMARY KEY (name));
 
 CREATE TABLE Ingredient
 	(name VARCHAR(20),
-	qty INT NOT NULL,
 	i_deleted CHAR(1) NOT NULL,
 	PRIMARY KEY(name));
 
