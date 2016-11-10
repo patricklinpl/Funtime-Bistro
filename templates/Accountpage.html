@@ -42,7 +42,7 @@
                 <input id="account-phone" class="pure-u-20-24" name="account-phone" type="text" placeholder="Phone" value="{{ phone }}">
               </div>
 
-           {% if accType|lower  == "chef" %}
+           {% if accType|lower == "chef" %}
               <div class="pure-u-1 pure-u-md-3-24">
               </div>
 
@@ -100,6 +100,11 @@
 
       </div>
     </div>
+    <hr>
+
+    {% if accType|lower == "admin" %}
+    <a href="/account/chef/all" style="float: right;">Click here to manage chef accounts.</a>
+    {% endif %}
   </div>
   <div class="pure-u-1-3">
   </div>
@@ -115,9 +120,9 @@ $("#save-btn").click(function () {
       url: "/account/update",
       type: "POST",
       data: {
-         "name": $("#account-name").val(),
-         "phone": $("#account-phone").val(),
-         "address": $("#account-address").val()
+         "account-name": $("#account-name").val(),
+         "account-phone": $("#account-phone").val(),
+         "account-address": $("#account-address").val()
       },
       success: function (data) {
          alert("Account information successfully saved.");

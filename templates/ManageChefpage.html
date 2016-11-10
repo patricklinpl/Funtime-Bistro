@@ -1,0 +1,72 @@
+{% extends "Layout.html" %}
+
+{% block content %}
+
+
+<div class="pure-g" style="height: 100%; background-image: url('http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/seigaiha.png');">
+  <div class="pure-u-2-24">
+  </div>
+  <div class="pure-u-20-24">
+    <div class="content">
+      <h2 class="content-head is-center">Current chef accounts</h2>
+
+      <hr>
+      <table class="pure-table" style="width: 65%; margin: 2em auto;">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Employee Id</th>
+            <th>Social Security #</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody style="background-color: white;">
+          <tr>
+            <th>-</th>
+            <th>-</th>
+            <th>-</th>
+            <th>-</th>
+            <th>-</th>
+            <th>-</th>
+            <th><button id="create-btn">Create</button></th>
+          </tr>
+          {% for chef in chefs %}
+          <tr>
+            <th>{{ chef.userName }}</th>
+            <th>{{ chef.name }}</th>
+            <th>{{ chef.phone }}</th>
+            <th>{{ chef.address }}</th>
+            <th>{{ chef.employee_id }}</th>
+            <th>{{ chef.ssNum }}</th>
+            <th>
+              <button>Edit</button>
+              <button>Delete</button>
+            </th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+
+    </div>
+  </div>
+  <div class="pure-u-2-24">
+  </div>
+</div>
+
+<script>
+
+$("#create-btn").click(function () {
+   window.location.replace("/account/chef/create");
+});
+
+
+</script>
+
+<!-- use confirm("Are you sure you want to delete this Chef account?") -->
+
+{% endblock %}

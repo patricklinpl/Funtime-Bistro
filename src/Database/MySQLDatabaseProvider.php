@@ -30,6 +30,14 @@ class MySQLDatabaseProvider implements DatabaseProvider
       }
    }
 
+   public function selectMultipleRowsQuery($query) : array
+   {
+      $queryResult = $this->dbProvider->query($query);
+      $queryArr = \mysqli_fetch_all($queryResult, MYSQLI_ASSOC);
+
+      return $queryArr;
+   }
+
    public function insertQuery($query)
    {
       $queryResult = $this->dbProvider->query($query);
@@ -39,5 +47,20 @@ class MySQLDatabaseProvider implements DatabaseProvider
    public function updateQuery($query)
    {
       return $this->insertQuery($query);
+   }
+
+   public function insertMultipleQuery($queryArr)
+   {
+      $this->dbProvider->autocommit(FALSE);
+      foreach ($queryArr as $query) {
+         $queryResult = $this->dbProvider->query($query);
+
+         if (!$queryResult) {
+            return false;
+         }
+      }
+
+      $this->dbProvider->commit();
+      return true;
    }
 }
