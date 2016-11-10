@@ -29,7 +29,7 @@ CREATE TABLE Chef
 	FOREIGN KEY (admin_userName) REFERENCES Users(userName)); 
 
 CREATE TABLE Orders
-	(order_id INT,
+	(order_id INT AUTO_INCREMENT,
 	customer_userName VARCHAR(20) NOT NULL,
 	chef_userName VARCHAR(20) NOT NULL,
 	orderdate DATE NOT NULL,
