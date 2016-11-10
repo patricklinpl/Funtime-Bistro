@@ -24,7 +24,7 @@ if(isset($_POST['sort']))
 
     $query = "SELECT name, price, imagepath, description, quantity 
     FROM MenuItem 
-    WHERE $col $operator $num";
+    WHERE $col $operator $num AND m_deleted = 'F'";
 
     if ($query) {
          $search_result = filterTable($query);
@@ -38,8 +38,8 @@ else {
 // function to connect and execute the query
 function filterTable($query)
 {
-    $connect = mysqli_connect("localhost", "root", "patricklin", "funtime");
-    $filter_Result = mysqli_query($connect, $query);
+    require "base.php";
+    $filter_Result = $conn->query($query);
     return $filter_Result;
 }
 
