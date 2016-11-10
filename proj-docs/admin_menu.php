@@ -134,7 +134,7 @@ if ($conn) {
 		$name = trim($_POST['oldname']);
 		$newname = trim($_POST['newname']);
 
-		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_alpha(preg_replace('/\s+/', '', $name))) {
+		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_alpha(preg_replace('/\s+/', '', $newname))) {
 
 			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' ");
 			$checkname2 = $conn->query("SELECT * FROM MenuItem WHERE name = '".$newname."' ");
