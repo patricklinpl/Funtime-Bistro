@@ -5,8 +5,6 @@ if(isset($_POST['sort']))
 
     $col = $_POST['filter'];
 
-    if ($col == "")
-
     $num = $_POST['value'];
     $operator = $_POST['operator'];
 
@@ -24,7 +22,7 @@ if(isset($_POST['sort']))
     }
 
 
-    $query = "SELECT name, price, imagepath, description, qty 
+    $query = "SELECT name, price, imagepath, description, quantity 
     FROM MenuItem 
     WHERE $col $operator $num";
 
@@ -33,7 +31,7 @@ if(isset($_POST['sort']))
     } 
 }
 else {
-    $query = "SELECT name, price, imagepath, description, qty FROM MenuItem  WHERE m_deleted = 'F'";
+    $query = "SELECT name, price, imagepath, description, quantity FROM MenuItem  WHERE m_deleted = 'F'";
     $search_result = filterTable($query);
 }
 
@@ -86,7 +84,7 @@ function filterTable($query)
                 <th>Quantity</th>
             </tr>
 
-            <input type="number" name="value" min=0 required>
+            <input type="number" name="value" step="0.01" min=0 required>
 
             <input type="hidden" name="sort">
 
@@ -100,7 +98,7 @@ function filterTable($query)
 
             &nbsp; &nbsp;
 
-            <a href="test.php"> Show All Menu Items <a/>
+            <a href="filter_menu.php"> Show All Menu Items <a/>
 
             </form>
             <br/><br/>
@@ -112,7 +110,7 @@ function filterTable($query)
                     <td><?php echo $row['price'];?></td>
                     <td><?php echo $row['imagepath'];?></td>
                     <td><?php echo $row['description'];?></td>
-                    <td><?php echo $row['qty'];?></td>
+                    <td><?php echo $row['quantity'];?></td>
                 </tr>
             <?php endwhile;?>
         </table>
