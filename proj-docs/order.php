@@ -21,7 +21,7 @@
   if ($openorderexist->num_rows == 0) {
     // Case 1: CREATE NEW ORDER
     echo "No open orders"; 
-    echo '<form action="" method="post"><input type="submit" name="NewOrder" value="Create New Order" /></form></td>"';
+    echo '<form action="" method="post"><input type="submit" name="NewOrder" value="Create New Order" /></form></td>';
     
     if(isset($_POST['NewOrder'])) {
       $mName = $_POST["NewOrder"];
