@@ -8,7 +8,7 @@ use ProjectFunTime\Template\FrontendRenderer;
 use ProjectFunTime\Database\DatabaseProvider;
 use ProjectFunTime\Session\SessionWrapper;
 use ProjectFunTime\Exceptions\EntityExistsException;
-use ProjectFunTime\Exceptions\UnknownException;
+use ProjectFunTime\Exceptions\SQLException;
 use \InvalidArgumentException;
 
 class Loginpage
@@ -45,7 +45,9 @@ class Loginpage
       $password = $this->request->getParameter('login-password');
       $accType = $this->request->getParameter('login-acc-type');
 
-      if (is_null($username) || is_null($password) || is_null($accType)) {
+      if (is_null($username) || strlen($username) == 0 ||
+          is_null($password) || strlen($password) == 0 ||
+          is_null($accType) || strlen($accType) == 0) {
          throw new InvalidArgumentException('required form input missing. Either username, password, or accType.');
       }
 
@@ -76,7 +78,9 @@ class Loginpage
       $phone = $this->request->getParameter('reg-phone');
       $address = $this->request->getParameter('reg-address');
 
-      if (is_null($name) || is_null($username) || is_null($password)) {
+      if (is_null($name) || strlen($name) == 0 ||
+          is_null($username) || strlen($username) == 0 ||
+          is_null($password) || strlen($password) == 0) {
          throw new InvalidArgumentException("required form input missing. Either name, username, or password.");
       }
 
@@ -84,7 +88,7 @@ class Loginpage
       $usernameQueryResult = $this->dbProvider->selectQuery($usernameQueryStr);
 
       if (!empty($usernameQueryResult)) {
-         throw new EntityExistsException("User exists with userName $username");
+         throw new EntityExistsException("User exists with username $username");
       }
 
       $registerQueryStr = "INSERT INTO Users " .
@@ -95,7 +99,7 @@ class Loginpage
       $created = $this->dbProvider->insertQuery($registerQueryStr);
       
       if (!$created) {
-         throw new UnknownException("Failed to create User with $name, $username, $password");
+         throw new SQLException("Failed to create User with $name, $username, $password");
       }
    }
 }

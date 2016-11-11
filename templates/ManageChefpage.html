@@ -3,7 +3,7 @@
 {% block content %}
 
 
-<div class="pure-g" style="height: 100%; background-image: url('http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/seigaiha.png');">
+<div class="pure-g">
   <div class="pure-u-2-24">
   </div>
   <div class="pure-u-20-24">
@@ -42,9 +42,9 @@
             <th>{{ chef.address == '' ? '-' : chef.address }}</th>
             <th>{{ chef.employee_id }}</th>
             <th>{{ chef.ssNum == '' ? '-' : chef.ssNum }}</th>
-            <th>
-              <button class="edit-btn" data-username="{{ chef.userName }}">Edit</button>
-              <button class="delete-btn" data-username="{{ chef.userName }}">Delete</button>
+            <th style="width: 170px;">
+              <button class="edit-btn" data-username="{{ chef.userName }}" style="margin: 5px;">Edit</button>
+              <button class="delete-btn" data-username="{{ chef.userName }}" style="margin: 5px;">Delete</button>
             </th>
           </tr>
           {% endfor %}

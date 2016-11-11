@@ -13,8 +13,8 @@
 }
 </style>
 
-<div class="pure-g" style="height: 100%; background-image: url('http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/seigaiha.png');">
-  <div class="pure-u-1-2">
+<div class="pure-g" style="height: 100%; display: table-cell;">
+  <div class="pure-u-1-2" style="height: 100%;">
 
     <div id="first-panel">
       <div class="content">
@@ -80,7 +80,7 @@
     </div>
   </div>
 
-  <div class="pure-u-1-2">
+  <div class="pure-u-1-2" style="height: 100%;">
 
     <div id="second-panel">
       <div class="content">
@@ -242,11 +242,13 @@ $("#create-btn").click(function () {
          "reg-phone": $("#reg-phone").val(),
          "reg-address": $("#reg-address").val()
       },
-      success: function () {
+      success: function (data) {
+         console.log(data);
          window.location.replace("/login");
          alert("Account creation succeeded. You may now log in.");
       },
-      error: function () {
+      error: function (data) {
+         console.log(data);
          alert("Account creation failed. Try again.");
       }
    });

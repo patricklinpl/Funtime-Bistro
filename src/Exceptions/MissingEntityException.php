@@ -4,7 +4,7 @@ namespace ProjectFunTime\Exceptions;
 
 use \Exception;
 
-class UnknownException extends Exception
+class MissingEntityException extends Exception
 {
    public function __construct($message, $code = 0, Exception $previous = null)
    {
