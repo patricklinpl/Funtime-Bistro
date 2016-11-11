@@ -171,6 +171,7 @@ printMenuResult($menu_result);
 }
 
 ?>
+<a href="index.php"> Back to control panel
 
 </body>
 </html>
