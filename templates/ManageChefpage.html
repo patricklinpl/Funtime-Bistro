@@ -1,7 +1,15 @@
 {% extends "Layout.html" %}
 
 {% block content %}
+<style>
+.btn-table-header {
+   white-space: nowrap;
+}
 
+.edit-btn, .delete-btn {
+   display: inline-block;
+}
+</style>
 
 <div class="pure-g">
   <div class="pure-u-2-24">
@@ -42,7 +50,7 @@
             <th>{{ chef.address == '' ? '-' : chef.address }}</th>
             <th>{{ chef.employee_id }}</th>
             <th>{{ chef.ssNum == '' ? '-' : chef.ssNum }}</th>
-            <th style="width: 170px;">
+            <th class="btn-table-header">
               <button class="edit-btn" data-username="{{ chef.userName }}" style="margin: 5px;">Edit</button>
               <button class="delete-btn" data-username="{{ chef.userName }}" style="margin: 5px;">Delete</button>
             </th>
