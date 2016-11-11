@@ -88,13 +88,11 @@ while($row = $result->fetch_array(MYSQLI_ASSOC)) {
   echo "<td>" . $row['imagepath'] . "</td>";
   echo "<td>" . $row['description'] . "</td>";
   echo '<td><form action="" method="post"><input type="hidden" name="mName" value="'.$row['name'].'"></td>';
-  echo '<td><input type="submit" name="AddItem" value="Add" />
-</td>';
-echo '<td><input type="text" name="quantity" size="18" pattern="*[0-9]" placeholder="Quantity"></td>';
-echo '<td>
-
-<input type="submit" name="UpdateItem" value="Update Quantity" /></form></td>';
-echo "</tr>";
+  echo '<td><input type="submit" name="AddItem" value="Add" /></td>';
+  echo '<td><input type="text" name="quantity" size="18" pattern="*[0-9]" placeholder="Quantity"></td>';
+  echo '<td><input type="submit" name="UpdateItem" value="Update Quantity" /></td>';
+  echo '<td><input type="submit" name="RemoveItem" value="Remove" /></form></td>';
+  echo "</tr>";
 }
 echo "</table>";
 }
@@ -137,6 +135,31 @@ if(isset($_POST['UpdateItem'])) {
      echo "<script type='text/javascript'>alert('Item Quantity failed to change in Order!')</script>";
    }
  }
+}
+
+if(isset($_POST['RemoveItem'])) {
+
+  $mName = $_POST['mName'];
+
+  $iteminorder_sql = "SELECT * FROM Contains WHERE name = '".$mName."' AND order_id = '".$orderid."'";
+  $iteminorder_result = $conn->query($iteminorder_sql);
+
+  if ($iteminorder_result->num_rows == 0) {
+   echo "<script type='text/javascript'>alert('Item not in Order!')</script>";
+ }
+ else {
+
+  $remove_sql = "DELETE FROM Contains WHERE order_id = '".$orderid."' AND name = '".$mName."'";
+  $remove_result = $conn->query($remove_sql);
+
+  if ($remove_result) {
+    echo "<script type='text/javascript'>alert('Item removed from Order!')</script>";
+    header( "refresh:0;" );
+  }
+  else {
+   echo "<script type='text/javascript'>alert('Item failed to be removed from Order!')</script>";
+ }
+}
 }
 
 echo "Available Items to Order";
