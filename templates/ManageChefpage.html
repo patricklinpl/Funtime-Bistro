@@ -38,13 +38,13 @@
           <tr>
             <th>{{ chef.userName }}</th>
             <th>{{ chef.name }}</th>
-            <th>{{ chef.phone }}</th>
-            <th>{{ chef.address }}</th>
+            <th>{{ chef.phone == '' ? '-' : chef.phone }}</th>
+            <th>{{ chef.address == '' ? '-' : chef.address }}</th>
             <th>{{ chef.employee_id }}</th>
-            <th>{{ chef.ssNum }}</th>
+            <th>{{ chef.ssNum == '' ? '-' : chef.ssNum }}</th>
             <th>
-              <button>Edit</button>
-              <button>Delete</button>
+              <button class="edit-btn" data-username="{{ chef.userName }}">Edit</button>
+              <button class="delete-btn" data-username="{{ chef.userName }}">Delete</button>
             </th>
           </tr>
           {% endfor %}
@@ -64,6 +64,33 @@ $("#create-btn").click(function () {
    window.location.replace("/account/chef/create");
 });
 
+$(".edit-btn").click(function () {
+   var url = "/account/chef/edit/";
+   var userName = $(this).data("username");
+   window.location.replace(url.concat(userName));
+});
+
+$(".delete-btn").click(function () {
+   if (!confirm("Are you sure you want to delete this Chef account?")) {
+      return;
+   }
+
+   $.ajax({
+      url: "/account/chef/delete",
+      type: "POST",
+      data: {
+         "chef-username": $(this).data("username")
+      },
+      success: function () {
+         window.location.replace("/account/chef/all");
+         alert("Account deletion succeeded.");
+      },
+      error: function () {
+         alert("Account deletion failed. Try again.");
+      }
+   });
+
+});
 
 </script>
 

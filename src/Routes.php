@@ -38,7 +38,7 @@ return [
     ['GET', '/account/chef/all', ['ProjectFunTime\Controllers\Accountpage', 'showAllChefAccounts']],
     ['GET', '/account/chef/create', ['ProjectFunTime\Controllers\Accountpage', 'showCreateChefForm']],
     ['POST', '/account/chef/create', ['ProjectFunTime\Controllers\Accountpage', 'createChefAccount']],
-    ['GET', '/account/{id:\d+}/chef/update', ['ProjectFunTime\Controllers\Accountpage', 'showEditChefForm']],
+    ['GET', '/account/chef/edit/{username}', ['ProjectFunTime\Controllers\Accountpage', 'showEditChefForm']],
     ['POST', '/account/chef/update', ['ProjectFunTime\Controllers\Accountpage', 'updateChefAccount']],
     ['POST', '/account/chef/delete', ['ProjectFunTime\Controllers\Accountpage', 'deleteChefAccount']],
 

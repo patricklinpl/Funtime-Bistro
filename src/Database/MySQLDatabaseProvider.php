@@ -49,7 +49,7 @@ class MySQLDatabaseProvider implements DatabaseProvider
       return $this->insertQuery($query);
    }
 
-   public function insertMultipleQuery($queryArr)
+   public function applyQueries($queryArr)
    {
       $this->dbProvider->autocommit(FALSE);
       foreach ($queryArr as $query) {

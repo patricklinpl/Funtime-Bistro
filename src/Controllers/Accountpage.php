@@ -44,6 +44,7 @@ class Accountpage
       $userQueryStr = "SELECT name, phone, address FROM Users " .
                       "WHERE userName = '$username'";
       $userResult = $this->dbProvider->selectQuery($userQueryStr);
+      // decorate with exception
 
       $data = [
          'accType' => $accType,
@@ -56,6 +57,7 @@ class Accountpage
          $chefQueryStr = "SELECT employee_id, ssNum FROM Chef " .
                          "WHERE chef_userName = '$username'";
          $chefResult = $this->dbProvider->selectQuery($chefQueryStr);
+         // decorate with exception check
 
          $data = array_merge($data, [
          'employeeId' => $chefResult["employee_id"],
@@ -101,7 +103,7 @@ class Accountpage
       $chefQueryStr = "SELECT userName, name, phone, address, employee_id, ssNum FROM Users " . 
                       "INNER JOIN Chef " .
                       "ON Users.userName = Chef.chef_userName " .
-                      "WHERE type = 'chef'";
+                      "WHERE type = 'chef' AND u_deleted = 'F'";
       $chefResult = $this->dbProvider->selectMultipleRowsQuery($chefQueryStr);
 
       $data = [
@@ -116,7 +118,7 @@ class Accountpage
    {
       $data = [];
       
-      $html = $this->renderer->render('ChefFormpage', $data);
+      $html = $this->renderer->render('CreateChefFormpage', $data);
       $this->response->setContent($html);      
    }
 
@@ -127,7 +129,6 @@ class Accountpage
       $password = $this->request->getParameter('chef-password');
       $phone = $this->request->getParameter('chef-phone');
       $address = $this->request->getParameter('chef-address');
-      $employee_id = $this->request->getParameter('chef-employee-id');
       $ssNum = $this->request->getParameter('chef-ssNum');
 
       $currentUsername = $this->session->getValue('userName');
@@ -142,42 +143,40 @@ class Accountpage
          throw new InvalidArgumentException("required form input missing. Either name, username, or password.");
       }
 
+
+      if ($ssNum == '') {
+         $temp1 = "(chef_userName, admin_userName) ";
+         $temp2 = "('$username', '$currentUsername')";
+      }
+      else {
+         $temp1 = "(chef_userName, admin_userName, ssNum) ";
+         $temp2 = "('$username', '$currentUsername', '$ssNum')";
+      }
+
       $insertUserQueryStr = "INSERT INTO Users " .
                             "(userName, password, type, name, phone, address, createDate, u_deleted) " .
                             "VALUE " .
                             "('$username', '$password', 'chef', '$name', '$phone', '$address', now(), 'F')";
 
       $insertChefQueryStr = "INSERT INTO Chef " .
-                            "(chef_userName, admin_userName, employee_id, ssNum) " .
+                            $temp1 .
                             "VALUE " .
-                            "('$username', '$currentUsername', '$employee_id', '$ssNum')";
+                            $temp2;
+
       $queryArr = [
          1 => $insertUserQueryStr,
          2 => $insertChefQueryStr
       ];
-      $queryResult = $this->dbProvider->insertMultipleQuery($queryArr);
-      
+      $queryResult = $this->dbProvider->applyQueries($queryArr);
+      // may fail because of username conflict
       if (!$queryResult) {
          throw new UnknownException("Failed to insert User and Chef");
       }
    }
 
-   public function showEditChefForm()
+   public function showEditChefForm($routeParams)
    {
-      $data = [];
-// do query
-      $html = $this->renderer->render('ChefFormpage', $data);
-      $this->response->setContent($html);
-   }
-
-   public function updateChefAccount($routeParams)
-   {
-   
-   }
-
-   public function deleteChefAccount($routeParams)
-   {
-
+      $username = $routeParams["username"];
 
       $accType = $this->session->getValue('accType');
       if (strcasecmp($accType, 'admin') != 0) {
@@ -185,6 +184,102 @@ class Accountpage
          exit();
       }
 
+      $chefQueryStr = "SELECT userName, name, phone, address, employee_id, ssNum FROM Users " .
+                      "INNER JOIN Chef " .
+                      "ON Users.userName = Chef.chef_userName " .
+                      "WHERE userName = '$username' AND type = 'chef' AND u_deleted = 'F'";
+      $chefResult = $this->dbProvider->selectQuery($chefQueryStr);
+      // need to check result
+      $data = [
+         'name' => $chefResult["name"],
+         'userName' => $chefResult["userName"],
+         'phone' => $chefResult["phone"],
+         'address' => $chefResult["address"],
+         'employee_id' => $chefResult["employee_id"],
+         'ssNum' => $chefResult["ssNum"]
+      ];
 
+      $html = $this->renderer->render('EditChefFormpage', $data);
+      $this->response->setContent($html);
+   }
+
+// will fail on constrinst like uniqueness of employeeid, ssNum
+   public function updateChefAccount($routeParams)
+   {
+      $name = $this->request->getParameter('chef-name');
+      $username = $this->request->getParameter('chef-username');
+      $phone = $this->request->getParameter('chef-phone');
+      $address = $this->request->getParameter('chef-address');
+      $employee_id = $this->request->getParameter('chef-employee-id');
+      $ssNum = $this->request->getParameter('chef-ssNum');
+
+
+      $currentUsername = $this->session->getValue('userName');
+
+      $accType = $this->session->getValue('accType');
+      if (strcasecmp($accType, 'admin') != 0) {
+         header('Location: /');
+         exit();
+      }
+
+      if (is_null($name) || is_null($username)) {
+         throw new InvalidArgumentException("required form input missing. Either name, or username.");
+      }
+
+      if ($ssNum == '') {
+         $temp = "SET employee_id = '$employee_id' ";
+      }
+      else {
+         $temp = "SET employee_id = '$employee_id', ssNum = '$ssNum' ";
+      }
+
+      $updateUserQueryStr = "UPDATE Users " .
+                            "SET name = '$name', phone = '$phone', address = '$address' " .
+                            "WHERE userName = '$username' AND type = 'chef'";
+
+      $updateChefQueryStr = "UPDATE Chef " .
+                            $temp .
+                            "WHERE chef_userName = '$username'";
+
+      $queryArr = [
+         1 => $updateUserQueryStr,
+         2 => $updateChefQueryStr
+      ];
+      $queryResult = $this->dbProvider->applyQueries($queryArr);
+      // may fail because of username conflict
+      if (!$queryResult) {
+         throw new UnknownException("Failed to insert User and Chef");
+      }
+   }
+
+   public function deleteChefAccount($routeParams)
+   {
+      $username = $this->request->getParameter('chef-username');
+
+      $accType = $this->session->getValue('accType');
+      if (strcasecmp($accType, 'admin') != 0) {
+         header('Location: /');
+         exit();
+      }
+
+      if (is_null($username)) {
+         throw new InvalidArgumentException("Username missing.");
+      }
+
+      $validateQueryStr = "SELECT type FROM Users " .
+                          "WHERE userName = '$username'";
+
+      $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
+                          // check type is chef, exception with dynamic message
+
+
+      $softDeleteQuery = "UPDATE Users " .
+                         "SET u_deleted = 'T'" .
+                         "WHERE userName = '$username'";
+      $softDeleteResult = $this->dbProvider->updateQuery($softDeleteQuery);
+
+      if (!$softDeleteResult) {
+         throw new UnknownException("Failed to (soft-)delete Chef account");
+      }
    }
 }
