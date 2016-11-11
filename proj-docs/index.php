@@ -24,6 +24,7 @@ if(!empty($_SESSION['LoggedIn']) && !empty($_SESSION['Username']))
      	
      	<p><a href="payment.php?' .SID. '"> Order Payment </a></p>
         <p><a href="order.php?' .SID. '"> Order </a></p>
+        <p><a href="invoice.php?' .SID. '"> Invoices </a></p>
     	<a href="logout.php"> Logout
     	<?php
  	}
