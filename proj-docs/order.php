@@ -20,7 +20,7 @@
 
   if ($openorderexist->num_rows == 0) {
     // Case 1: CREATE NEW ORDER
-    echo "No open orders"; 
+    echo "No Open Orders"; 
     echo '<form action="" method="post"><input type="submit" name="NewOrder" value="Create New Order" /></form></td>';
     
     if(isset($_POST['NewOrder'])) {
@@ -41,11 +41,11 @@
  else {
     // Case 2: SELECT AN ORDER ID
 
-$oid_sql = "SELECT order_id FROM Orders WHERE customer_userName = '".$uName."' AND status = 'open'";
- $oid_result = $conn->query($oid_sql);
+  $oid_sql = "SELECT order_id FROM Orders WHERE customer_userName = '".$uName."' AND status = 'open'";
+  $oid_result = $conn->query($oid_sql);
  // $orderid = mysql_fetch_assoc($oid_sql);
- $row = $oid_result->fetch_array(MYSQLI_ASSOC);
- $orderid = $row['order_id'];
+  $row = $oid_result->fetch_array(MYSQLI_ASSOC);
+  $orderid = $row['order_id'];
 
   function printResult($contains_result) { //prints results from a select 
     echo "<table><tr>
@@ -88,8 +88,13 @@ while($row = $result->fetch_array(MYSQLI_ASSOC)) {
   echo "<td>" . $row['imagepath'] . "</td>";
   echo "<td>" . $row['description'] . "</td>";
   echo '<td><form action="" method="post"><input type="hidden" name="mName" value="'.$row['name'].'"></td>';
-  echo '<td><input type="submit" name="AddItem" value="Add" /></form></td>';
-  echo "</tr>";
+  echo '<td><input type="submit" name="AddItem" value="Add" />
+</td>';
+echo '<td><input type="text" name="quantity" size="18" pattern="*[0-9]" placeholder="Quantity"></td>';
+echo '<td>
+
+<input type="submit" name="UpdateItem" value="Update Quantity" /></form></td>';
+echo "</tr>";
 }
 echo "</table>";
 }
@@ -99,13 +104,38 @@ if(isset($_POST['AddItem'])) {
 // $delete = $_POST['deleteItem']
 // $sql = "DELETE FROM `tablename` where `id` = '$delete'"; 
   $mName = $_POST['mName'];
-  $addsql = $conn->query("INSERT INTO Contains (order_id, name, qty) VALUES('".$orderid."', '".$mName."', '1')");
-  if ($addsql) {
+  $add_sql = "INSERT INTO Contains (order_id, name, qty) VALUES('".$orderid."', '".$mName."', '1')";
+  $add_result = $conn->query($add_sql);
+  if ($add_result) {
     echo "<script type='text/javascript'>alert('Item added to Order!')</script>";
     header( "refresh:0;" );
   }
   else {
    echo "<script type='text/javascript'>alert('Item already in Order!')</script>";
+ }
+}
+
+if(isset($_POST['UpdateItem'])) {
+
+  $mName = $_POST['mName'];
+
+  $iteminorder_sql = "SELECT * FROM Contains WHERE name = '".$mName."' AND order_id = '".$orderid."'";
+  $iteminorder_result = $conn->query($iteminorder_sql);
+
+  if ($iteminorder_result->num_rows == 0) {
+    echo "<script type='text/javascript'>alert('Item not in Order, quantity cannot be changed!')</script>";
+  }
+  else {
+    $newqty = $_POST['quantity'];
+    $update_sql = "UPDATE Contains SET qty = '".$newqty."' WHERE order_id = '".$orderid."' AND name = '".$mName."'";
+    $update_result = $conn->query($update_sql);
+    if ($update_result) {
+      echo "<script type='text/javascript'>alert('Item Quantity changed in Order!')</script>";
+      header( "refresh:0;" );
+    }
+    else {
+     echo "<script type='text/javascript'>alert('Item Quantity failed to change in Order!')</script>";
+   }
  }
 }
 
