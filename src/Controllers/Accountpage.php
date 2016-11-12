@@ -10,6 +10,7 @@ use ProjectFunTime\Session\SessionWrapper;
 use ProjectFunTime\Exceptions\MissingEntityException;
 use ProjectFunTime\Exceptions\EntityExistsException;
 use ProjectFunTime\Exceptions\SQLException;
+use ProjectFunTime\Exceptions\PermissionException;
 use \InvalidArgumentException;
 
 class Accountpage
@@ -95,14 +96,23 @@ class Accountpage
          throw new InvalidArgumentException("required form input missing. name.");
       }
 
-      $updateQueryStr = "UPDATE Users " .
-                        "SET name = '$name', phone = '$phone', address = '$address' " .
-                        "WHERE userName = '$username'";
+      $validateQueryStr = "SELECT * FROM Users " .
+                          "WHERE userName = '$username' AND u_deleted = 'F'";
+      $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
 
-      $updated = $this->dbProvider->updateQuery($updateQueryStr);
+      if(!empty($validateResult)) {
+         $updateQueryStr = "UPDATE Users " .
+                           "SET name = '$name', phone = '$phone', address = '$address' " .
+                           "WHERE userName = '$username'";
 
-      if (!$updated) {
-         throw new SQLException("Failed to update User with $name, $phone, $address");
+         $updated = $this->dbProvider->updateQuery($updateQueryStr);
+
+         if (!$updated) {
+            throw new SQLException("Failed to update User with $name, $phone, $address");
+         }
+      }
+      else {
+         throw new MissingEntityException("Unable to find User $username to update");
       }
    }
 
@@ -294,30 +304,42 @@ class Accountpage
          }
       }
 
+      $validateUserQueryStr = "SELECT * FROM Users " .
+                              "WHERE userName = '$username' AND type = 'chef' AND u_deleted = 'F'";
+      $validateUserResult = $this->dbProvider->selectQuery($validateUserQueryStr);
 
-      $updateUserQueryStr = "UPDATE Users " .
-                            "SET name = '$name', phone = '$phone', address = '$address' " .
-                            "WHERE userName = '$username' AND type = 'chef'";
+      $validateChefQueryStr = "SELECT * FROM Chef " .
+                              "WHERE chef_userName = '$username'";
+      $validateChefResult = $this->dbProvider->selectQuery($validateChefQueryStr);
 
-      if (is_null($ssNum) || strlen($ssNum) == 0) {
-         $updateChefQueryStr = "UPDATE Chef " .
-                               "SET employee_id = $employee_id, ssNum = NULL " .
-                               "WHERE chef_userName = '$username'";
+      if (!empty($validateUserResult) && !empty($validateChefResult)) {
+         $updateUserQueryStr = "UPDATE Users " .
+                               "SET name = '$name', phone = '$phone', address = '$address' " .
+                               "WHERE userName = '$username' AND type = 'chef'";
+
+         if (is_null($ssNum) || strlen($ssNum) == 0) {
+            $updateChefQueryStr = "UPDATE Chef " .
+                                  "SET employee_id = $employee_id, ssNum = NULL " .
+                                  "WHERE chef_userName = '$username'";
+         }
+         else {
+            $updateChefQueryStr = "UPDATE Chef " .
+                                  "SET employee_id = $employee_id, ssNum = $ssNum " .
+                                  "WHERE chef_userName = '$username'";
+         }
+
+         $queryArr = [
+            1 => $updateUserQueryStr,
+            2 => $updateChefQueryStr
+         ];
+         $queryResult = $this->dbProvider->applyQueries($queryArr);
+
+         if (!$queryResult) {
+            throw new SQLException("Failed to update User and Chef");
+         }
       }
       else {
-         $updateChefQueryStr = "UPDATE Chef " .
-                               "SET employee_id = $employee_id, ssNum = $ssNum " .
-                               "WHERE chef_userName = '$username'";
-      }
-
-      $queryArr = [
-         1 => $updateUserQueryStr,
-         2 => $updateChefQueryStr
-      ];
-      $queryResult = $this->dbProvider->applyQueries($queryArr);
-
-      if (!$queryResult) {
-         throw new SQLException("Failed to update User and Chef");
+         throw new MissingEntityException("Unable to find either User or Chef $username to update");
       }
    }
 
@@ -327,19 +349,22 @@ class Accountpage
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType) || strcasecmp($accType, 'admin') != 0) {
-         header('Location: /');
-         exit();
+         throw new PermissionException("Must be admin in order to delete chef account");
       }
 
       if (is_null($username) || strlen($username) == 0) {
          throw new InvalidArgumentException("Username missing.");
       }
 
-      $validateQueryStr = "SELECT type FROM Users " .
-                          "WHERE userName = '$username' AND type = 'chef'";
-      $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
+      $validateUserQueryStr = "SELECT * FROM Users " .
+                              "WHERE userName = '$username' AND type = 'chef' AND u_deleted = 'F'";
+      $validateUserResult = $this->dbProvider->selectQuery($validateUserQueryStr);
 
-      if (!empty($validateResult)) {
+      $validateChefQueryStr = "SELECT * FROM Chef " .
+                              "WHERE chef_userName = '$username'";
+      $validateChefResult = $this->dbProvider->selectQuery($validateChefQueryStr);
+
+      if (!empty($validateUserResult) && !empty($validateChefResult)) {
          $softDeleteQuery = "UPDATE Users " .
                             "SET u_deleted = 'T'" .
                             "WHERE userName = '$username' AND type = 'chef'";
@@ -348,6 +373,9 @@ class Accountpage
          if (!$softDeleteResult) {
             throw new SQLException("Failed to (soft-)delete Chef account");
          }
+      }
+      else {
+         throw new MissingEntityException("Unable to find User or Chef $username to delete");
       }
    }
 }

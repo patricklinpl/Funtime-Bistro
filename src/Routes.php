@@ -21,8 +21,9 @@ return [
 
 // ingredient page
     ['GET', '/ingredients', ['ProjectFunTime\Controllers\Ingredientpage', 'show']],
-    ['POST', '/ingredient/{id:\d+}/update', ['ProjectFunTime\Controllers\Ingredientpage', 'update']],
-    ['POST', '/ingredient/{id:\d+}/delete', ['ProjectFunTime\Controllers\Ingredientpage', 'delete']],
+    ['POST', '/ingredient/create', ['ProjectFunTime\Controllers\Ingredientpage', 'create']],
+    ['POST', '/ingredient/update', ['ProjectFunTime\Controllers\Ingredientpage', 'update']],
+    ['POST', '/ingredient/delete', ['ProjectFunTime\Controllers\Ingredientpage', 'delete']],
 
 // order page
     ['GET', '/orders', ['ProjectFunTime\Controllers\Orderpage', 'show']],

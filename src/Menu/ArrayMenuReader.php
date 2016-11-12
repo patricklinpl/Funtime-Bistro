@@ -9,17 +9,13 @@ class ArrayMenuReader implements MenuReader
       if (is_null($accType)) {
          return [];
       }
-      elseif (strcasecmp($accType, 'customer') == 0 || strcasecmp($accType, 'chef') == 0) {
+      elseif (strcasecmp($accType, 'customer') == 0 ||
+              strcasecmp($accType, 'chef') == 0 ||
+              strcasecmp($accType, 'admin') == 0) {
          return [
             ['href' => '/menuItems', 'text' => 'Menu'],
-            ['href' => '/ingredients', 'text' => 'Ingredients'],
             ['href' => '/orders', 'text' => 'Orders'],
-            ['href' => '/account', 'text' => 'Account']
-         ];
-      }
-      else {
-         return [
-         // not sure what else at the moment
+            ['href' => '/ingredients', 'text' => 'Ingredients'],
             ['href' => '/account', 'text' => 'Account']
          ];
       }
