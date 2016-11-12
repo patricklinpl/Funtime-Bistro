@@ -1,39 +1,67 @@
 <?php
 
-if(isset($_POST['sort']))
-{
+
+// run when filter button is clicked
+if(isset($_POST['select'])) {
 
     $col = $_POST['filter'];
 
     $num = $_POST['value'];
+
     $operator = $_POST['operator'];
 
-
-    if ($_POST['operator'] == "eq") {
-        $operator = '=';
-    }
-
-    if ($_POST['operator'] == "gt") {
-        $operator = '>';
-    }
-
-    if ($_POST['operator'] == "lt") {
-        $operator = '<';
-    }
+    $name = "name,";
+    $price = "price,";
+    $img = "imagepath,";
+    $desc = "description,";
+    $qty = "quantity,";
 
 
-    $query = "SELECT name, price, imagepath, description, quantity 
+    if(!isset($_POST['selname'])) {
+        $name = "";
+    } 
+
+    if(!isset($_POST['selprice'])) {
+        $price = "";
+    } 
+
+    if(!isset($_POST['selimg'])) {
+        $img = "";
+    } 
+
+    if(!isset($_POST['seldesc'])) {
+        $desc = "";
+    } 
+
+    if(!isset($_POST['selqty'])) {
+        $qty = "";
+    } 
+
+    $att = rtrim("$name $price $img $desc $qty", ', '); 
+
+
+
+    $query = "SELECT $att
     FROM MenuItem 
     WHERE $col $operator $num AND m_deleted = 'F'";
 
     if ($query) {
-         $search_result = filterTable($query);
-    } 
-}
-else {
+       $search_result = filterTable($query);
+   }
+
+
+
+
+
+
+
+
+
+} else {
     $query = "SELECT name, price, imagepath, description, quantity FROM MenuItem  WHERE m_deleted = 'F'";
     $search_result = filterTable($query);
 }
+
 
 // function to connect and execute the query
 function filterTable($query)
@@ -59,6 +87,8 @@ function filterTable($query)
 </head>
 <body>
 
+
+    <!-- Form to filer by price / quantity  -->
     <form method="post">
         Show only Menu Items where
 
@@ -70,11 +100,42 @@ function filterTable($query)
         is
 
         <select name="operator">
-            <option value="eq">=</option>
-            <option value="gt">></option>
-            <option value="lt"><</option>
+            <option value="=">=</option>
+            <option value=">">></option>
+            <option value="<"><</option>
         </select>
 
+        <input type="number" name="value" step="0.01" min=0 required>
+
+        <input type="hidden" name="select">
+
+        &nbsp; <br/> <br/>
+
+        Choose the attributes to display <br>
+
+        <input type="checkbox" name="selname" value="y" checked /> Name
+        <input type="checkbox" name="selprice" value="y" checked/> Price
+        <input type="checkbox" name="selimg" value="y" checked/> Image
+        <input type="checkbox" name="seldesc" value="y" checked/> Description
+        <input type="checkbox" name="selqty" value="y" checked/> Quantity
+
+        <input type="hidden" name="display">
+
+
+        <input type="submit" value="Filter"> 
+
+        &nbsp; &nbsp;
+
+        or 
+
+        &nbsp; &nbsp;
+
+        <a href="filter_menu.php"> Show All Menu Items <a/>
+            <br/><br/>
+
+        </form>
+
+        <!-- Repopulate tables after filtering-->
         <table>
             <tr>
                 <th>Name</th>
@@ -84,37 +145,45 @@ function filterTable($query)
                 <th>Quantity</th>
             </tr>
 
-            <input type="number" name="value" step="0.01" min=0 required>
-
-            <input type="hidden" name="sort">
-
-            &nbsp;
-
-            <input type="submit" value="Filter"> 
-
-            &nbsp; &nbsp;
-
-            or 
-
-            &nbsp; &nbsp;
-
-            <a href="filter_menu.php"> Show All Menu Items <a/>
-
-            </form>
-            <br/><br/>
-
-            <!-- populate table from mysql database -->
             <?php while($row = mysqli_fetch_array($search_result)):?>
                 <tr>
-                    <td><?php echo $row['name'];?></td>
-                    <td><?php echo $row['price'];?></td>
-                    <td><?php echo $row['imagepath'];?></td>
-                    <td><?php echo $row['description'];?></td>
-                    <td><?php echo $row['quantity'];?></td>
-                </tr>
-            <?php endwhile;?>
-        </table>
-    </form>
+                    <td>
+                        <?php
+                        if (isset($row['name'])) {
+                            echo $row['name'];}
+                            ?>
+                        </td>
 
-</body>
-</html>
+                        <td>
+                            <?php 
+                            if (isset($row['price'])) {
+                                echo $row['price'];}
+                                ?>
+                            </td>
+
+                            <td>
+                                <?php 
+                                if (isset($row['imagepath'])) {
+                                    echo $row['imagepath'];}
+                                    ?>
+                                </td>
+
+                                <td>
+                                    <?php 
+                                    if (isset($row['description'])) {
+                                        echo $row['description'];}
+                                        ?>
+                                    </td>
+
+                                    <td>
+                                        <?php 
+                                        if (isset($row['quantity'])) {
+                                            echo $row['quantity'];}
+                                            ?>
+                                        </td>
+                                    </tr>
+                                <?php endwhile;?>
+                            </table>
+
+                        </body>
+                        </html>
