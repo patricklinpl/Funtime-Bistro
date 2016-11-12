@@ -21,6 +21,7 @@
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Type</th>
               </tr>
             </thead>
 
@@ -28,6 +29,7 @@
               {% for ingredient in ingredients %}
               <tr>
                 <th>{{ ingredient.name }}</th>
+                <th>{{ ingredient.type }}</th>
               </tr>
               {% endfor %}
             </tbody>

@@ -19,6 +19,7 @@
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Type</th>
                 <th style="width: 20%;">Actions</th>
               </tr>
             </thead>
@@ -26,14 +27,16 @@
             <tbody style="background-color: white;">
               <tr>
                 <th>-</th>
+                <th>-</th>
                 <th><button id="create-btn">Create</button></th>
               </tr>
               {% for ingredient in ingredients %}
               <tr>
                 <th>{{ ingredient.name }}</th>
+                <th>{{ ingredient.type }}</th>
                 <th class="btn-table-header">
-                  <button class="edit-btn" data-name="{{ ingredient.name }}" style="margin: 5px;">Edit</button>
-                  <button class="delete-btn" data-name="{{ ingredient.name }}" style="margin: 5px;">Delete</button>
+                  <button class="edit-btn" data-name="{{ ingredient.name }}" data-type="{{ ingredient.type }}" style="margin: 5px;">Edit</button>
+                  <button class="delete-btn" data-name="{{ ingredient.name }}" data-type="{{ ingredient.type }}" style="margin: 5px;">Delete</button>
                 </th>
               </tr>
               {% endfor %}
@@ -67,7 +70,10 @@
               <div class="pure-u-1 pure-u-md-1-3">
 
                 <label for="create-ingred-name">Ingredient Name <b style="color: red;">*</b></label>
-                <input id="create-ingred-name" class="pure-u-1-1" name="create-ingred-name" type="text" placeholder="Ingredient Name">            
+                <input id="create-ingred-name" class="pure-u-1-1" name="create-ingred-name" type="text" placeholder="Ingredient Name">
+
+                <label for="create-ingred-type">Ingredient Type <b style="color: red;">*</b></label>
+                <input id="create-ingred-type" class="pure-u-1-1" name="create-ingred-type" type="text" placeholder="Ingredient Type">
               </div>
 
               <div class="pure-u-1 pure-u-md-1-3">
@@ -108,9 +114,12 @@
               <div class="pure-u-1 pure-u-md-1-3">
                 <label for="current-ingred-name">Current Ingredient Name</label>
                 <input id="current-ingred-name" class="pure-u-1-1" name="current-ingred-name" type="text" disabled>
-
+                <label for="current-ingred-type">Current Ingredient Type</label>
+                <input id="current-ingred-type" class="pure-u-1-1" name="current-ingred-type" type="text" disabled>
                 <label for="new-ingred-name">New Ingredient Name <b style="color: red;">*</b></label>
-                <input id="new-ingred-name" class="pure-u-1-1" name="new-ingred-name" type="text" placeholder="New Ingredient Name">            
+                <input id="new-ingred-name" class="pure-u-1-1" name="new-ingred-name" type="text" placeholder="New Ingredient Name">
+                <label for="new-ingred-type">New Ingredient Type <b style="color: red;">*</b></label>
+                <input id="new-ingred-type" class="pure-u-1-1" name="new-ingred-type" type="text" placeholder="New Ingredient Type">
               </div>
 
               <div class="pure-u-1 pure-u-md-1-3">
@@ -146,11 +155,14 @@ $("#create-btn").click(function () {
 
 $(".edit-btn").click(function () {
    $("#new-ingred-name").val("");
+   $("#new-ingred-type").val("");
    $("#second-panel-create").hide();
    $("#second-panel-update").show();
 
    var ingredName = $(this).data("name");
+   var ingredType = $(this).data("type");
    $("#current-ingred-name").val(ingredName);
+   $("#current-ingred-type").val(ingredType);
 });
 
 $(".delete-btn").click(function () {
@@ -179,8 +191,9 @@ $(".delete-btn").click(function () {
 
 $("#create-ingred-btn").click(function () {
 
-   if ($("#create-ingred-name").val().trim() === '') {
-      alert("Ingredient name is missing. Try again.");
+   if ($("#create-ingred-name").val().trim() === '' ||
+       $("#create-ingred-type").val().trim() === '') {
+      alert("Ingredient name or type is missing. Try again.");
       return;
    }
 
@@ -188,7 +201,8 @@ $("#create-ingred-btn").click(function () {
       url: "/ingredient/create",
       type: "POST",
       data: {
-         "ingredient-name": $("#create-ingred-name").val()
+         "ingredient-name": $("#create-ingred-name").val(),
+         "ingredient-type": $("#create-ingred-type").val()
       },
       success: function (data) {
          console.log(data);
@@ -204,8 +218,9 @@ $("#create-ingred-btn").click(function () {
 
 $("#update-ingred-btn").click(function () {
 
-   if ($("#new-ingred-name").val().trim() === '') {
-      alert("New ingredient name is missing. Try again.");
+   if ($("#new-ingred-name").val().trim() === '' ||
+       $("#new-ingred-type").val().trim() === '') {
+      alert("New ingredient name or type is missing. Try again.");
       return;
    }
 
@@ -214,7 +229,8 @@ $("#update-ingred-btn").click(function () {
       type: "POST",
       data: {
          "ingredient-name": $("#current-ingred-name").val(),
-         "new-ingredient-name": $("#new-ingred-name").val()
+         "new-ingredient-name": $("#new-ingred-name").val(),
+         "new-ingredient-type": $("#new-ingred-type").val()
       },
       success: function (data) {
          console.log(data);

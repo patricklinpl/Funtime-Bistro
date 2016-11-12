@@ -51,7 +51,7 @@ class Ingredientpage
          $page = 'IngredientFullViewpage';
       }
 
-      $ingredQueryStr = "SELECT name FROM Ingredient " .
+      $ingredQueryStr = "SELECT name, type FROM Ingredient " .
                         "WHERE i_deleted = 'F'";
       $ingredResult = $this->dbProvider->selectMultipleRowsQuery($ingredQueryStr);
 
@@ -65,6 +65,7 @@ class Ingredientpage
    public function create()
    {
       $ingredName = $this->request->getParameter('ingredient-name');
+      $ingredType = $this->request->getParameter('ingredient-type');
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType) ||
@@ -73,11 +74,12 @@ class Ingredientpage
          throw new PermissionException("Must be admin or chef in order to create ingredient");
       }
 
-      if (is_null($ingredName) || strlen($ingredName) == 0) {
-         throw new InvalidArgumentException("required form input missing. Ingredient name.");
+      if (is_null($ingredName) || strlen($ingredName) == 0 ||
+          is_null($ingredType) || strlen($ingredType) == 0) {
+         throw new InvalidArgumentException("required form input missing. Ingredient name or type.");
       }
 
-      $ingredQueryStr = "SELECT * FROM Ingredient " . 
+      $ingredQueryStr = "SELECT * FROM Ingredient " .
                         "WHERE name = '$ingredName' AND i_deleted = 'F'";
       $ingredQueryResult = $this->dbProvider->selectQuery($ingredQueryStr);
 
@@ -91,14 +93,14 @@ class Ingredientpage
 
       if (!empty($deletedIngredQueryResult)) {
          $createIngredQueryStr = "UPDATE Ingredient " .
-                                 "SET i_deleted = 'F' " .
+                                 "SET type = '$ingredType', i_deleted = 'F' " .
                                  "WHERE name = '$ingredName' AND i_deleted = 'T'";
       }
       else {
          $createIngredQueryStr = "INSERT INTO Ingredient " .
-                                 "(name, i_deleted) " .
+                                 "(name, type, i_deleted) " .
                                  "VALUES " .
-                                 "('$ingredName', 'F')";
+                                 "('$ingredName', '$ingredType', 'F')";
       }
 
       $created = $this->dbProvider->insertQuery($createIngredQueryStr);
@@ -112,6 +114,7 @@ class Ingredientpage
    {
       $ingredName = $this->request->getParameter('ingredient-name');
       $newIngredName = $this->request->getParameter('new-ingredient-name');
+      $newIngredType = $this->request->getParameter('new-ingredient-type');
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType) ||
@@ -121,8 +124,9 @@ class Ingredientpage
       }
 
       if (is_null($ingredName) || strlen($ingredName) == 0 ||
-          is_null($newIngredName) || strlen($newIngredName) == 0) {
-         throw new InvalidArgumentException("required form input missing. Either ingredient name or new ingredient name.");
+          is_null($newIngredName) || strlen($newIngredName) == 0 ||
+          is_null($newIngredType) || strlen($newIngredType) == 0) {
+         throw new InvalidArgumentException("required form input missing. Either ingredient name, new ingredient name or type.");
       }
 
       $validateQueryStr = "SELECT * FROM Ingredient " .
@@ -131,7 +135,7 @@ class Ingredientpage
 
       if (!empty($validateResult)) {
          $updateQueryStr = "UPDATE Ingredient " .
-                           "SET name = '$newIngredName' " .
+                           "SET name = '$newIngredName', type = '$newIngredType'" .
                            "WHERE name = '$ingredName' AND i_deleted = 'F'";
 
          $updated = $this->dbProvider->updateQuery($updateQueryStr);
