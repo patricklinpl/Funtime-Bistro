@@ -30,36 +30,36 @@ insert into Invoice values (2, 'ptlin', 125.23, DATE '2016-11-02', 'cash');
 insert into Invoice values (3, 'quanbao', 125.23, DATE '2016-11-02', 'cash');
 
 
-insert into Menuitem (name, price, imagepath, description, quantity, m_deleted) values ('Shrimp Fried Rice', 11.00, 'http://', 'Egg fried rice with shrimps', 3, 'F');
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Shrimp Fried Rice', 11.00, 'Entree', 'Egg fried rice with shrimps', 3, 'F');
 
-insert into Menuitem (name, price, imagepath, description, quantity, m_deleted) values ('Deluxe Burger', 8.95, 'http://', 'Hamburger with lettuce, tomato, pickles, and a beef patty', 5, 'F');
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Deluxe Burger', 8.95, 'Entree', 'Hamburger with lettuce, tomato, pickles, and a beef patty', 5, 'F');
 
-insert into Menuitem (name, price, imagepath, description, quantity, m_deleted) values ('Ice cream ramen', 5.23, 'http://', 'Noodles in a cone!', 10, 'F');
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Ice cream ramen', 5.23, 'Dessert', 'Noodles in a cone!', 10, 'F');
 
-insert into Menuitem (name, price, imagepath, description, quantity, m_deleted) values ('Beef smoothie', 6.21, 'http://', 'A healthy blend of greens and beef to ensure you hit your protein macros.', 1, 'F');
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Beef smoothie', 6.21, 'Drink', 'A healthy blend of greens and beef to ensure you hit your protein macros.', 1, 'F');
 
-insert into Menuitem (name, price, imagepath, description, quantity, m_deleted) values ('Deep fried protein powder', 18.43, 'http://', 'Anything is better deep fried!', 15, 'F');
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Deep fried protein powder', 18.43, 'Entree', 'Anything is better deep fried!', 15, 'F');
 
 
-insert into Ingredient (name, i_deleted) values ('Lettuce', 'F');
+insert into Ingredient (name, type, i_deleted) values ('Lettuce', 'Vegetable', 'F');
 
-insert into Ingredient (name, i_deleted) values ('Tomato',  'F');
+insert into Ingredient (name, type, i_deleted) values ('Tomato', 'Vegetable', 'F');
 
-insert into Ingredient (name, i_deleted) values ('Burger Buns', 'F');
+insert into Ingredient (name, type, i_deleted) values ('Burger Buns', 'Grain','F');
 
-insert into Ingredient (name, i_deleted) values ('Beef Patty', 'F');
+insert into Ingredient (name, type, i_deleted) values ('Beef Patty', 'Meat','F');
 
-insert into Ingredient (name, i_deleted) values ('Rice',  'F');
+insert into Ingredient (name, type, i_deleted) values ('Rice', 'Vegetarian', 'F');
 
-insert into Ingredient (name, i_deleted) values ('Egg',  'F');
+insert into Ingredient (name, type, i_deleted) values ('Egg', 'Meat', 'F');
 
-insert into Ingredient (name, i_deleted) values ('Shrimp', 'F');
+insert into Ingredient (name, type, i_deleted) values ('Shrimp', 'Meat', 'F');
 
-insert into Ingredient (name, i_deleted) values ('Ramen', 'F');
+insert into Ingredient (name, type, i_deleted) values ('Ramen', 'Grain', 'F');
 
-insert into Ingredient (name, i_deleted) values ('Ice cream', 'F');
+insert into Ingredient (name, type, i_deleted) values ('Ice cream', 'Dairy', 'F');
 
-insert into Ingredient (name, i_deleted) values ('Protein', 'F');
+insert into Ingredient (name, type, i_deleted) values ('Protein', 'Meat', 'F');
 
 
 insert into Contains values (1, 'Shrimp Fried Rice', 2);
