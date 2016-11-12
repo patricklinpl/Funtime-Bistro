@@ -36,7 +36,7 @@ CREATE TABLE Orders
 	orderdate DATE NOT NULL,
 	cookeddate DATE NULL, 
 	paymentStatus VARCHAR(20) NOT NULL,
-        cookedStatus VARCHAR(20) NOT NULL,
+    cookedStatus VARCHAR(20) NOT NULL,
 	PRIMARY KEY (order_id),
 	FOREIGN KEY (chef_userName) REFERENCES Chef(chef_userName), 
 	FOREIGN KEY (customer_userName) REFERENCES Users(userName));
@@ -55,7 +55,7 @@ CREATE TABLE Menuitem
 	(menu_id INT AUTO_INCREMENT,
 	name VARCHAR(80),
 	price DECIMAL(5, 2) NOT NULL,
-	imagepath VARCHAR(300) NULL,
+	category VARCHAR(30) NOT NULL,
 	description VARCHAR(300) NULL,
 	quantity INT NOT NULL,
 	m_deleted CHAR(1) NOT NULL,
@@ -65,6 +65,7 @@ CREATE TABLE Menuitem
 CREATE TABLE Ingredient
 	(ing_id INT AUTO_INCREMENT,
 	name VARCHAR(20),
+	type VARCHAR(30) NOT NULL,
 	i_deleted CHAR(1) NOT NULL,
 	UNIQUE (ing_id),
 	PRIMARY KEY(name));
