@@ -35,7 +35,8 @@ CREATE TABLE Orders
 	chef_userName VARCHAR(20) NOT NULL,
 	orderdate DATE NOT NULL,
 	cookeddate DATE NULL, 
-	status VARCHAR(20) NOT NULL,
+	paymentStatus VARCHAR(20) NOT NULL,
+        cookedStatus VARCHAR(20) NOT NULL,
 	PRIMARY KEY (order_id),
 	FOREIGN KEY (chef_userName) REFERENCES Chef(chef_userName), 
 	FOREIGN KEY (customer_userName) REFERENCES Users(userName));

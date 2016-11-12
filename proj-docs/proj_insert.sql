@@ -16,11 +16,11 @@ insert into Chef (chef_userName, admin_userName, ssNum) values ('chef1', 'omgitz
 insert into Chef (chef_userName, admin_userName, ssNum) values ('Wewic', 'omgitzme', 234013005);
 
 
-insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, status) values ('newuser', 'chef1', DATE '2016-11-01', DATE '2016-11-01', 'open');
+insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('newuser', 'chef1', DATE '2016-11-01', DATE '2016-11-01', 'open', 'open');
 
-insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, status) values ('ptlin', 'Wewic', DATE '2016-11-02', DATE '2016-11-01', 'open');
+insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('ptlin', 'Wewic', DATE '2016-11-02', DATE '2016-11-01', 'paid', 'in progress');
 
-insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, status) values ('quanbao', 'Wewic', DATE '2016-11-01', DATE '2016-11-01', 'open');
+insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('quanbao', 'Wewic', DATE '2016-11-01', DATE '2016-11-01', 'open', 'cooked');
 
 
 insert into Invoice values (1, 'newuser', 34.50, DATE '2016-11-01', 'credit');
