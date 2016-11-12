@@ -26,20 +26,20 @@ CREATE TABLE Chef
 	UNIQUE (employee_id),
 	UNIQUE (ssNum),
 	PRIMARY KEY (chef_userName),
-	FOREIGN KEY (chef_userName) REFERENCES Users(userName),
-	FOREIGN KEY (admin_userName) REFERENCES Users(userName)); 
+	FOREIGN KEY (chef_userName) REFERENCES Users(userName) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (admin_userName) REFERENCES Users(userName) ON UPDATE CASCADE); 
 
 CREATE TABLE Orders
 	(order_id INT AUTO_INCREMENT,
 	customer_userName VARCHAR(20) NOT NULL,
-	chef_userName VARCHAR(20) NOT NULL,
+	chef_userName VARCHAR(20),
 	orderdate DATE NOT NULL,
 	cookeddate DATE NULL, 
 	paymentStatus VARCHAR(20) NOT NULL,
     cookedStatus VARCHAR(20) NOT NULL,
 	PRIMARY KEY (order_id),
-	FOREIGN KEY (chef_userName) REFERENCES Chef(chef_userName), 
-	FOREIGN KEY (customer_userName) REFERENCES Users(userName));
+	FOREIGN KEY (chef_userName) REFERENCES Chef(chef_userName) ON DELETE SET NULL ON UPDATE CASCADE, 
+	FOREIGN KEY (customer_userName) REFERENCES Users(userName) ON UPDATE CASCADE);
 
 CREATE TABLE Invoice
 	(order_id INT NOT NULL,
@@ -48,8 +48,8 @@ CREATE TABLE Invoice
 	createdate DATE NULL,
 	paymentType VARCHAR(20) NULL,
 	PRIMARY KEY (order_id),
-	FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-	FOREIGN KEY (customer_userName) REFERENCES Users(userName));
+	FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON UPDATE CASCADE,
+	FOREIGN KEY (customer_userName) REFERENCES Users(userName) ON UPDATE CASCADE);
 
 CREATE TABLE Menuitem
 	(menu_id INT AUTO_INCREMENT,
@@ -75,7 +75,7 @@ CREATE TABLE Contains
 	name VARCHAR(80) NOT NULL,
 	qty INT NOT NULL,
 	PRIMARY KEY (order_id, name),
-	FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+	FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON UPDATE CASCADE,
 	FOREIGN KEY (name) REFERENCES Menuitem(name) ON UPDATE CASCADE);
 
 CREATE TABLE MadeOf
