@@ -1,13 +1,20 @@
 <?php
 
+// create the array (for viewing the form)
+$form = array( 
+    'namebox' => true, // default to checked
+    'pricebox' => true, // default to checked
+    'imgbox' => true, // default to checked
+    'descbox' => true, // default to checked
+    'qtybox' => true // default to checked
+);
+
 
 // run when filter button is clicked
 if(isset($_POST['select'])) {
 
     $col = $_POST['filter'];
-
     $num = $_POST['value'];
-
     $operator = $_POST['operator'];
 
     $name = "name,";
@@ -16,40 +23,41 @@ if(isset($_POST['select'])) {
     $desc = "description,";
     $qty = "quantity,";
 
-
     if(!isset($_POST['selname'])) {
         $name = "";
+        $form['namebox'] = false;
     } 
 
     if(!isset($_POST['selprice'])) {
         $price = "";
+        $form['pricebox'] = false;
     } 
 
     if(!isset($_POST['selimg'])) {
         $img = "";
+        $form['imgbox'] = false;
     } 
 
     if(!isset($_POST['seldesc'])) {
         $desc = "";
+        $form['descbox'] = false;
     } 
 
     if(!isset($_POST['selqty'])) {
         $qty = "";
+        $form['qtybox'] = false;
     } 
 
+    // remvove the last comma from select statement
     $att = rtrim("$name $price $img $desc $qty", ', '); 
 
-    $query = "SELECT $att
-    FROM MenuItem 
-    WHERE $col $operator $num AND m_deleted = 'F'";
+    $query = "SELECT $att FROM MenuItem WHERE $col $operator $num AND m_deleted = 'F'";
 
-    if ($query) {
-     $search_result = filterTable($query);
- }
+    $search_result = filterTable($query);
 
 
 } else {
-    $query = "SELECT name, price, imagepath, description, quantity FROM MenuItem  WHERE m_deleted = 'F'";
+    $query = "SELECT name, price, imagepath, description, quantity FROM MenuItem WHERE m_deleted = 'F'";
     $search_result = filterTable($query);
 }
 
@@ -104,14 +112,11 @@ function filterTable($query)
 
         Choose the attributes to display <br>
 
-        <input type="checkbox" name="selname" value="y" checked /> Name
-        <input type="checkbox" name="selprice" value="y" checked/> Price
-        <input type="checkbox" name="selimg" value="y" checked/> Image
-        <input type="checkbox" name="seldesc" value="y" checked/> Description
-        <input type="checkbox" name="selqty" value="y" checked/> Quantity
-
-        <input type="hidden" name="display">
-
+        <input type="checkbox" name="selname" value="yes" <?php echo $form['namebox'] ? 'checked' : '' ?> />Name
+        <input type="checkbox" name="selprice" value="yes" <?php echo $form['pricebox'] ? 'checked' : '' ?> /> Price
+        <input type="checkbox" name="selimg" value="yes" <?php echo $form['imgbox'] ? 'checked' : '' ?>/> Image
+        <input type="checkbox" name="seldesc" value="yes" <?php echo $form['descbox'] ? 'checked' : '' ?>/> Description
+        <input type="checkbox" name="selqty" value="yes" <?php echo $form['qtybox'] ? 'checked' : '' ?>/> Quantity
 
         <input type="submit" value="Filter"> 
 
@@ -126,55 +131,55 @@ function filterTable($query)
 
         </form>
 
-        <!-- Repopulate tables after filtering-->
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Image</th>
-                <th>Description</th>
-                <th>Quantity</th>
-            </tr>
+       <!-- Repopulate tables after filtering-->
+       <table>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image</th>
+            <th>Description</th>
+            <th>Quantity</th>
+        </tr>
 
-            <?php while($row = mysqli_fetch_array($search_result)):?>
-                <tr>
+        <?php while($row = mysqli_fetch_array($search_result)):?>
+            <tr>
+                <td>
+                    <?php
+                    if (isset($row['name'])) {
+                        echo $row['name'];}
+                        ?>
+                    </td>
+
                     <td>
-                        <?php
-                        if (isset($row['name'])) {
-                            echo $row['name'];}
+                        <?php 
+                        if (isset($row['price'])) {
+                            echo $row['price'];}
                             ?>
                         </td>
 
                         <td>
                             <?php 
-                            if (isset($row['price'])) {
-                                echo $row['price'];}
+                            if (isset($row['imagepath'])) {
+                                echo $row['imagepath'];}
                                 ?>
                             </td>
 
                             <td>
                                 <?php 
-                                if (isset($row['imagepath'])) {
-                                    echo $row['imagepath'];}
+                                if (isset($row['description'])) {
+                                    echo $row['description'];}
                                     ?>
                                 </td>
 
                                 <td>
                                     <?php 
-                                    if (isset($row['description'])) {
-                                        echo $row['description'];}
+                                    if (isset($row['quantity'])) {
+                                        echo $row['quantity'];}
                                         ?>
                                     </td>
+                                </tr>
+                            <?php endwhile;?>
+                        </table>
 
-                                    <td>
-                                        <?php 
-                                        if (isset($row['quantity'])) {
-                                            echo $row['quantity'];}
-                                            ?>
-                                        </td>
-                                    </tr>
-                                <?php endwhile;?>
-                            </table>
-
-                        </body>
-                        </html>
+                    </body>
+                    </html>
