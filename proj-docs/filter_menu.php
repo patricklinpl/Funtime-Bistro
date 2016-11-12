@@ -4,7 +4,7 @@
 $form = array( 
     'namebox' => true, // default to checked
     'pricebox' => true, // default to checked
-    'imgbox' => true, // default to checked
+    'catbox' => true, // default to checked
     'descbox' => true, // default to checked
     'qtybox' => true // default to checked
 );
@@ -19,7 +19,7 @@ if(isset($_POST['select'])) {
 
     $name = "name,";
     $price = "price,";
-    $img = "imagepath,";
+    $cat = "category,";
     $desc = "description,";
     $qty = "quantity,";
 
@@ -33,9 +33,9 @@ if(isset($_POST['select'])) {
         $form['pricebox'] = false;
     } 
 
-    if(!isset($_POST['selimg'])) {
+    if(!isset($_POST['selcat'])) {
         $img = "";
-        $form['imgbox'] = false;
+        $form['catbox'] = false;
     } 
 
     if(!isset($_POST['seldesc'])) {
@@ -49,7 +49,7 @@ if(isset($_POST['select'])) {
     } 
 
     // remvove the last comma from select statement
-    $att = rtrim("$name $price $img $desc $qty", ', '); 
+    $att = rtrim("$name $price $cat $desc $qty", ', '); 
 
     $query = "SELECT $att FROM MenuItem WHERE $col $operator $num AND m_deleted = 'F'";
 
@@ -57,7 +57,7 @@ if(isset($_POST['select'])) {
 
 
 } else {
-    $query = "SELECT name, price, imagepath, description, quantity FROM MenuItem WHERE m_deleted = 'F'";
+    $query = "SELECT name, price, category, description, quantity FROM MenuItem WHERE m_deleted = 'F'";
     $search_result = filterTable($query);
 }
 
@@ -114,7 +114,7 @@ function filterTable($query)
 
         <input type="checkbox" name="selname" value="yes" <?php echo $form['namebox'] ? 'checked' : '' ?> />Name
         <input type="checkbox" name="selprice" value="yes" <?php echo $form['pricebox'] ? 'checked' : '' ?> /> Price
-        <input type="checkbox" name="selimg" value="yes" <?php echo $form['imgbox'] ? 'checked' : '' ?>/> Image
+        <input type="checkbox" name="selimg" value="yes" <?php echo $form['catbox'] ? 'checked' : '' ?>/> Category
         <input type="checkbox" name="seldesc" value="yes" <?php echo $form['descbox'] ? 'checked' : '' ?>/> Description
         <input type="checkbox" name="selqty" value="yes" <?php echo $form['qtybox'] ? 'checked' : '' ?>/> Quantity
 
@@ -136,7 +136,7 @@ function filterTable($query)
         <tr>
             <th>Name</th>
             <th>Price</th>
-            <th>Image</th>
+            <th>Category</th>
             <th>Description</th>
             <th>Quantity</th>
         </tr>
@@ -159,8 +159,8 @@ function filterTable($query)
 
                         <td>
                             <?php 
-                            if (isset($row['imagepath'])) {
-                                echo $row['imagepath'];}
+                            if (isset($row['category'])) {
+                                echo $row['category'];}
                                 ?>
                             </td>
 
