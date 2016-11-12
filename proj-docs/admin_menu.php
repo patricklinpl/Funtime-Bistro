@@ -58,7 +58,7 @@ echo "</table>";
 
 				if ($checkdel->num_rows == 1) {
 					$insmenuquery = $conn->query("UPDATE MenuItem SET price = '".$price."', category = '".$cat."', description = '".$desc."', quantity = '".$qty."', m_deleted = 'F' WHERE name = '".$name."'");
-					echo "<script type='text/javascript'>alert('Menu Item already added!')</script>";
+					echo "<script type='text/javascript'>alert('Menu Item created successfully!')</script>";
 				}
 				else {
 					echo "<script type='text/javascript'>alert('Menu Item already added!')</script>";
