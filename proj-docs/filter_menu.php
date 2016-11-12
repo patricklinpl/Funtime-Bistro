@@ -39,22 +39,13 @@ if(isset($_POST['select'])) {
 
     $att = rtrim("$name $price $img $desc $qty", ', '); 
 
-
-
     $query = "SELECT $att
     FROM MenuItem 
     WHERE $col $operator $num AND m_deleted = 'F'";
 
     if ($query) {
-       $search_result = filterTable($query);
-   }
-
-
-
-
-
-
-
+     $search_result = filterTable($query);
+ }
 
 
 } else {
