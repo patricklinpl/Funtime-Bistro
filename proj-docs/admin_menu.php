@@ -52,9 +52,17 @@ echo "</table>";
 		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($price)) && ctype_digit(trim ($qty))) {//check for correct input
 			
 			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."'");
+			$checkdel = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'T' ");
 
 			if($checkname->num_rows == 1) {
-				echo "<script type='text/javascript'>alert('Menu Item already added!')</script>";
+
+				if ($checkdel->num_rows == 1) {
+					$insmenuquery = $conn->query("UPDATE MenuItem SET price = '".$price."', category = '".$cat."', description = '".$desc."', quantity = '".$qty."', m_deleted = 'F' WHERE name = '".$name."'");
+					echo "<script type='text/javascript'>alert('Menu Item already added!')</script>";
+				}
+				else {
+					echo "<script type='text/javascript'>alert('Menu Item already added!')</script>";
+				}
 			}
 
 			else {
@@ -105,14 +113,14 @@ echo "</table>";
 
 		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($price)) && ctype_digit(trim ($qty))) {//check for correct input
 
-			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' ");
+			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' "); //can't edit a deleted menuitem
 
 			if($checkname->num_rows == 0) {
 				echo "<script type='text/javascript'>alert('Menu Item does not exist! Please try again.')</script>";
 			}
 
 			else {
-				$editmenuquery = $conn->query("UPDATE MenuItem SET price = '".$price."', category = '".$cat."', description = '".$desc."', qty = '".$qty."' WHERE name = '".$name."'");
+				$editmenuquery = $conn->query("UPDATE MenuItem SET price = '".$price."', category = '".$cat."', description = '".$desc."', quantity = '".$qty."' WHERE name = '".$name."'");
 				echo "<script type='text/javascript'>alert('Menu Item edited successfully!')</script>";
 			}
 		}else {
@@ -152,21 +160,21 @@ echo "</table>";
 
 
 // Query database for all Menu Items
-$menu_sql = "SELECT * FROM MenuItem";
-$menu_result = $conn->query($menu_sql);
-printResult($menu_result);
+	$menu_sql = "SELECT * FROM MenuItem";
+	$menu_result = $conn->query($menu_sql);
+	printResult($menu_result);
 
 
-$conn->close();
-?>  
+	$conn->close();
+	?>  
 
 
 
-<p>Create a new Menu Item below:</p>
+	<p>Create a new Menu Item below:</p>
 
-<form method="POST">
-	<!--refresh page when submit-->
-	<!--Input box text change-->
+	<form method="POST">
+		<!--refresh page when submit-->
+		<!--Input box text change-->
 		<input type="text" name="insName" size="18" pattern="*[A-Za-z]" placeholder="Name" required>
 		<input type="text" name="insPrice" size="18" pattern="*[0-9]" placeholder="Price" required>
 		<input type="text" name="insCat" size="18" placeholder="Category">
@@ -187,29 +195,29 @@ $conn->close();
 			<input type="submit" value="edit" name="updatesubmit"></p>
 		</form>
 
-	<p> Edit MenuItem: </p>
-	<form method="POST" action="admin_menu.php">
-		<!--refresh page when submit-->
-		<p><input type="text" name="edName"  size="18" pattern="*[A-Za-z]" placeholder="Name of Item to edit" required>
-			<input type="text" name="edPrice" size="18" pattern="*[0-9]" placeholder="New Price" required>
-			<input type="text" name="edCat" size="18" placeholder="New Category">
-			<input type="text" name="edDescr" size="18" pattern="*[A-Za-z]" placeholder="New Description">
-			<input type="text" name="edqty" size="18" pattern="*[A-Za-z]" placeholder="Quantity">
-			<!--define two variables to pass the value-->
-			<input type="hidden" name="editevry">	
-			<input type="submit" value="update" name="updatesubmit"></p>
-		</form>
-
-		<p> Delete a Menu Item</p>
+		<p> Edit MenuItem: </p>
 		<form method="POST" action="admin_menu.php">
 			<!--refresh page when submit-->
-			<p><input type="text" name="delName" size="18" pattern="*[A-Za-z]" placeholder="Name" required>
+			<p><input type="text" name="edName"  size="18" pattern="*[A-Za-z]" placeholder="Name of Item to edit" required>
+				<input type="text" name="edPrice" size="18" pattern="*[0-9]" placeholder="New Price" required>
+				<input type="text" name="edCat" size="18" placeholder="New Category">
+				<input type="text" name="edDescr" size="18" pattern="*[A-Za-z]" placeholder="New Description">
+				<input type="text" name="edqty" size="18" pattern="*[A-Za-z]" placeholder="Quantity">
 				<!--define two variables to pass the value-->
-				<input type="hidden" name="delete">		
-				<input type="submit" value="delete" name="deletesubmit"></p>
+				<input type="hidden" name="editevry">	
+				<input type="submit" value="update" name="updatesubmit"></p>
 			</form>
 
-			<a href="index.php"> Back to control panel
+			<p> Delete a Menu Item</p>
+			<form method="POST" action="admin_menu.php">
+				<!--refresh page when submit-->
+				<p><input type="text" name="delName" size="18" pattern="*[A-Za-z]" placeholder="Name" required>
+					<!--define two variables to pass the value-->
+					<input type="hidden" name="delete">		
+					<input type="submit" value="delete" name="deletesubmit"></p>
+				</form>
 
-			</body>
-			</html>
+				<a href="index.php"> Back to control panel
+
+				</body>
+				</html>
