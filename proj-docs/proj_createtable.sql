@@ -84,4 +84,4 @@ CREATE TABLE MadeOf
 	PRIMARY KEY (menuItem_name, ingredient_name),
 	FOREIGN KEY (ingredient_name) REFERENCES Ingredient(name) ON UPDATE CASCADE,
 	FOREIGN KEY (menuItem_name) REFERENCES Menuitem(name) ON UPDATE CASCADE);
-
+	
