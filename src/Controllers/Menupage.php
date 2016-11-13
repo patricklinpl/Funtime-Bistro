@@ -40,22 +40,17 @@ class Menupage
       $this->response->setContent($html);
    }
 
-   public function showMenuItemById($routeParams)
-   {
-
-   }
-
    public function create()
    {
 
    }
 
-   public function update($routeParams)
+   public function update()
    {
 
    }
 
-   public function delete($routeParams)
+   public function delete()
    {
 
    }
