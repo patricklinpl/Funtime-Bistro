@@ -7,8 +7,7 @@ $form = array(
     'catbox' => true, // default to checked
     'descbox' => true, // default to checked
     'qtybox' => true // default to checked
-);
-
+    );
 
 // run when filter button is clicked
 if(isset($_POST['select'])) {
@@ -54,13 +53,25 @@ if(isset($_POST['select'])) {
     $query = "SELECT $att FROM MenuItem WHERE $col $operator $num AND m_deleted = 'F'";
 
     $search_result = filterTable($query);
+} 
 
 
-} else {
-    $query = "SELECT name, price, category, description, quantity FROM MenuItem WHERE m_deleted = 'F'";
+// run when filter button for vegan is clicked
+if(isset($_POST['vegan'])) {
+
+    $query = "SELECT DISTINCT name, price, category, description, quantity 
+              FROM MenuItem 
+              WHERE m_deleted = 'F' AND name NOT IN (SELECT DISTINCT menuItem_name 
+                                                     FROM MADEOF 
+                                                     WHERE ingredient_name IN (SELECT name 
+                                                     FROM INGREDIENT WHERE type = 'Meat'))";
     $search_result = filterTable($query);
 }
 
+else {
+    $query = "SELECT name, price, category, description, quantity FROM MenuItem WHERE m_deleted = 'F'";
+    $search_result = filterTable($query);
+}
 
 // function to connect and execute the query
 function filterTable($query)
@@ -127,9 +138,22 @@ function filterTable($query)
         &nbsp; &nbsp;
 
         <a href="filter_menu.php"> Show All Menu Items <a/>
-            <br/><br/>
+
 
         </form>
+
+        &nbsp; &nbsp; or &nbsp; &nbsp; 
+
+        <!-- Form to filer by price / quantity  -->
+        <form method="post">
+
+           <input type="hidden" name="vegan">
+
+           <input type="submit" value="Vegan Options Only"> 
+
+       </form>
+
+       <br/><br/>
 
        <!-- Repopulate tables after filtering-->
        <table>
