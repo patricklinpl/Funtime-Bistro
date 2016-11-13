@@ -26,8 +26,7 @@
     if(isset($_POST['NewOrder'])) {
       $mName = $_POST["NewOrder"];
 
-  // NEED dynamic Date
-      $makeneworder = $conn->query("INSERT INTO Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) VALUES('".$uName."', 'chef1', curdate(), NULL, 'open', 'open')");
+      $makeneworder = $conn->query("INSERT INTO Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) VALUES('".$uName."', 'chef1', now(), NULL, 'open', 'open')");
 
       if ($makeneworder) {
         echo "<script type='text/javascript'>alert('New Order opened')</script>";
