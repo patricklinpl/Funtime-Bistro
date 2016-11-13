@@ -16,7 +16,7 @@
   $openorderexist = $conn->query("
     SELECT *
     FROM Orders
-    WHERE customer_username = '".$uName."' AND status = 'open'");
+    WHERE customer_username = '".$uName."' AND paymentStatus = 'open'");
 
   if ($openorderexist->num_rows == 0) {
     // Case 1: CREATE NEW ORDER
@@ -27,7 +27,7 @@
       $mName = $_POST["NewOrder"];
 
   // NEED dynamic Date
-      $makeneworder = $conn->query("INSERT INTO Orders (customer_userName, chef_userName, orderdate, cookeddate, status) VALUES('".$uName."', 'chef1', DATE '2016-11-01', NULL, 'open')");
+      $makeneworder = $conn->query("INSERT INTO Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) VALUES('".$uName."', 'chef1', curdate(), NULL, 'open', 'open')");
 
       if ($makeneworder) {
         echo "<script type='text/javascript'>alert('New Order opened')</script>";
@@ -41,7 +41,7 @@
  else {
     // Case 2: SELECT AN ORDER ID
 
-  $oid_sql = "SELECT order_id FROM Orders WHERE customer_userName = '".$uName."' AND status = 'open'";
+  $oid_sql = "SELECT order_id FROM Orders WHERE customer_userName = '".$uName."' AND paymentStatus = 'open'";
   $oid_result = $conn->query($oid_sql);
  // $orderid = mysql_fetch_assoc($oid_sql);
   $row = $oid_result->fetch_array(MYSQLI_ASSOC);
@@ -75,9 +75,9 @@ printResult($contains_result);
 function printMenuResult($result) { 
 
   echo "<table><tr>
-  <th>NAME</th>
+  <th>Name</th>
   <th>Price</th>
-  <th>ImagePath</th>
+  <th>Category</th>
   <th>Description</th>
   <thAdd</th>
 </tr>";
@@ -85,7 +85,7 @@ while($row = $result->fetch_array(MYSQLI_ASSOC)) {
   echo "<tr>";
   echo "<td>" . $row['name'] . "</td>";
   echo "<td>" . $row['price'] . "</td>";
-  echo "<td>" . $row['imagepath'] . "</td>";
+  echo "<td>" . $row['category'] . "</td>";
   echo "<td>" . $row['description'] . "</td>";
   echo '<td><form action="" method="post"><input type="hidden" name="mName" value="'.$row['name'].'"></td>';
   echo '<td><input type="submit" name="AddItem" value="Add" /></td>';
