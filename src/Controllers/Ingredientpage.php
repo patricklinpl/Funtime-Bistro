@@ -64,8 +64,8 @@ class Ingredientpage
 
    public function create()
    {
-      $ingredName = $this->request->getParameter('ingredient-name');
-      $ingredType = $this->request->getParameter('ingredient-type');
+      $ingredName = trim($this->request->getParameter('ingredient-name'));
+      $ingredType = trim($this->request->getParameter('ingredient-type'));
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType) ||
@@ -112,9 +112,9 @@ class Ingredientpage
 
    public function update()
    {
-      $ingredName = $this->request->getParameter('ingredient-name');
-      $newIngredName = $this->request->getParameter('new-ingredient-name');
-      $newIngredType = $this->request->getParameter('new-ingredient-type');
+      $ingredName = trim($this->request->getParameter('ingredient-name'));
+      $newIngredName = trim($this->request->getParameter('new-ingredient-name'));
+      $newIngredType = trim($this->request->getParameter('new-ingredient-type'));
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType) ||
