@@ -156,9 +156,6 @@ echo "</table>";
 		}
 	}
 
-
-
-
 // Query database for all Menu Items
 	$menu_sql = "SELECT * FROM MenuItem";
 	$menu_result = $conn->query($menu_sql);
@@ -180,23 +177,21 @@ echo "</table>";
 		<input type="text" name="insCat" size="18" placeholder="Category">
 		<input type="text" name="insDescr" size="18" pattern="*[A-Za-z]" placeholder="Description">
 		<input type="text" name="insqty" size="18" pattern="*[0-9]" placeholder="Quantity">
-		<!--define two variables to pass the value--> 
-		<input type="hidden" name="create">		
-		<input type="submit" value="insert" name="insertsubmit"></p>
+		<!--define two variables to pass the value--> 	
+		<input type="submit" value="insert" name="create"></p>
 	</form>
 
 	<p> Edit MenuItem Name: </p>
-	<form method="POST" action="admin_menu.php">
+	<form method="POST">
 		<!--refresh page when submit-->
 		<p><input type="text" name="oldname"  size="18" pattern="*[A-Za-z]" placeholder="Name of Item to edit" required>
 			<input type="text" name="newname" size="18" pattern="*[A-Za-z]" placeholder="New name" required>
 			<!--define two variables to pass the value-->
-			<input type="hidden" name="editname">	
-			<input type="submit" value="edit" name="updatesubmit"></p>
+			<input type="submit" value="edit" name="editname"></p>
 		</form>
 
 		<p> Edit MenuItem: </p>
-		<form method="POST" action="admin_menu.php">
+		<form method="POST">
 			<!--refresh page when submit-->
 			<p><input type="text" name="edName"  size="18" pattern="*[A-Za-z]" placeholder="Name of Item to edit" required>
 				<input type="text" name="edPrice" size="18" pattern="*[0-9]" placeholder="New Price" required>
@@ -204,17 +199,15 @@ echo "</table>";
 				<input type="text" name="edDescr" size="18" pattern="*[A-Za-z]" placeholder="New Description">
 				<input type="text" name="edqty" size="18" pattern="*[A-Za-z]" placeholder="Quantity">
 				<!--define two variables to pass the value-->
-				<input type="hidden" name="editevry">	
-				<input type="submit" value="update" name="updatesubmit"></p>
+				<input type="submit" value="update" name="editevry"></p>
 			</form>
 
 			<p> Delete a Menu Item</p>
-			<form method="POST" action="admin_menu.php">
+			<form method="POST">
 				<!--refresh page when submit-->
 				<p><input type="text" name="delName" size="18" pattern="*[A-Za-z]" placeholder="Name" required>
-					<!--define two variables to pass the value-->
-					<input type="hidden" name="delete">		
-					<input type="submit" value="delete" name="deletesubmit"></p>
+					<!--define two variables to pass the value-->	
+					<input type="submit" value="delete" name="delete"></p>
 				</form>
 
 				<a href="index.php"> Back to control panel
