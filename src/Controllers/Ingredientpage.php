@@ -150,7 +150,7 @@ class Ingredientpage
 
    public function delete()
    {
-      $ingredName = $this->request->getParameter('ingredient-name');
+      $ingredName = trim($this->request->getParameter('ingredient-name'));
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType) ||
