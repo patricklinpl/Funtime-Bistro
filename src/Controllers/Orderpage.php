@@ -5,7 +5,13 @@ namespace ProjectFunTime\Controllers;
 use Http\Request;
 use Http\Response;
 use ProjectFunTime\Template\FrontendRenderer;
+use ProjectFunTime\Database\DatabaseProvider;
 use ProjectFunTime\Session\SessionWrapper;
+use ProjectFunTime\Exceptions\PermissionException;
+use ProjectFunTime\Exceptions\MissingEntityException;
+use ProjectFunTime\Exceptions\EntityExistsException;
+use ProjectFunTime\Exceptions\SQLException;
+use \InvalidArgumentException;
 
 class Orderpage
 {
