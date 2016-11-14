@@ -96,7 +96,6 @@ public function updateMenuItemQuantity() {
       throw new InvalidArgumentException("required form input missing. Invalid menu item name or order Id.");
 }
 
-<<<<<<< Updated upstream
 $validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";   
 $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
 
@@ -131,51 +130,6 @@ if (!empty($validateResult)) {
 
    if (!$deleteResult) {
       throw new SQLException("Item failed to be removed from Order!");
-=======
-      $userName = $this->session->getValue('userName');
-      if (is_null($userName)) {
-         throw new PermissionException("Must be logged in to purchase order");
-      }
-
-      //retrieves price of order by $orderId and gives price 10% discount of customer ordered the same item more than once
-      $priceQuery = "SELECT SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 ELSE m.price * c.qty END) as price 
-                     FROM orders o, contains c, menuitem m WHERE o.order_id = '".$orderId."' 
-                     AND o.order_id = c.order_id AND c.name = m.name AND o.paymentStatus != 'paid' AND o.customer_userName = '".$userName."'";
-      $price = $this->dbProvider->selectQuery($priceQuery);
-
-      //check if there are enough qty in menuitems for purchase
-      $check_avai = $this->dbProvider->selectQuery("SELECT m.name FROM menuitem m, contains c WHERE m.name = c.name AND c.order_id = '".$orderId."' AND m.quantity - c.qty >= 0");
-
-      //updates qty in menuitems
-      $del_qty_sql = ("UPDATE menuitem m, contains c SET m.quantity= m.quantity - c.qty WHERE m.name = c.name AND c.order_id = '".$orderId."' AND m.quantity - c.qty >= 0");
-
-      //create invoice
-      $create_invoice_sql = "INSERT INTO Invoice VALUES ('".$orderId."', '".$userName."', '".$price."', now(), '".$paymentType."')";
-
-      //soft deletes order from order table
-      $del_order_sql = "UPDATE Orders SET status = 'paid' WHERE order_id = '".$orderId."'";
-
-      if($check_avai->num_rows > 0) {
-         $del_order_query = $this->dbProvider->updateQuery($del_order_sql);
-         if ($del_order_query){
-            $create_invoice_query = $this->dbProvider->insertQuery($create_invoice_sql);
-            if ($create_invoice_query){
-               $del_qty_query = $this->dbProvider->updateQuery($del_qty_sql);
-               $del_order_query = $this->dbProvider->updateQuery($del_order_sql);
-
-               if (!$del_qty_query){
-                  throw new SQLException("Order was not paid for");
-               }
-            }
-            else {
-               throw new SQLException("Error creating invoice");
-            }  
-         }
-         else throw new SQLException("Error deleting order");
-      }
-      else throw new SQLException("Not enough quantity, please change your order");
-   
->>>>>>> Stashed changes
    }
 } else {
    throw new MissingEntityException("Unable to find item $menuName in Order $orderid to delete");
