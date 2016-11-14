@@ -55,17 +55,17 @@ class Orderpage
 
    }
 
-   public function addMenuItem($routeParams)
+   public function addMenuItem()
    {
 
    }
 
-   public function updateMenuItemQuantity($routeParams)
+   public function updateMenuItemQuantity()
    {
 
    }
 
-   public function removeMenuItem($routeParams)
+   public function removeMenuItem()
    {
 
    }
