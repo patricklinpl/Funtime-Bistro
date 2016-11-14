@@ -117,36 +117,34 @@ class Menupage
 
    public function delete()
    {
-
     $menuName = $this->request->getParameter('menu-name');
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType) ||
           (strcasecmp($accType, 'admin') != 0 &&
            strcasecmp($accType, 'chef') != 0)) {
-         throw new PermissionException("Must be admin or chef in order to delete ingredient");
+         throw new PermissionException("Must be admin or chef in order to delete menu item");
       }
 
-      if (is_null($ingredName) || strlen($ingredName) == 0) {
-         throw new InvalidArgumentException("Ingredient name missing.");
+      if (is_null($menuName) || strlen($menuName) == 0) {
+         throw new InvalidArgumentException("Menu item name missing.");
       }
 
-      $validateQueryStr = "SELECT * FROM Ingredient " .
-                          "WHERE name = '$ingredName'";
+      $validateQueryStr = "SELECT * FROM MenuItem WHERE name = '$menuName'";
       $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
 
       if (!empty($validateResult)) {
-         $softDeleteQuery = "UPDATE Ingredient " .
-                            "SET i_deleted = 'T' " .
-                            "WHERE name = '$ingredName'";
+         $softDeleteQuery = "UPDATE MenuItem " .
+                            "SET m_deleted = 'T' " .
+                            "WHERE name = '$menuName'";
          $softDeleteResult = $this->dbProvider->updateQuery($softDeleteQuery);
 
          if (!$softDeleteResult) {
-            throw new SQLException("Failed to (soft-)delete Ingredient");
+            throw new SQLException("Failed to (soft-)delete Menu item");
          }
       }
       else {
-         throw new MissingEntityException("Unable to find Ingredient $ingredName to delete");
+         throw new MissingEntityException("Unable to find Menuitem $menuName to delete");
       }
    }
 }
