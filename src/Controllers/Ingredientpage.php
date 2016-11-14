@@ -68,6 +68,7 @@ class Ingredientpage
       $ingredType = trim($this->request->getParameter('ingredient-type'));
 
       $accType = $this->session->getValue('accType');
+
       if (is_null($accType) ||
           (strcasecmp($accType, 'chef') != 0 &&
           strcasecmp($accType, 'admin') != 0)) {
@@ -83,12 +84,13 @@ class Ingredientpage
                         "WHERE name = '$ingredName' AND i_deleted = 'F'";
       $ingredQueryResult = $this->dbProvider->selectQuery($ingredQueryStr);
 
-      if (!empty($ingredQueryResult)) {
+      if (!empty($ingredQueryResult)) { //never gets thrown?? 
          throw new EntityExistsException("Ingredient exists with name $ingredName");
       }
 
       $deletedIngredQueryStr = "SELECT * FROM Ingredient " .
                                "WHERE name = '$ingredName' AND i_deleted = 'T'";
+
       $deletedIngredQueryResult = $this->dbProvider->selectQuery($deletedIngredQueryStr);
 
       if (!empty($deletedIngredQueryResult)) {
@@ -105,7 +107,7 @@ class Ingredientpage
 
       $created = $this->dbProvider->insertQuery($createIngredQueryStr);
       
-      if (!$created) {
+      if (!$created) { 
          throw new SQLException("Failed to create Ingredient with $ingredName");
       }
    }
