@@ -80,7 +80,28 @@ class Orderpage
 
    public function removeMenuItem()
    {
+      $menuName = $this->request->getParameter('menu-name');
+      $orderid = $this->request->getParameter('order-id');
 
+      if (is_null($menuName) || strlen($menuName) == 0 ||
+         is_null($orderid) || strlen($orderid) == 0 ) {
+         throw new InvalidArgumentException("Menu item name and order id missing.");
+      }
+
+      $validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";
+      $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
+
+      if (!empty($validateResult)) {
+         $deleteQueryStr = "DELETE FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";
+         $deleteResult = $this->dbProvider->updateQuery($deleteQueryStr);
+
+         if (!$deleteResult) {
+            throw new SQLException("Item failed to be removed from Order!");
+         }
+      }
+      else {
+         throw new MissingEntityException("Unable to find item $menuName in Order $orderid to delete");
+      }
    }
 
    public function purchase()
