@@ -52,7 +52,7 @@ class Menupage
       'menu' => $menuResult
       ];
 
-      $html = $this->renderer->render($page, $data);
+      $html = $this->renderer->render('Menupage', $data);
       $this->response->setContent($html);
    }
 
