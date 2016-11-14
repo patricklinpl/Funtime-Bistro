@@ -45,7 +45,20 @@ class Orderpage
          exit();
       }
 
-      $data = [];
+      $user = $this->session->getValue('userName');
+
+      $openOrder_sql = "SELECT o.order_id, SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 ELSE m.price * c.qty END) as price, o.customer_userName FROM orders o, contains c, menuitem m WHERE o.order_id = c.order_id AND c.name = m.name AND o.status != 'paid' AND o.customer_userName = '$user' GROUP BY o.order_id";
+
+      $closedOrder_sql = "SELECT o.order_id, SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 ELSE m.price * c.qty END) as price, o.customer_userName FROM orders o, contains c, menuitem m WHERE o.order_id = c.order_id AND c.name = m.name AND o.status = 'paid' AND o.customer_userName = '$user' GROUP BY o.order_id";
+
+      $openOrderResult = $this->dbProvider->selectMultipleRowsQuery($openOrder_sql);
+      $closedOrderResult = $this->dbProvider->selectMultipleRowsQuery($closedOrder_sql);
+
+      $data = [
+         'order' => $openOrderResult
+         'order2' => $closedOrderResult
+      ];
+
       $html = $this->renderer->render('Orderpage', $data);
       $this->response->setContent($html);
    }
@@ -72,15 +85,6 @@ class Orderpage
 
    public function purchase()
    {
-      $orderId = trim($this->request->getParameter('order-id'));
-      $paymentType = trim($this->request->getParameter('payment-type'));
-
-      $accType = $this->session->getValue('accType');
-      if (is_null($accType)) {
-         throw new PermissionException("Must be logged in to purchase order");
-      }
-
-
-
+      
    }
 }
