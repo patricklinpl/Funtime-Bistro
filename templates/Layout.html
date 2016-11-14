@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FunTime Bistro</title>
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <link rel="stylesheet" href="/css/pure/pure-min.css">
     <!--[if lte IE 8]>
-        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
+        <link rel="stylesheet" href="/css/pure/grids-responsive-old-ie-min.css">
     <![endif]-->
     <!--[if gt IE 8]><!-->
-        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">  
+        <link rel="stylesheet" href="/css/pure/grids-responsive-min.css">
     <!--<![endif]-->
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="/css/font-awesome/font-awesome.css">
     <!--[if lte IE 8]>
         <link rel="stylesheet" href="/css/layouts/marketing-old-ie.css">
     <![endif]-->
@@ -19,10 +19,10 @@
         <link rel="stylesheet" href="/css/layouts/marketing.css">
     <!--<![endif]-->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
     <style>
       #layout-body {
-         background-image: url(http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/seigaiha.png);
+         background-image: url(/img/seigaiha.png);
          padding: 59px 0;
          position: absolute;
          top: 0;
@@ -33,23 +33,46 @@
       .btn-table-header {
          white-space: nowrap;
       }
+      #logo {
+         margin-bottom: -15px;
+         cursor: pointer;
+      }
+      .pure-menu-link, .pure-menu-link:hover {
+         background-color: #2d3e50 !important;
+      }
     </style>
 </head>
 <body id="layout-body">
 <div class="header" style="height: 59px; margin-top: -59px;">
     <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
-<!--        <a class="pure-menu-heading" href="">Your Site</a> -->
-    <a href="/"><img src="/img/test.png" style="position: fixed;" /></a>
+      <img id="logo" src="/img/logo.png" />
 
         <ul class="pure-menu-list">
           {% for item in menuItems %}
-             <li class="pure-menu-item"><a href="{{ item.href }}" class="pure-menu-link">{{ item.text }}</a></li>
+             {% if item.text|lower == "menu" %}
+                <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+                  <a href="{{ item.href }}" class="pure-menu-link">{{ item.text }}</a>
+                  <ul class="pure-menu-children">
+                    {% for child in item.children %}
+                       <a href="{{ child.href }}" class="pure-menu-link">{{ child.text }}</a>
+                    {% endfor %}
+                  </ul>
+                </li>
+             {% else %}
+                <li class="pure-menu-item">
+                  <a href="{{ item.href }}" class="pure-menu-link">{{ item.text }}</a>
+                </li>
+             {% endif %}
           {% endfor %}
 
           {% if accType == null %}
-            <li class="pure-menu-item"><a href="/login" class="pure-menu-link">Login</a></li>
+            <li class="pure-menu-item">
+              <a href="/login" class="pure-menu-link">Login</a>
+            </li>
           {% else %}
-            <li class="pure-menu-item"><a href="#" id="signout-link" class="pure-menu-link">Signout</a></li>
+            <li class="pure-menu-item">
+              <a href="#" id="signout-link" class="pure-menu-link">Signout</a>
+            </li>
           {% endif %}
         </ul>
     </div>
@@ -65,6 +88,10 @@
 </div>
 
 <script>
+$("#logo").click(function () {
+   window.location.replace("/");
+});
+
 $("#signout-link").click(function () {
    console.log("sign out now!");
    $.ajax({

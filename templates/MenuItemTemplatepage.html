@@ -1,0 +1,26 @@
+<div class="menu-item">
+  <div class="menu-item-info">
+    <div class="is-center" style="padding: 5px;">
+      <text class="menu-item-title">{{ menuItem.name }}</text>
+    </div>
+
+    <div class="is-center" stlye="padding-bottom: 5px;">
+      <text>{{ menuItem.description }}</text>
+    </div>
+
+    <hr>
+
+    <div class="pure-g" style="padding: 10px 0;">
+      <div class="pure-u-5-24">
+        <text style="margin-left: 10px;">price: {{ menuItem.price }}</text>
+      </div>
+      <div class="pure-u-5-24">
+        <text style="margin-left: 10px;">quantity: {{ menuItem.quantity }}</text>
+      </div>
+      <div class="pure-u-14-24">
+        <button class="add-to-order-btn" data-name="{{ menuItem.name }}">Add to Order</button>
+      </div>
+    </div>
+  </div>
+
+</div>

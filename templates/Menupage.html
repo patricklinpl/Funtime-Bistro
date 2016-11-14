@@ -1,9 +1,51 @@
 {% extends "Layout.html" %}
 {% block content %}
 
+<style>
+.menu-item {
+   width: 100%;
+   background-color: white;
+   margin: 15px 0;
+}
+
+.menu-item-info {
+   border: 2px solid #93a1a1;
+}
+
+.menu-item-title {
+   text-decoration: underline;
+   font-size: 1.5em;
+}
+
+.menu-item-info-bar {
+   border-top: 2px solid #93a1a1;
+}
+
+.add-to-order-btn {
+   float: right; 
+   margin-right: 10px;
+}
+
+#prev-page-link {
+   height: 100%;
+   line-height: 100px;
+   margin: 0 50px;
+   display: none;
+}
+
+#next-page-link {
+   height: 100%;
+   line-height: 100px;
+   margin: 0 50px;
+   float: right;
+}
+
+</style>
+
 <div class="pure-g">
 
   <div class="pure-u-1-3">
+    <h1 id="prev-page-link">Previous Page</h1>
   </div>
 
   <div class="pure-u-1-3">
@@ -12,19 +54,123 @@
   </div>
 
   <div class="pure-u-1-3">
+    <h1 id="next-page-link">Next Page</h1>
   </div>
 
   <div class="pure-u-1-1">
-    <div class="content">
+      <div class="pure-g" id="page-1">
 
-      <div class="pure-g">
+        <div class="pure-u-1-3">
+          <div class="content">
+            <h3 class="content-head is-center">Appetizers</h3>
+            <hr>
 
+            {% for menuItem in appetizers %}
+               {{ include('MenuItemTemplatepage.html') }}
+            {% endfor %}
 
+          </div>
+        </div>
+
+        <div class="pure-u-1-3">
+          <div class="content">
+            <h3 class="content-head is-center">Entrees</h3>
+            <hr>
+
+            {% for menuItem in entrees %}
+               {{ include('MenuItemTemplatepage.html') }}
+            {% endfor %}
+
+          </div>
+        </div>
+
+        <div class="pure-u-1-3">
+          <div class="content">
+            <h3 class="content-head is-center">Dessert</h3>
+            <hr>
+
+            {% for menuItem in desserts %}
+               {{ include('MenuItemTemplatepage.html') }}
+            {% endfor %}
+
+          </div>
+        </div>
 
       </div>
 
-    </div>
+      <div class="pure-g" id="page-2" style="display: none;">
+
+        <div class="pure-u-1-3">
+          <div class="content">
+            <h3 class="content-head is-center">Drinks</h3>
+            <hr>
+
+            {% for menuItem in drinks %}
+               {{ include('MenuItemTemplatepage.html') }}
+            {% endfor %}
+
+          </div>
+        </div>
+
+        <div class="pure-u-1-3">
+          <div class="content">
+            <h3 class="content-head is-center">Others</h3>
+            <hr>
+
+            {% for menuItem in others %}
+               {{ include('MenuItemTemplatepage.html') }}
+            {% endfor %}
+
+          </div>
+        </div>
+
+        <div class="pure-u-1-3">
+        </div>
+
+      </div>
   </div>
+
 </div>
+
+<script>
+
+$("#prev-page-link").click(function () {
+   $("#next-page-link").fadeIn(600);
+   $("#prev-page-link").fadeOut(800);
+
+   $("#page-1").fadeIn(1000);
+   $("#page-2").hide();
+});
+
+$("#next-page-link").click(function () {
+   $("#prev-page-link").fadeIn(600);
+   $("#next-page-link").fadeOut(800);
+
+   $("#page-1").hide();
+   $("#page-2").fadeIn(1000);
+});
+
+$(".add-to-order-btn").click(function () {
+   var menuItemName = $(this).data("name");
+
+//   $.ajax({
+//      url: "/ingredient/delete",
+//      type: "POST",
+//      data: {
+//         "ingredient-name": $(this).data("name")
+//      },
+//      success: function (data) {
+//         console.log(data);
+//         window.location.replace("/ingredients");
+//         alert("Ingredient deletion succeeded.");
+//      },
+//      error: function (data) {
+//         console.log(data);
+//         alert("Ingredient deletion failed. Try again.");
+//      }
+//   });
+});
+
+</script>
 
 {% endblock %}

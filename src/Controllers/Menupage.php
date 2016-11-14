@@ -35,6 +35,46 @@ class Menupage
       $this->session = $session;
    }
 
+   private function in_array_case($val, $arr)
+   {
+      foreach($arr as $arrElement) {
+         if (strcasecmp($val, $arrElement) == 0) {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   private function filterCategoryArray($arr, $category) : array
+   {
+      $result = [];
+
+      for ($i = 0; $i < count($arr); $i++) {
+         $element = $arr[$i];
+
+         if (strcasecmp($element['category'], $category) == 0) {
+            $result[] = $element;
+         }
+      }
+
+      return $result;
+   }
+
+   private function filterOtherCategoryArray($arr, $categoryArr) : array
+   {
+      $result = [];
+
+      for ($i = 0; $i < count($arr); $i++) {
+         $element = $arr[$i];
+
+         if (!$this->in_array_case($element['category'], $categoryArr)) {
+            $result[] = $element;
+         }
+      }
+
+      return $result;
+   }
+
    public function showAllMenuItems()
    {
       $accType = $this->session->getValue('accType');
@@ -44,16 +84,33 @@ class Menupage
          exit();
       }
 
-      $menuQueryStr = "SELECT name, price, category, description, quantity FROM Menuitem WHERE m_deleted = 'F'";
+      $menuQueryStr = "SELECT name, price, category, description, quantity FROM Menuitem " .
+                      "WHERE m_deleted = 'F'";
 
       $menuResult = $this->dbProvider->selectMultipleRowsQuery($menuQueryStr);
 
+      $appetizers = $this->filterCategoryArray($menuResult, 'appetizer');
+      $entrees = $this->filterCategoryArray($menuResult, 'entree');
+      $desserts = $this->filterCategoryArray($menuResult, 'dessert');
+      $drinks = $this->filterCategoryArray($menuResult, 'drink');
+
+      $others = $this->filterOtherCategoryArray($menuResult, ['appetizer', 'entree', 'dessert', 'drink']);
+
       $data = [
-      'menu' => $menuResult
+         'appetizers' => $appetizers,
+         'entrees' => $entrees,
+         'desserts' => $desserts,
+         'drinks' => $drinks,
+         'others' => $others
       ];
 
       $html = $this->renderer->render('Menupage', $data);
       $this->response->setContent($html);
+   }
+
+   public function showCreateMenuItemForm()
+   {
+
    }
 
    public function create()
@@ -181,5 +238,15 @@ class Menupage
       else {
          throw new MissingEntityException("Unable to find Menuitem $menuName to delete");
       }
+   }
+
+   public function showMenuItemSearchForm()
+   {
+
+   }
+
+   public function showMenuItemSearchResult()
+   {
+
    }
 }

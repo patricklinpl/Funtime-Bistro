@@ -14,9 +14,13 @@ return [
 
 // menu page
     ['GET', '/menuItems', ['ProjectFunTime\Controllers\Menupage', 'showAllMenuItems']],
+    ['GET', '/menuItem/create', ['ProjectFunTime\Controllers\Menupage', 'showCreateMenuItemForm']],
     ['POST', '/menuItem/create', ['ProjectFunTime\Controllers\Menupage', 'create']],
     ['POST', '/menuItem/update', ['ProjectFunTime\Controllers\Menupage', 'update']],
     ['POST', '/menuItem/delete', ['ProjectFunTime\Controllers\Menupage', 'delete']],
+    ['GET', '/menuItem/search', ['ProjectFunTime\Controllers\Menupage', 'showMenuItemSearchForm']],
+    ['GET', '/menuItem/searchResult', ['ProjectFunTime\Controllers\Menupage', 'showMenuItemSearchResult']],
+
 
 // ingredient page
     ['GET', '/ingredients', ['ProjectFunTime\Controllers\Ingredientpage', 'show']],
