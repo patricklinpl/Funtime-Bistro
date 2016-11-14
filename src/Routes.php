@@ -30,7 +30,7 @@ return [
     ['POST', '/order/{id:\d+}/addMenuItem{menuItemId:\d+}', ['ProjectFunTime\Controllers\Orderpage', 'addMenuItem']],
     ['POST', '/order/{id:\d+}/updateMenuItem{menuItemId:\d+}', ['ProjectFunTime\Controllers\Orderpage', 'updateMenuItemQuantity']],
     ['POST', '/order/{id:\d+}/removeMenuItem{menuItemId:\d+}', ['ProjectFunTime\Controllers\Orderpage', 'removeMenuItem']],
-    ['POST', '/purchase/order/{id:\d+}', ['ProjectFunTime\Controllers\Homepage', 'purchase']],
+    ['POST', '/purchase/order/{id:\d+}', ['ProjectFunTime\Controllers\Orderpage', 'purchase']],
 
 // account page
     ['GET', '/account', ['ProjectFunTime\Controllers\Accountpage', 'show']],

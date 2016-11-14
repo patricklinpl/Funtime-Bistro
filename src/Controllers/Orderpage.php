@@ -65,4 +65,9 @@ class Orderpage
    {
 
    }
+
+   public function purchase()
+   {
+      
+   }
 }
