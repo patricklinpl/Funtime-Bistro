@@ -60,7 +60,7 @@ CREATE TABLE Menuitem
 	name VARCHAR(80),
 	price DECIMAL(5, 2) NOT NULL,
 	category VARCHAR(30) NOT NULL,
-	description VARCHAR(300) NULL,
+	description VARCHAR(100) NULL,
 	quantity INT NOT NULL,
 	m_deleted CHAR(1) NOT NULL,
 	UNIQUE (menu_id),
