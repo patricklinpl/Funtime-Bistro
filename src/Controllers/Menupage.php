@@ -80,43 +80,73 @@ class Menupage
           is_null($menuQty) || strlen($menuQty) == 0 || 
           !ctype_digit($menuQty)
           ) {
-         throw new InvalidArgumentException("required form input missing. Ingredient name or type.");
+         throw new InvalidArgumentException("required form input missing. Menu name, categroy, and quantity must be valid.");
       }
 
       $menuQueryStr = "SELECT * FROM MenuItem WHERE m_deleted = 'F' AND name = '$menuName' ";
       $menuQueryResult = $this->dbProvider->selectQuery($menuQueryStr);
 
       if (!empty($menuQueryResult)) {
-         throw new EntityExistsException("Ingredient exists with name $menuName");
+         throw new EntityExistsException("Menu item exists with name $menuName");
       }
 
       $deletedMenuQueryStr = "SELECT * FROM MenuItem " .
                              "WHERE name = '$menuName' AND m_deleted = 'T'";
       $deletedMenuQueryResult = $this->dbProvider->selectQuery($deletedMenuQueryStr);
 
-      if (!empty($deletedIngredQueryResult)) {
+      if (!empty($deletedMenuQueryResult)) {
          $createIngredQueryStr = "UPDATE MenuItem SET price = '$menuPrice', category = '$menuCat', description = '$menuDesc', quantity = '$menuQty', m_deleted = 'F' WHERE name = '$menuName'";
       }
       else {
-         $createIngredQueryStr = "INSERT INTO MenuItem (name, price, category, description, quantity, m_deleted) VALUES('$menuName', '$menuPrice', '$menuCat', '$menuDesc', '$menuQty', 'F' )";
+         $createMenuQueryStr = "INSERT INTO MenuItem (name, price, category, description, quantity, m_deleted) VALUES('$menuName', '$menuPrice', '$menuCat', '$menuDesc', '$menuQty', 'F' )";
       }
 
-      $created = $this->dbProvider->insertQuery($createIngredQueryStr);
+      $created = $this->dbProvider->insertQuery($createMenuQueryStr);
       
       if (!$created) { 
-         throw new SQLException("Failed to create Ingredient with $ingredName");
+         throw new SQLException("Failed to create Menu item with $menuName");
       }
-
-
    }
 
    public function update()
    {
+
+
 
    }
 
    public function delete()
    {
 
+    $menuName = $this->request->getParameter('menu-name');
+
+      $accType = $this->session->getValue('accType');
+      if (is_null($accType) ||
+          (strcasecmp($accType, 'admin') != 0 &&
+           strcasecmp($accType, 'chef') != 0)) {
+         throw new PermissionException("Must be admin or chef in order to delete ingredient");
+      }
+
+      if (is_null($ingredName) || strlen($ingredName) == 0) {
+         throw new InvalidArgumentException("Ingredient name missing.");
+      }
+
+      $validateQueryStr = "SELECT * FROM Ingredient " .
+                          "WHERE name = '$ingredName'";
+      $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
+
+      if (!empty($validateResult)) {
+         $softDeleteQuery = "UPDATE Ingredient " .
+                            "SET i_deleted = 'T' " .
+                            "WHERE name = '$ingredName'";
+         $softDeleteResult = $this->dbProvider->updateQuery($softDeleteQuery);
+
+         if (!$softDeleteResult) {
+            throw new SQLException("Failed to (soft-)delete Ingredient");
+         }
+      }
+      else {
+         throw new MissingEntityException("Unable to find Ingredient $ingredName to delete");
+      }
    }
 }
