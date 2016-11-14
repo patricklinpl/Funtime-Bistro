@@ -152,7 +152,7 @@ class Menupage
 
    public function delete()
    {
-    $menuName = $this->request->getParameter('menu-name');
+    $menuName = trim($this->request->getParameter('menu-name'));
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType) ||
