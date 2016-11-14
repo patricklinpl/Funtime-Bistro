@@ -59,6 +59,55 @@ class Menupage
    public function create()
    {
 
+      $menuName = trim($this->request->getParameter('menu-name'));
+      $menuPrice = trim($this->request->getParameter('menu-price'));
+      $menuCat = trim($this->request->getParameter('menu-category'));
+      $menuDesc = trim($this->request->getParameter('menu-description'));
+      $menuQty = trim($this->request->getParameter('menu-quantity'));
+
+      $accType = $this->session->getValue('accType');
+
+      if (is_null($accType) ||
+          (strcasecmp($accType, 'chef') != 0 &&
+          strcasecmp($accType, 'admin') != 0)) {
+         throw new PermissionException("Must be admin or chef in order to create menu item");
+      }
+
+      if (is_null($menuName) || strlen($menuName) == 0 ||
+          is_null($menuPrice) || strlen($menuPrice) == 0 ||
+          !ctype_digit($menuPrice) || 
+          is_null($menuCat) || strlen($menuCat) == 0 ||
+          is_null($menuQty) || strlen($menuQty) == 0 || 
+          !ctype_digit($menuQty)
+          ) {
+         throw new InvalidArgumentException("required form input missing. Ingredient name or type.");
+      }
+
+      $menuQueryStr = "SELECT * FROM MenuItem WHERE m_deleted = 'F' AND name = '$menuName' ";
+      $menuQueryResult = $this->dbProvider->selectQuery($menuQueryStr);
+
+      if (!empty($menuQueryResult)) {
+         throw new EntityExistsException("Ingredient exists with name $menuName");
+      }
+
+      $deletedMenuQueryStr = "SELECT * FROM MenuItem " .
+                             "WHERE name = '$menuName' AND m_deleted = 'T'";
+      $deletedMenuQueryResult = $this->dbProvider->selectQuery($deletedMenuQueryStr);
+
+      if (!empty($deletedIngredQueryResult)) {
+         $createIngredQueryStr = "UPDATE MenuItem SET price = '$menuPrice', category = '$menuCat', description = '$menuDesc', quantity = '$menuQty', m_deleted = 'F' WHERE name = '$menuName'";
+      }
+      else {
+         $createIngredQueryStr = "INSERT INTO MenuItem (name, price, category, description, quantity, m_deleted) VALUES('$menuName', '$menuPrice', '$menuCat', '$menuDesc', '$menuQty', 'F' )";
+      }
+
+      $created = $this->dbProvider->insertQuery($createIngredQueryStr);
+      
+      if (!$created) { 
+         throw new SQLException("Failed to create Ingredient with $ingredName");
+      }
+
+
    }
 
    public function update()
