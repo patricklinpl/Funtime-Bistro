@@ -101,6 +101,8 @@ insert into Users values ('quanbao', 'customer', 'ptran', 'Paul Tran', '60412523
 
 insert into Users values ('newuser', 'customer', 'random', 'John Smith', '8329103291', '1513 Las Vegas St.', DATE '2016-11-01', 'F');
 
+insert into Users values ('newuser2', 'customer', 'random', 'John Doe', '8329123291', '1515 Las Vegas St.', DATE '2016-11-01', 'F');
+
 insert into Users values ('chef1', 'chef', 'cooking', 'Rordon Gamsey', '8329192919', '1514 Las Vegas St.', DATE '2016-11-02', 'F');
 
 
@@ -109,29 +111,39 @@ insert into Chef (chef_userName, admin_userName, ssNum) values ('chef1', 'omgitz
 insert into Chef (chef_userName, admin_userName, ssNum) values ('Wewic', 'omgitzme', 234013005);
 
 
-insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('newuser', 'chef1', DATE '2016-11-01', DATE '2016-11-01', 'open', 'open');
+insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('newuser', 'chef1', DATE '2016-11-01', DATE '2016-11-01', 'paid', 'open');
 
 insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('ptlin', 'Wewic', DATE '2016-11-02', DATE '2016-11-01', 'paid', 'in progress');
 
-insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('quanbao', 'Wewic', DATE '2016-11-01', DATE '2016-11-01', 'open', 'cooked');
+insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('quanbao', 'Wewic', DATE '2016-11-01', DATE '2016-11-01', 'paid', 'cooked');
 
 
-insert into Invoice values (1, 'newuser', 34.50, DATE '2016-11-01', 'credit');
+insert into Invoice values (1, 'newuser', 48.85, DATE '2016-11-01', 'credit');
 
-insert into Invoice values (2, 'ptlin', 125.23, DATE '2016-11-02', 'cash');
+insert into Invoice values (2, 'ptlin', 27.00, DATE '2016-11-02', 'cash');
 
-insert into Invoice values (3, 'quanbao', 125.23, DATE '2016-11-02', 'cash');
+insert into Invoice values (3, 'quanbao', 77.50, DATE '2016-11-02', 'cash');
 
 
-insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Shrimp Fried Rice', 11.00, 'Entree', 'Egg fried rice with shrimps', 3, 'F');
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Shrimp Fried Rice', 11.00, 'Entree', 'Egg fried rice with shrimps, what else could it be...', 50, 'F');
 
-insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Deluxe Burger', 8.95, 'Entree', 'Hamburger with lettuce, tomato, pickles, and a beef patty', 5, 'F');
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Deluxe Burger', 8.95, 'Entree', 'Hamburger with lettuce, tomato, pickles, and a beef patty', 55, 'F');
 
-insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Ice cream ramen', 5.23, 'Dessert', 'Noodles in a cone!', 10, 'F');
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Ice cream Ramen', 4.00, 'Dessert', 'Noodles in a cone!', 50, 'F');
 
-insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Beef smoothie', 6.21, 'Drink', 'A healthy blend of greens and beef to ensure you hit your protein macros.', 1, 'F');
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Beef Smoothie', 6.50, 'Drink', 'A healthy blend of greens and beef to ensure you hit your protein macros.', 66, 'F');
 
-insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Deep fried protein powder', 18.43, 'Entree', 'Anything is better deep fried!', 15, 'F');
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Deep-fried Protein Powder', 5.95, 'Entree', 'Anything is better deep fried!', 72, 'F');
+
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Sushi Surprise', 9.00, 'Entree', 'Surprise! Sushi again...', 53, 'F');
+
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Frozen Mango', 2.50, 'Dessert', 'People always order mango flavoured drinks, why not just have a mango?', 36, 'F');
+
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Dog Chow', 6.45, 'Entree', 'Ever wondered what man''s best friend eats?', 65, 'F');
+
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Tropical Delight', 4.50, 'Drink', 'A mixture of tropical fruits that will send you to a tropical paradise!', 55, 'F');
+
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Mushroom Forest', 10.50, 'Entree', 'An assortment of mushrooms seasoned with herbs.', 73, 'F');
 
 
 insert into Ingredient (name, type, i_deleted) values ('Lettuce', 'Vegetable', 'F');
@@ -142,7 +154,7 @@ insert into Ingredient (name, type, i_deleted) values ('Burger Buns', 'Grain','F
 
 insert into Ingredient (name, type, i_deleted) values ('Beef Patty', 'Meat','F');
 
-insert into Ingredient (name, type, i_deleted) values ('Rice', 'Vegetarian', 'F');
+insert into Ingredient (name, type, i_deleted) values ('Rice', 'Grain', 'F');
 
 insert into Ingredient (name, type, i_deleted) values ('Egg', 'Meat', 'F');
 
@@ -154,20 +166,40 @@ insert into Ingredient (name, type, i_deleted) values ('Ice cream', 'Dairy', 'F'
 
 insert into Ingredient (name, type, i_deleted) values ('Protein', 'Meat', 'F');
 
+insert into Ingredient (name, type, i_deleted) values ('Salmon', 'Meat', 'F');
+
+insert into Ingredient (name, type, i_deleted) values ('Seaweed', 'Vegetable', 'F');
+
+insert into Ingredient (name, type, i_deleted) values ('Mango', 'Vegetable', 'F');
+
+insert into Ingredient (name, type, i_deleted) values ('Ground Beef', 'Meat', 'F');
+
+insert into Ingredient (name, type, i_deleted) values ('Bell Peppers', 'Vegetable', 'F');
+
+insert into Ingredient (name, type, i_deleted) values ('Pineapple', 'Vegetable', 'F');
+
+insert into Ingredient (name, type, i_deleted) values ('Coconut', 'Vegetable', 'F');
+
+insert into Ingredient (name, type, i_deleted) values ('Shiitake Mushroom', 'Vegetable', 'F');
+
+insert into Ingredient (name, type, i_deleted) values ('White Mushroom', 'Vegetable', 'F');
+
+insert into Ingredient (name, type, i_deleted) values ('Portabello Mushroom', 'Vegetable', 'F');
+
 
 insert into Contains values (1, 'Shrimp Fried Rice', 2);
 
 insert into Contains values (1, 'Deluxe Burger', 3);
 
-insert into Contains values (2, 'Ice cream ramen', 3);
+insert into Contains values (2, 'Ice cream Ramen', 3);
 
-insert into Contains values (2, 'Beef smoothie', 1);
+insert into Contains values (2, 'Tropical Delight', 1);
 
-insert into Contains values (2, 'Shrimp Fried Rice', 1);
+insert into Contains values (2, 'Mushroom Forest', 1);
 
-insert into Contains values (3, 'Deep fried protein powder', 10);
+insert into Contains values (3, 'Deep-fried Protein Powder', 10);
 
-insert into Contains values (3, 'Deluxe Burger', 2);
+insert into Contains values (3, 'Sushi Surprise', 2);
 
 
 insert into MadeOf values ('Shrimp Fried Rice', 'Rice');
@@ -184,10 +216,35 @@ insert into MadeOf values ('Deluxe Burger', 'Tomato');
 
 insert into MadeOf values ('Deluxe Burger', 'Beef Patty');
 
-insert into MadeOf values ('Ice cream ramen', 'Ramen');
+insert into MadeOf values ('Ice cream Ramen', 'Ramen');
 
-insert into MadeOf values ('Ice cream ramen', 'Ice cream');
+insert into MadeOf values ('Ice cream Ramen', 'Ice cream');
 
-insert into MadeOf values ('Beef smoothie', 'Beef Patty');
+insert into MadeOf values ('Beef Smoothie', 'Beef Patty');
 
-insert into MadeOf values ('Deep fried protein powder', 'Protein');
+insert into MadeOf values ('Deep-fried Protein Powder', 'Protein');
+
+insert into MadeOf values ('Sushi Surprise', 'Salmon');
+
+insert into MadeOf values ('Sushi Surprise', 'Rice');
+
+insert into MadeOf values ('Sushi Surprise', 'Seaweed');
+
+insert into MadeOf values ('Frozen Mango', 'Mango');
+
+insert into MadeOf values ('Dog Chow', 'Ground Beef');
+
+insert into MadeOf values ('Dog Chow', 'Bell Peppers');
+
+insert into MadeOf values ('Tropical Delight', 'Mango');
+
+insert into MadeOf values ('Tropical Delight', 'Coconut');
+
+insert into MadeOf values ('Tropical Delight', 'Pineapple');
+
+insert into MadeOf values ('Mushroom Forest', 'Shiitake Mushroom');
+
+insert into MadeOf values ('Mushroom Forest', 'White Mushroom');
+
+insert into MadeOf values ('Mushroom Forest', 'Portabello Mushroom');
+
