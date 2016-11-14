@@ -99,10 +99,7 @@ class Ingredientpage
                                  "WHERE name = '$ingredName' AND i_deleted = 'T'";
       }
       else {
-         $createIngredQueryStr = "INSERT INTO Ingredient " .
-                                 "(name, type, i_deleted) " .
-                                 "VALUES " .
-                                 "('$ingredName', '$ingredType', 'F')";
+         $createIngredQueryStr = "INSERT INTO Ingredient (name, type, i_deleted) VALUES ('$ingredName', '$ingredType', 'F')";
       }
 
       $created = $this->dbProvider->insertQuery($createIngredQueryStr);
