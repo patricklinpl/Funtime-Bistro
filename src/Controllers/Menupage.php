@@ -110,8 +110,43 @@ class Menupage
 
    public function update()
    {
+      $menuName = trim($this->request->getParameter('menu-name'));
+      $newMenuName = trim($this->request->getParameter('new-menu-name'));
+      $newMenuPrice = trim($this->request->getParameter('new-menu-price'));
+      $newMenuCat = trim($this->request->getParameter('new-menu-category'));
+      $newMenuDesc = trim($this->request->getParameter('new-menu-description'));
+      $newMenuQty = trim($this->request->getParameter('new-menu-quantity'));
 
+      $accType = $this->session->getValue('accType');
+      if (is_null($accType) ||
+          (strcasecmp($accType, 'chef') != 0 &&
+          strcasecmp($accType, 'admin') != 0)) {
+         throw new PermissionException("Must be admin or chef in order to update menu items");
+      }
 
+      if (is_null($menuName) || strlen($menuName) == 0 || is_null($newMenuName) || strlen($newMenuName) == 0 ||
+          is_null($newMenuPrice) || strlen($newMenuPrice) == 0 || !ctype_digit($newMenuPrice) || 
+          is_null($newMenuCat) || strlen($newMenuCat) == 0 || is_null($newMenuQty) || strlen($newMenuQty) == 0 || 
+          !ctype_digit($newMenuQty)) {
+         throw new InvalidArgumentException("required form input missing. Either invalid name, price, category, or quantity.");
+      }
+
+      $validateQueryStr = "SELECT * FROM Menuitem " .
+                          "WHERE name = '$menuName' AND m_deleted = 'F'";
+      $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
+
+      if (!empty($validateResult)) {
+         $updateQueryStr = "UPDATE MenuItem SET name = '$newMenuName', price = '$newMenuPrice', category = '$newMenuCat', description = '$newMenuDesc', quantity = '$newMenuQty' WHERE name = '$menuName' AND m_deleted = 'F'";
+
+         $updated = $this->dbProvider->updateQuery($updateQueryStr);
+
+         if (!$updated) {
+            throw new SQLException("Failed to update Menu item $menuName with $newMenuName");
+         }
+      }
+      else {
+         throw new MissingEntityException("Unable to find Menu Item $menuName to update");
+      }
 
    }
 
