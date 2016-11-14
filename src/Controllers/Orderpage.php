@@ -13,8 +13,7 @@ use ProjectFunTime\Exceptions\EntityExistsException;
 use ProjectFunTime\Exceptions\SQLException;
 use \InvalidArgumentException;
 
-class Orderpage
-{
+class Orderpage {
    private $request;
    private $response;
    private $renderer;
@@ -36,8 +35,7 @@ class Orderpage
 
    }
 
-   public function show()
-   {
+   public function show() {
       $accType = $this->session->getValue('accType');
 
       if (is_null($accType)) {
@@ -54,60 +52,72 @@ class Orderpage
       $openOrderResult = $this->dbProvider->selectMultipleRowsQuery($openOrder_sql);
       $closedOrderResult = $this->dbProvider->selectMultipleRowsQuery($closedOrder_sql);
 
-      $data = [
-      'order' => $openOrderResult
-      'order2' => $closedOrderResult
-      ];
+      $data = ['order' => $openOrderResult, 'order2' => $closedOrderResult];
 
       $html = $this->renderer->render('Orderpage', $data);
       $this->response->setContent($html);
    }
 
-   public function create()
-   {
+   public function create() {
 
    }
 
-   public function addMenuItem()
-   {
-
-   }
-
-   public function updateMenuItemQuantity()
-   {
+   public function addMenuItem() {
       $menuName = trim($this->request->getParameter('menu-name'));
       $orderid = trim($this->request->getParameter('order-id'));
-      $newItemQuantity = trim($this->request->getParameter('item-quantity'));
 
-      if (is_null($menuName) || strlen($menuName) == 0 ||
-        is_null($orderid) || strlen($orderid) == 0 ||
-        !ctype_digit($orderid)) {
+      if (is_null($menuName) || strlen($menuName) == 0 || is_null($orderid) || strlen($orderid) == 0 ||
+         !ctype_digit($orderid)) {
          throw new InvalidArgumentException("required form input missing. Invalid menu item name or order Id.");
    }
 
    $validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";   
    $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
 
-   if (!empty($validateResult)) {
-      $updateQueryStr = "UPDATE Contains SET qty = '$newItemQuantity' WHERE order_id = '$orderid' AND name = '$menuName'";
-      $updated = $this->dbProvider->updateQuery($updateQueryStr);
+   if (empty($validateResult)) {
+      $addQueryStr = "INSERT INTO Contains (order_id, name, qty) VALUES('$orderid', '$menuName', '1')"; 
+      $addResult = $this->dbProvider->selectQuery($addQueryStr);
 
-      if (!$updated) {
-         throw new SQLException("Failed to update item $menuName in order $orderid with quantity of $newItemQuantity ");
+      if (!$addResult) {
+         throw new SQLException("Failed to add item into order ");
       }
-   }
+   } 
    else {
-      throw new MissingEntityException("Item not in Order, quantity cannot be changed!");
+      throw new MissingEntityException("Item already in Order!");
    }
 }
 
-public function removeMenuItem()
-{
+public function updateMenuItemQuantity() {
+   $menuName = trim($this->request->getParameter('menu-name'));
+   $orderid = trim($this->request->getParameter('order-id'));
+
+   if (is_null($menuName) || strlen($menuName) == 0 || is_null($orderid) || strlen($orderid) == 0 ||
+      !ctype_digit($orderid)) {
+      throw new InvalidArgumentException("required form input missing. Invalid menu item name or order Id.");
+}
+
+$validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";   
+$validateResult = $this->dbProvider->selectQuery($validateQueryStr);
+
+if (!empty($validateResult)) {
+   $updateQueryStr = "UPDATE Contains SET qty = '$newItemQuantity' WHERE order_id = '$orderid' AND name = '$menuName'";
+   $updated = $this->dbProvider->updateQuery($updateQueryStr);
+
+   if (!$updated) {
+      throw new SQLException("Failed to update item $menuName in order $orderid with quantity of $newItemQuantity ");
+   }
+} else {
+   throw new MissingEntityException("Item not in Order, quantity cannot be changed!");
+}
+}
+
+public function removeMenuItem() {
    $menuName = trim($this->request->getParameter('menu-name'));
    $orderid = trim($this->request->getParameter('order-id'));
 
    if (is_null($menuName) || strlen($menuName) == 0 ||
-      is_null($orderid) || strlen($orderid) == 0 ) {
+      is_null($orderid) || strlen($orderid) == 0 ||
+      !ctype_digit($orderid)) {
       throw new InvalidArgumentException("Menu item name and order id missing.");
 }
 
@@ -121,14 +131,13 @@ if (!empty($validateResult)) {
    if (!$deleteResult) {
       throw new SQLException("Item failed to be removed from Order!");
    }
-}
-else {
+} else {
    throw new MissingEntityException("Unable to find item $menuName in Order $orderid to delete");
 }
 }
 
-public function purchase()
-{
+public function purchase() {
 
 }
+
 }
