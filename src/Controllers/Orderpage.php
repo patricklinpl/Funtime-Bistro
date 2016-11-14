@@ -18,18 +18,22 @@ class Orderpage
    private $request;
    private $response;
    private $renderer;
+   private $dbProvider;
    private $session;
 
    public function __construct(
       Request $request,
       Response $response,
       FrontendRenderer $renderer,
+      DatabaseProvider $dbProvider,
       SessionWrapper $session)
    {
       $this->request = $request;
       $this->response = $response;
       $this->renderer = $renderer;
+      $this->dbProvider = $dbProvider;
       $this->session = $session;
+
    }
 
    public function show()
