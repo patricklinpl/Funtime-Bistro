@@ -55,8 +55,8 @@ class Orderpage
       $closedOrderResult = $this->dbProvider->selectMultipleRowsQuery($closedOrder_sql);
 
       $data = [
-         'order' => $openOrderResult
-         'order2' => $closedOrderResult
+      'order' => $openOrderResult
+      'order2' => $closedOrderResult
       ];
 
       $html = $this->renderer->render('Orderpage', $data);
@@ -75,37 +75,60 @@ class Orderpage
 
    public function updateMenuItemQuantity()
    {
-
-   }
-
-   public function removeMenuItem()
-   {
-      $menuName = $this->request->getParameter('menu-name');
-      $orderid = $this->request->getParameter('order-id');
+      $menuName = trim($this->request->getParameter('menu-name'));
+      $orderid = trim($this->request->getParameter('order-id'));
+      $newItemQuantity = trim($this->request->getParameter('item-quantity'));
 
       if (is_null($menuName) || strlen($menuName) == 0 ||
-         is_null($orderid) || strlen($orderid) == 0 ) {
-         throw new InvalidArgumentException("Menu item name and order id missing.");
-      }
-
-      $validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";
-      $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
-
-      if (!empty($validateResult)) {
-         $deleteQueryStr = "DELETE FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";
-         $deleteResult = $this->dbProvider->updateQuery($deleteQueryStr);
-
-         if (!$deleteResult) {
-            throw new SQLException("Item failed to be removed from Order!");
-         }
-      }
-      else {
-         throw new MissingEntityException("Unable to find item $menuName in Order $orderid to delete");
-      }
+        is_null($orderid) || strlen($orderid) == 0 ||
+        !ctype_digit($orderid)) {
+         throw new InvalidArgumentException("required form input missing. Invalid menu item name or order Id.");
    }
 
-   public function purchase()
-   {
-      
+   $validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";   
+   $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
+
+   if (!empty($validateResult)) {
+      $updateQueryStr = "UPDATE Contains SET qty = '$newItemQuantity' WHERE order_id = '$orderid' AND name = '$menuName'";
+      $updated = $this->dbProvider->updateQuery($updateQueryStr);
+
+      if (!$updated) {
+         throw new SQLException("Failed to update item $menuName in order $orderid with quantity of $newItemQuantity ");
+      }
    }
+   else {
+      throw new MissingEntityException("Item not in Order, quantity cannot be changed!");
+   }
+}
+
+public function removeMenuItem()
+{
+   $menuName = trim($this->request->getParameter('menu-name'));
+   $orderid = trim($this->request->getParameter('order-id'));
+
+   if (is_null($menuName) || strlen($menuName) == 0 ||
+      is_null($orderid) || strlen($orderid) == 0 ) {
+      throw new InvalidArgumentException("Menu item name and order id missing.");
+}
+
+$validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";
+$validateResult = $this->dbProvider->selectQuery($validateQueryStr);
+
+if (!empty($validateResult)) {
+   $deleteQueryStr = "DELETE FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";
+   $deleteResult = $this->dbProvider->updateQuery($deleteQueryStr);
+
+   if (!$deleteResult) {
+      throw new SQLException("Item failed to be removed from Order!");
+   }
+}
+else {
+   throw new MissingEntityException("Unable to find item $menuName in Order $orderid to delete");
+}
+}
+
+public function purchase()
+{
+
+}
 }
