@@ -44,7 +44,7 @@ class Menupage
          exit();
       }
 
-      $menuQueryStr = "SELECT name, price, category, description, quantity FROM MenuItem WHERE m_deleted = 'F'";
+      $menuQueryStr = "SELECT name, price, category, description, quantity FROM Menuitem WHERE m_deleted = 'F'";
 
       $menuResult = $this->dbProvider->selectMultipleRowsQuery($menuQueryStr);
 

@@ -68,6 +68,15 @@ class Orderpage
 
    public function purchase()
    {
-      
+      $orderId = trim($this->request->getParameter('order-id'));
+      $paymentType = trim($this->request->getParameter('payment-type'));
+
+      $accType = $this->session->getValue('accType');
+      if (is_null($accType)) {
+         throw new PermissionException("Must be logged in to purchase order");
+      }
+
+
+
    }
 }

@@ -1,6 +1,43 @@
 {% extends "Layout.html" %}
 {% block content %}
+orderid
+loginusername
+price of order
+paymenttype
 
-<h1>Welcome to the order page.</h1>
+
+<input type="text" id="order-id" placeholder="order id" />
+<input type="text" id="order-payment" placeholder="payment type" />
+<button id="payment-btn">Payment method</button>
+
+<script>
+$("#payment-btn").click(function () {
+
+var orderId = $("#order-id").val();
+var orderPaymentType = $("#order-payment").val();
+
+$.ajax({
+   url: "/purchase/order",
+   type: "POST",
+   data: {
+      "order-id": orderId,
+      "payment-type": orderPaymentType
+   },
+   success: function (data) {
+      console.log(data);
+      alert("success");
+   },
+   error: function (data) {
+      console.log(data);
+      alert("error");
+   }
+});
+
+});
+
+</script>
+
+
+
 
 {% endblock %}
