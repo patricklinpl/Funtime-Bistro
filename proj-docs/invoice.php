@@ -13,7 +13,7 @@
 
   $uName = ($_SESSION['Username']);
 
-  $oid_sql = "SELECT order_id FROM Orders WHERE customer_userName = '".$uName."' AND status = 'processing'";
+  $oid_sql = "SELECT order_id FROM Orders WHERE customer_userName = '".$uName."' AND paymentStatus = 'paid'";
   $oid_result = $conn->query($oid_sql);
   $row = $oid_result->fetch_array(MYSQLI_ASSOC);
   $orderid = $row['order_id'];
