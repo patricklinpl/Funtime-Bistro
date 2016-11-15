@@ -136,7 +136,7 @@ class Menupage
 
       if (is_null($menuName) || strlen($menuName) == 0 ||
           is_null($menuPrice) || strlen($menuPrice) == 0 ||
-          !ctype_digit($menuPrice) || 
+          !is_numeric($menuPrice) ||
           is_null($menuCat) || strlen($menuCat) == 0 ||
           is_null($menuQty) || strlen($menuQty) == 0 || 
           !ctype_digit($menuQty)) {
