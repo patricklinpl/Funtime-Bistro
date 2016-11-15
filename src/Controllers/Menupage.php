@@ -110,7 +110,8 @@ class Menupage
 
    public function showCreateMenuItemForm()
    {
-
+      $html = $this->renderer->render('MenuItemFormpage');
+      $this->response->setContent($html);
    }
 
    public function create()
@@ -242,11 +243,13 @@ class Menupage
 
    public function showMenuItemSearchForm()
    {
-
+      $html = $this->renderer->render('SearchMenuFormpage');
+      $this->response->setContent($html);
    }
 
    public function showMenuItemSearchResult()
    {
-
+      $html = $this->renderer->render('SearchMenuResultpage');
+      $this->response->setContent($html);
    }
 }

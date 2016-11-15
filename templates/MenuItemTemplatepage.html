@@ -18,8 +18,14 @@
         <text style="margin-left: 10px;">quantity: {{ menuItem.quantity }}</text>
       </div>
       <div class="pure-u-14-24">
-        <button class="add-to-order-btn" data-name="{{ menuItem.name }}">Add to Order</button>
+        <div style="float: right;">
+          {% if accType|lower == "chef" or accType|lower == "admin" %}
+          <button class="edit-menu-item-btn" data-name="{{ menuItem.name }}">Edit Menu Item</button>
+          {% endif %}
+          <button class="add-to-order-btn" data-name="{{ menuItem.name }}">Add to Order</button>
+        </div>
       </div>
+
     </div>
   </div>
 

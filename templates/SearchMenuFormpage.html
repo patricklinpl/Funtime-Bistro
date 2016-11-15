@@ -1,4 +1,18 @@
 {% extends "Layout.html" %}
 {% block content %}
 
+<h1>Search Menu Form page</h1>
+
+<button id="search-btn">Search</button>
+
+<script>
+
+$("#search-btn").click(function () {
+
+window.location.replace("/menuItem/searchResult");
+
+});
+
+</script>
+
 {% endblock %}
