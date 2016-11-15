@@ -158,7 +158,7 @@ class Menupage
       $deletedMenuQueryResult = $this->dbProvider->selectQuery($deletedMenuQueryStr);
 
       if (!empty($deletedMenuQueryResult)) {
-         $createMenuQueryStr = "UPDATE MenuItem " .
+         $createMenuQueryStr = "UPDATE Menuitem " .
                                  "SET price = '$menuPrice', " .
                                  "category = '$menuCat', " .
                                  "description = '$menuDesc', " .
@@ -168,7 +168,7 @@ class Menupage
          $created = $this->dbProvider->updateQuery($createMenuQueryStr);
       }
       else {
-         $createMenuQueryStr = "INSERT INTO MenuItem " .
+         $createMenuQueryStr = "INSERT INTO Menuitem " .
                                "(name, price, category, description, quantity, m_deleted) " .
                                "VALUES " .
                                "('$menuName', '$menuPrice', '$menuCat', '$menuDesc', '$menuQty', 'F' )";

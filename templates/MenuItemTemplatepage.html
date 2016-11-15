@@ -10,7 +10,7 @@
 
     <hr>
 
-    <div class="pure-g" style="padding: 10px 0;">
+    <div class="pure-g" style="padding-bottom: 10px;">
       <div class="pure-u-5-24">
         <text style="margin-left: 10px;">price: {{ menuItem.price }}</text>
       </div>
@@ -19,14 +19,14 @@
       </div>
       <div class="pure-u-14-24">
         <div style="float: right;">
-          {% if accType|lower == "chef" or accType|lower == "admin" %}
-          <button class="edit-menu-item-btn" data-name="{{ menuItem.name }}">Edit Menu Item</button>
-          {% endif %}
+    {% if accType|lower == "chef" or accType|lower == "admin" %}
+          <button class="delete-menu-item-btn" data-name="{{ menuItem.name }}">Delete</button>
+          <button class="edit-menu-item-btn" data-name="{{ menuItem.name }}">Edit</button>
+    {% endif %}
           <button class="add-to-order-btn" data-name="{{ menuItem.name }}">Add to Order</button>
         </div>
       </div>
-
     </div>
+    
   </div>
-
 </div>
