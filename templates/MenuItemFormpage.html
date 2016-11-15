@@ -31,8 +31,8 @@ select:invalid {
               </div>
 
               <div class="pure-u-1 pure-u-md-10-24">
-                <label for="menu-item-name">Menu Item Name <b style="color: red;">*</b></label>
-                <input id="menu-item-name" class="pure-u-20-24" name="menu-item-name" type="text" placeholder="Menu Item Name">
+                <label for="menu-item-name">Name <b style="color: red;">*</b></label>
+                <input id="menu-item-name" class="pure-u-20-24" name="menu-item-name" type="text" placeholder="Menu Item Name" value="{{ name }}">
               </div>
 
               <div class="pure-u-1 pure-u-md-3-24">
@@ -41,12 +41,14 @@ select:invalid {
               <div class="pure-u-1 pure-u-md-10-24">
                 <label for="menu-item-category">Category <b style="color: red;">*</b></label>
                 <select id="menu-item-category" class="pure-u-20-24" name="menu-item-category" type="text" required>
+                  {% if action == "create" %}
                   <option value="" disabled selected hidden>Select a Category</option>
-                  <option value="Appetizer">Appetizer</option>
-                  <option value="Entree">Entree</option>
-                  <option value="Dessert">Dessert</option>
-                  <option value="Drink">Drink</option>
-                  <option value="Other">Other</option>
+                  {% endif %}
+                  <option {{ category == "appetizer" ? selected : "" }} value="Appetizer">Appetizer</option>
+                  <option {{ category == "entree" ? selected : "" }} value="Entree">Entree</option>
+                  <option {{ category == "dessert" ? selected : "" }} value="Dessert">Dessert</option>
+                  <option {{ category == "drink" ? selected : "" }} value="Drink">Drink</option>
+                  <option {{ category == "other" ? selected : "" }} value="Other">Other</option>
                 </select>
               </div>
 
@@ -57,7 +59,7 @@ select:invalid {
 
               <div class="pure-u-1 pure-u-md-10-24">
                 <label for="menu-item-price">Price <b style="color: red;">*</b></label>
-                <input id="menu-item-price" class="pure-u-20-24" name="menu-item-price" type="text" placeholder="Price">
+                <input id="menu-item-price" class="pure-u-20-24" name="menu-item-price" type="text" placeholder="Menu Item Price" value="{{ price }}">
               </div>
 
 
@@ -66,7 +68,7 @@ select:invalid {
 
               <div class="pure-u-1 pure-u-md-10-24">
                 <label for="menu-item-quantity">Quantity <b style="color: red;">*</b></label>
-                <input id="menu-item-quantity" class="pure-u-20-24" name="menu-item-quantity" type="text" placeholder="Quantity">
+                <input id="menu-item-quantity" class="pure-u-20-24" name="menu-item-quantity" type="text" placeholder="Menu Item Quantity" value="{{ quantity }}">
               </div>
 
 
@@ -77,7 +79,7 @@ select:invalid {
 
               <div class="pure-u-1 pure-u-md-23-24">
                 <label for="menu-item-description">Description</label>
-                <textarea id="menu-item-description" class="pure-u-22-24" name="menu-item-description" placeholder="Description" rows="4"></textarea>
+                <textarea id="menu-item-description" class="pure-u-22-24" name="menu-item-description" placeholder="Menu Item Description" rows="4">{{ description }}</textarea>
               </div>
 
               <!-- row -->
@@ -92,7 +94,7 @@ select:invalid {
                 {% if action == "create" %}
                 <button id="create-btn" class="pure-button pure-button-primary" type="button">Create</button>
                 {% else %}
-                <button id="save-btn" class="pure-button pure-button-primary" type="button">Save</button>
+                <button id="save-btn" class="pure-button pure-button-primary" type="button" data-id="{{ id }}">Save</button>
                 {% endif %}
               </div>
 
@@ -108,13 +110,47 @@ select:invalid {
     </div>
     <hr>
 
-    <a href="/account/chef/all" style="float: left;">Click here to go back.</a>
+    {% if action == "update" %}
+    <a href="/menuItems" style="float: left;">Click here to go back.</a>
+    {% endif %}
   </div>
   <div class="pure-u-1-3">
   </div>
 </div>
 
 <script>
+$("#save-btn").click(function () {
+   if ($("#menu-item-name").val().trim() === '' ||
+       $("#menu-item-category").val().trim() === '' ||
+       $("#menu-item-price").val().trim() === '' ||
+       $("#menu-item-quantity").val().trim() === '') {
+      alert("Required input is missing. Fill out and try again.");
+      return;
+   }
+
+   $.ajax({
+      url: "/menuItem/update",
+      type: "POST",
+      data: {
+         "menu-id": $(this).data("id"),
+         "new-menu-item-name": $("#menu-item-name").val(),
+         "new-menu-item-category": $("#menu-item-category").val(),
+         "new-menu-item-price": $("#menu-item-price").val(),
+         "new-menu-item-quantity": $("#menu-item-quantity").val(),
+         "new-menu-item-description": $("#menu-item-description").val()
+      },
+      success: function (data) {
+         console.log(data);
+         window.location.replace("/menuItems");
+         alert('Menu Item changes succeeded.');
+      },
+      error: function (data) {
+         console.log(data);
+         alert('Menu Item changes failed. Try again.');
+      }
+   });
+});
+
 $("#create-btn").click(function () {
    if ($("#menu-item-name").val().trim() === '' ||
        $("#menu-item-category").val().trim() === '' ||

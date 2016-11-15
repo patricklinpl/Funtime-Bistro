@@ -150,7 +150,9 @@ $("#next-page-link").click(function () {
 });
 
 $(".edit-menu-item-btn").click(function () {
-
+   var url = "/menuItem/update/";
+   var menuId = $(this).data("id");
+   window.location.replace(url.concat(menuId));
 });
 
 $(".add-to-order-btn").click(function () {

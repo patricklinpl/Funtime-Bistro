@@ -20,10 +20,10 @@
       <div class="pure-u-14-24">
         <div style="float: right;">
     {% if accType|lower == "chef" or accType|lower == "admin" %}
-          <button class="delete-menu-item-btn" data-name="{{ menuItem.name }}">Delete</button>
-          <button class="edit-menu-item-btn" data-name="{{ menuItem.name }}">Edit</button>
+          <button class="delete-menu-item-btn" data-id="{{ menuItem.menu_id }}">Delete</button>
+          <button class="edit-menu-item-btn" data-id="{{ menuItem.menu_id }}">Edit</button>
     {% endif %}
-          <button class="add-to-order-btn" data-name="{{ menuItem.name }}">Add to Order</button>
+          <button class="add-to-order-btn" data-id="{{ menuItem.menu_id }}">Add to Order</button>
         </div>
       </div>
     </div>

@@ -84,9 +84,8 @@ class Menupage
          exit();
       }
 
-      $menuQueryStr = "SELECT name, price, category, description, quantity FROM Menuitem " .
+      $menuQueryStr = "SELECT menu_id, name, price, category, description, quantity FROM Menuitem " .
                       "WHERE m_deleted = 'F'";
-
       $menuResult = $this->dbProvider->selectMultipleRowsQuery($menuQueryStr);
 
       $appetizers = $this->filterCategoryArray($menuResult, 'appetizer');
@@ -180,14 +179,42 @@ class Menupage
       }
    }
 
+   public function showUpdateMenuItemForm($routeParams)
+   {
+      $menuId = $routeParams['id'];
+
+      $menuItemQueryStr = "SELECT name, price, category, description, quantity FROM Menuitem " .
+                          "WHERE menu_id = $menuId " .
+                          "AND m_deleted = 'F'";
+      $menuItemResult = $this->dbProvider->selectQuery($menuItemQueryStr);
+
+      if (empty($menuItemResult)) {
+         throw new MissingEntityException('Unable to find menu item information');
+      }
+
+      $data = [
+         'action' => 'update',
+         'id' => $menuId,
+         'name' => $menuItemResult['name'],
+         'category' => $menuItemResult['category'],
+         'price' => $menuItemResult['price'],
+         'quantity' => $menuItemResult['quantity'],
+         'description' => $menuItemResult['description']
+      ];
+
+      $html = $this->renderer->render('MenuItemFormpage', $data);
+      $this->response->setContent($html);
+   }
+
    public function update()
    {
-      $menuName = trim($this->request->getParameter('menu-name'));
-      $newMenuName = trim($this->request->getParameter('new-menu-name'));
-      $newMenuPrice = trim($this->request->getParameter('new-menu-price'));
-      $newMenuCat = trim($this->request->getParameter('new-menu-category'));
-      $newMenuDesc = trim($this->request->getParameter('new-menu-description'));
-      $newMenuQty = trim($this->request->getParameter('new-menu-quantity'));
+      $menuId = trim($this->request->getParameter('menu-id'));
+
+      $newMenuName = trim($this->request->getParameter('new-menu-item-name'));
+      $newMenuPrice = trim($this->request->getParameter('new-menu-item-price'));
+      $newMenuCat = trim($this->request->getParameter('new-menu-item-category'));
+      $newMenuDesc = trim($this->request->getParameter('new-menu-item-description'));
+      $newMenuQty = trim($this->request->getParameter('new-menu-item-quantity'));
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType) ||
@@ -196,25 +223,27 @@ class Menupage
          throw new PermissionException("Must be admin or chef in order to update menu items");
       }
 
-      if (is_null($menuName) || strlen($menuName) == 0 || is_null($newMenuName) || strlen($newMenuName) == 0 ||
-          is_null($newMenuPrice) || strlen($newMenuPrice) == 0 || !ctype_digit($newMenuPrice) || 
-          is_null($newMenuCat) || strlen($newMenuCat) == 0 || is_null($newMenuQty) || strlen($newMenuQty) == 0 || 
-          !ctype_digit($newMenuQty)) {
+      if (is_null($newMenuName) || strlen($newMenuName) == 0 ||
+          is_null($newMenuPrice) || strlen($newMenuPrice) == 0 || !is_numeric($newMenuPrice) ||
+          is_null($newMenuCat) || strlen($newMenuCat) == 0 ||
+          is_null($newMenuQty) || strlen($newMenuQty) == 0 || !ctype_digit($newMenuQty)) {
          throw new InvalidArgumentException("required form input missing. Either invalid name, price, category, or quantity.");
       }
 
       $validateQueryStr = "SELECT * FROM Menuitem " .
-                          "WHERE name = '$menuName' AND m_deleted = 'F'";
+                          "WHERE menu_id = '$menuId' " .
+                          "AND m_deleted = 'F'";
       $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
 
       if (!empty($validateResult)) {
          $updateQueryStr = "UPDATE Menuitem " .
                            "SET name = '$newMenuName', " .
-                           "price = '$newMenuPrice', " . 
+                           "price = '$newMenuPrice', " .
                            "category = '$newMenuCat', " .
                            "description = '$newMenuDesc', " .
                            "quantity = '$newMenuQty' " .
-                           "WHERE name = '$menuName' AND m_deleted = 'F'";
+                           "WHERE menu_id = '$menuId' " .
+                           "AND m_deleted = 'F'";
 
          $updated = $this->dbProvider->updateQuery($updateQueryStr);
 
@@ -223,14 +252,14 @@ class Menupage
          }
       }
       else {
-         throw new MissingEntityException("Unable to find Menu Item $menuName to update");
+         throw new MissingEntityException("Unable to find Menu Item with Id $menuId to update");
       }
 
    }
 
    public function delete()
    {
-    $menuName = trim($this->request->getParameter('menu-name'));
+      $menuName = trim($this->request->getParameter('menu-name'));
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType) ||

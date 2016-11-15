@@ -16,6 +16,7 @@ return [
     ['GET', '/menuItems', ['ProjectFunTime\Controllers\Menupage', 'showAllMenuItems']],
     ['GET', '/menuItem/create', ['ProjectFunTime\Controllers\Menupage', 'showCreateMenuItemForm']],
     ['POST', '/menuItem/create', ['ProjectFunTime\Controllers\Menupage', 'create']],
+    ['GET', '/menuItem/update/{id}', ['ProjectFunTime\Controllers\Menupage', 'showUpdateMenuItemForm']],
     ['POST', '/menuItem/update', ['ProjectFunTime\Controllers\Menupage', 'update']],
     ['POST', '/menuItem/delete', ['ProjectFunTime\Controllers\Menupage', 'delete']],
     ['GET', '/menuItem/search', ['ProjectFunTime\Controllers\Menupage', 'showMenuItemSearchForm']],
