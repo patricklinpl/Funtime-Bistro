@@ -69,7 +69,7 @@ class Orderpage {
          throw new PermissionException("Must be logged in to create order");
       }
 
-   $newOrderQueryStr = "INSERT INTO Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) VALUES('$user ', 'chef1', now(), NULL, 'open', 'open')"
+   $newOrderQueryStr = "INSERT INTO Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) VALUES('$user ', 'chef1', now(), NULL, 'open', 'open')";
    $newOrderQueryResult = $this->dbProvider->insertQuery($newOrderQueryStr);
 
    if (!$newOrderQueryResult) { 
