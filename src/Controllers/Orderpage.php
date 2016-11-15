@@ -60,36 +60,62 @@ class Orderpage {
 
    public function create() {
 
-   }
+      $user = $this->session->getValue('userName');
 
-   public function addMenuItem() {
-      $menuName = trim($this->request->getParameter('menu-name'));
-      $orderid = trim($this->request->getParameter('order-id'));
+      $accType = $this->session->getValue('accType');
 
-      if (is_null($menuName) || strlen($menuName) == 0 || is_null($orderid) || strlen($orderid) == 0 ||
-         !ctype_digit($orderid)) {
-         throw new InvalidArgumentException("required form input missing. Invalid menu item name or order Id.");
-   }
-
-   $validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";   
-   $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
-
-   if (empty($validateResult)) {
-      $addQueryStr = "INSERT INTO Contains (order_id, name, qty) VALUES('$orderid', '$menuName', '1')"; 
-      $addResult = $this->dbProvider->selectQuery($addQueryStr);
-
-      if (!$addResult) {
-         throw new SQLException("Failed to add item into order ");
+      $accType = $this->session->getValue('accType');
+      if (is_null($accType)) {
+         throw new PermissionException("Must be logged in to create order");
       }
-   } 
-   else {
-      throw new MissingEntityException("Item already in Order!");
+
+   $newOrderQueryStr = "INSERT INTO Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) VALUES('$user ', 'chef1', now(), NULL, 'open', 'open')"
+   $newOrderQueryResult = $this->dbProvider->insertQuery($newOrderQueryStr);
+
+   if (!$newOrderQueryResult) { 
+      throw new SQLException("Failed to create order");
    }
+
+}
+
+public function addMenuItem() {
+   $menuName = trim($this->request->getParameter('menu-name'));
+   $orderid = trim($this->request->getParameter('order-id'));
+
+   $accType = $this->session->getValue('accType');
+   if (is_null($accType)) {
+      throw new PermissionException("Must be logged in to add menuitem to order");
+   }
+
+   if (is_null($menuName) || strlen($menuName) == 0 || is_null($orderid) || strlen($orderid) == 0 ||
+      !ctype_digit($orderid)) {
+      throw new InvalidArgumentException("required form input missing. Invalid menu item name or order Id.");
+}
+
+$validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";   
+$validateResult = $this->dbProvider->selectQuery($validateQueryStr);
+
+if (empty($validateResult)) {
+   $addQueryStr = "INSERT INTO Contains (order_id, name, qty) VALUES('$orderid', '$menuName', '1')"; 
+   $addResult = $this->dbProvider->insertQuery($addQueryStr);
+
+   if (!$addResult) {
+      throw new SQLException("Failed to add item into order ");
+   }
+} 
+else {
+   throw new MissingEntityException("Item already in Order!");
+}
 }
 
 public function updateMenuItemQuantity() {
    $menuName = trim($this->request->getParameter('menu-name'));
    $orderid = trim($this->request->getParameter('order-id'));
+
+   $accType = $this->session->getValue('accType');
+   if (is_null($accType)) {
+      throw new PermissionException("Must be logged in to update menuitem in order");
+   }
 
    if (is_null($menuName) || strlen($menuName) == 0 || is_null($orderid) || strlen($orderid) == 0 ||
       !ctype_digit($orderid)) {
@@ -114,6 +140,11 @@ if (!empty($validateResult)) {
 public function removeMenuItem() {
    $menuName = trim($this->request->getParameter('menu-name'));
    $orderid = trim($this->request->getParameter('order-id'));
+
+   $accType = $this->session->getValue('accType');
+   if (is_null($accType)) {
+      throw new PermissionException("Must be logged in to remove menuitem from order");
+   }
 
    if (is_null($menuName) || strlen($menuName) == 0 ||
       is_null($orderid) || strlen($orderid) == 0 ||
@@ -153,8 +184,8 @@ public function purchase()
 
    //retrieves price of order by $orderId and gives price 10% discount of customer ordered the same item more than once
    $priceQuery = "SELECT SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 ELSE m.price * c.qty END) as price 
-                  FROM orders o, contains c, menuitem m WHERE o.order_id = '".$orderId."' 
-                  AND o.order_id = c.order_id AND c.name = m.name AND o.paymentStatus != 'paid' AND o.customer_userName = '".$userName."'";
+   FROM orders o, contains c, menuitem m WHERE o.order_id = '".$orderId."' 
+   AND o.order_id = c.order_id AND c.name = m.name AND o.paymentStatus != 'paid' AND o.customer_userName = '".$userName."'";
    $price = $this->dbProvider->selectQuery($priceQuery);
 
    //check if there are enough qty in menuitems for purchase
