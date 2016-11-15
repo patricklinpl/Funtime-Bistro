@@ -1,6 +1,151 @@
 {% extends "Layout.html" %}
 {% block content %}
 
-<h1>Create / Edit Menu Item Form page</h1>
+<style>
+select:invalid {
+   color: gray;
+}
+
+</style>
+
+<div class="pure-g">
+  <div class="pure-u-1-3">
+  </div>
+  <div class="pure-u-1-3">
+
+    <div id="first-panel">
+      <div class="content">
+        {% if action == "create" %}
+        <h2 class="content-head is-center">Create Menu Item</h2>
+        {% else %}
+        <h2 class="content-head is-center">Update Menu Item</h2>
+        {% endif %}
+        <hr>
+
+        <form class="pure-form pure-form-stacked">
+          <fieldset>
+
+            <div class="pure-g">
+
+              <div class="pure-u-1 pure-u-md-1-24">
+              </div>
+
+              <div class="pure-u-1 pure-u-md-10-24">
+                <label for="menu-item-name">Menu Item Name <b style="color: red;">*</b></label>
+                <input id="menu-item-name" class="pure-u-20-24" name="menu-item-name" type="text" placeholder="Menu Item Name">
+              </div>
+
+              <div class="pure-u-1 pure-u-md-3-24">
+              </div>
+
+              <div class="pure-u-1 pure-u-md-10-24">
+                <label for="menu-item-category">Category <b style="color: red;">*</b></label>
+                <select id="menu-item-category" class="pure-u-20-24" name="menu-item-category" type="text" required>
+                  <option value="" disabled selected hidden>Select a Category</option>
+                  <option value="Appetizer">Appetizer</option>
+                  <option value="Entree">Entree</option>
+                  <option value="Dessert">Dessert</option>
+                  <option value="Drink">Drink</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <!-- one row -->
+
+              <div class="pure-u-1 pure-u-md-1-24">
+              </div>
+
+              <div class="pure-u-1 pure-u-md-10-24">
+                <label for="menu-item-price">Price <b style="color: red;">*</b></label>
+                <input id="menu-item-price" class="pure-u-20-24" name="menu-item-price" type="text" placeholder="Price">
+              </div>
+
+
+              <div class="pure-u-1 pure-u-md-3-24">
+              </div>
+
+              <div class="pure-u-1 pure-u-md-10-24">
+                <label for="menu-item-quantity">Quantity <b style="color: red;">*</b></label>
+                <input id="menu-item-quantity" class="pure-u-20-24" name="menu-item-quantity" type="text" placeholder="Quantity">
+              </div>
+
+
+              <!-- other row -->
+
+              <div class="pure-u-1 pure-u-md-1-24">
+              </div>
+
+              <div class="pure-u-1 pure-u-md-23-24">
+                <label for="menu-item-description">Description <b style="color: red;">*</b></label>
+                <textarea id="menu-item-description" class="pure-u-22-24" name="menu-item-description" placeholder="Description" rows="4"></textarea>
+              </div>
+
+              <!-- row -->
+            </div>
+
+            <!-- button row -->
+            <div class="pure-g" style="padding-top: 30px;">
+              <div class="pure-u-1 pure-u-md-18-24">
+              </div>
+
+              <div class="pure-u-1 pure-u-md-2-24">
+                {% if action == "create" %}
+                <button id="create-btn" class="pure-button pure-button-primary" type="button">Create</button>
+                {% else %}
+                <button id="save-btn" class="pure-button pure-button-primary" type="button">Save</button>
+                {% endif %}
+              </div>
+
+              <div class="pure-u-1 pure-u-md-4-24">
+              </div>
+
+            </div>
+
+          </fieldset>
+        </form>
+
+      </div>
+    </div>
+    <hr>
+
+    <a href="/account/chef/all" style="float: left;">Click here to go back.</a>
+  </div>
+  <div class="pure-u-1-3">
+  </div>
+</div>
+
+<script>
+$("#create-btn").click(function () {
+   if ($("#menu-item-name").val().trim() === '' ||
+       $("#menu-item-category").val().trim() === '' ||
+       $("#menu-item-price").val().trim() === '' ||
+       $("#menu-item-quantity").val().trim() === '' ||
+       $("#menu-item-description").val().trim() === '') {
+      alert("Required input is missing. Fill out and try again.");
+      return;
+   }
+
+   $.ajax({
+      url: "/menuItem/create",
+      type: "POST",
+      data: {
+         "menu-item-name": $("#menu-item-name").val(),
+         "menu-item-category": $("#menu-item-category").val(),
+         "menu-item-price": $("#menu-item-price").val(),
+         "menu-item-quantity": $("#menu-item-quantity").val(),
+         "menu-item-description": $("#menu-item-description").val()
+      },
+      success: function (data) {
+         console.log(data);
+         window.location.replace("/menuItems");
+         alert('Menu Item creation succeeded.');
+      },
+      error: function (data) {
+         console.log(data);
+         alert('Menu Item creation failed. Try again.');
+      }
+   });
+});
+</script>
 
 {% endblock %}

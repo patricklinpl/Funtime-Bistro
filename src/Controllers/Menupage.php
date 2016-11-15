@@ -110,18 +110,21 @@ class Menupage
 
    public function showCreateMenuItemForm()
    {
-      $html = $this->renderer->render('MenuItemFormpage');
+      $data = [
+         'action' => 'create'
+      ];
+
+      $html = $this->renderer->render('MenuItemFormpage', $data);
       $this->response->setContent($html);
    }
 
    public function create()
    {
-
-      $menuName = trim($this->request->getParameter('menu-name'));
-      $menuPrice = trim($this->request->getParameter('menu-price'));
-      $menuCat = trim($this->request->getParameter('menu-category'));
-      $menuDesc = trim($this->request->getParameter('menu-description'));
-      $menuQty = trim($this->request->getParameter('menu-quantity'));
+      $menuName = trim($this->request->getParameter('menu-item-name'));
+      $menuCat = trim($this->request->getParameter('menu-item-category'));
+      $menuPrice = trim($this->request->getParameter('menu-item-price'));
+      $menuQty = trim($this->request->getParameter('menu-item-quantity'));
+      $menuDesc = trim($this->request->getParameter('menu-item-description'));
 
       $accType = $this->session->getValue('accType');
 
@@ -136,30 +139,41 @@ class Menupage
           !ctype_digit($menuPrice) || 
           is_null($menuCat) || strlen($menuCat) == 0 ||
           is_null($menuQty) || strlen($menuQty) == 0 || 
-          !ctype_digit($menuQty)
-          ) {
-         throw new InvalidArgumentException("required form input missing. Menu name, categroy, and quantity must be valid.");
+          !ctype_digit($menuQty)) {
+         throw new InvalidArgumentException("required form input missing. Name, Category, Price, Quantity and Description must be valid.");
       }
 
-      $menuQueryStr = "SELECT * FROM MenuItem WHERE m_deleted = 'F' AND name = '$menuName' ";
+      $menuQueryStr = "SELECT * FROM Menuitem " .
+                      "WHERE name = '$menuName' " .
+                      "AND m_deleted = 'F'";
       $menuQueryResult = $this->dbProvider->selectQuery($menuQueryStr);
 
       if (!empty($menuQueryResult)) {
          throw new EntityExistsException("Menu item exists with name $menuName");
       }
 
-      $deletedMenuQueryStr = "SELECT * FROM MenuItem " .
-                             "WHERE name = '$menuName' AND m_deleted = 'T'";
+      $deletedMenuQueryStr = "SELECT * FROM Menuitem " .
+                             "WHERE name = '$menuName' " .
+                             "AND m_deleted = 'T'";
       $deletedMenuQueryResult = $this->dbProvider->selectQuery($deletedMenuQueryStr);
 
       if (!empty($deletedMenuQueryResult)) {
-         $createIngredQueryStr = "UPDATE MenuItem SET price = '$menuPrice', category = '$menuCat', description = '$menuDesc', quantity = '$menuQty', m_deleted = 'F' WHERE name = '$menuName'";
+         $createMenuQueryStr = "UPDATE MenuItem " .
+                                 "SET price = '$menuPrice', " .
+                                 "category = '$menuCat', " .
+                                 "description = '$menuDesc', " .
+                                 "quantity = '$menuQty', " .
+                                 "m_deleted = 'F' " .
+                                 "WHERE name = '$menuName'";
+         $created = $this->dbProvider->updateQuery($createMenuQueryStr);
       }
       else {
-         $createMenuQueryStr = "INSERT INTO MenuItem (name, price, category, description, quantity, m_deleted) VALUES('$menuName', '$menuPrice', '$menuCat', '$menuDesc', '$menuQty', 'F' )";
+         $createMenuQueryStr = "INSERT INTO MenuItem " .
+                               "(name, price, category, description, quantity, m_deleted) " .
+                               "VALUES " .
+                               "('$menuName', '$menuPrice', '$menuCat', '$menuDesc', '$menuQty', 'F' )";
+         $created = $this->dbProvider->insertQuery($createMenuQueryStr);
       }
-
-      $created = $this->dbProvider->insertQuery($createMenuQueryStr);
       
       if (!$created) { 
          throw new SQLException("Failed to create Menu item with $menuName");
