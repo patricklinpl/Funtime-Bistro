@@ -259,7 +259,7 @@ class Menupage
 
    public function delete()
    {
-      $menuName = trim($this->request->getParameter('menu-name'));
+      $menuId = trim($this->request->getParameter('menu-id'));
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType) ||
@@ -268,26 +268,28 @@ class Menupage
          throw new PermissionException("Must be admin or chef in order to delete menu item");
       }
 
-      if (is_null($menuName) || strlen($menuName) == 0) {
-         throw new InvalidArgumentException("Menu item name missing.");
+      if (is_null($menuId) || strlen($menuId) == 0) {
+         throw new InvalidArgumentException("Menu item id missing.");
       }
 
-      $validateQueryStr = "SELECT * FROM Menuitem" .
-                          "WHERE name = '$menuName'";
+      $validateQueryStr = "SELECT * FROM Menuitem " .
+                          "WHERE menu_id = $menuId " .
+                          "AND m_deleted = 'F'";
       $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
 
       if (!empty($validateResult)) {
          $softDeleteQuery = "UPDATE Menuitem " .
                             "SET m_deleted = 'T' " .
-                            "WHERE name = '$menuName'";
+                            "WHERE menu_id = $menuId " .
+                            "AND m_deleted = 'F'";
          $softDeleteResult = $this->dbProvider->updateQuery($softDeleteQuery);
 
          if (!$softDeleteResult) {
-            throw new SQLException("Failed to (soft-)delete Menu item");
+            throw new SQLException("Failed to (soft-)delete Menu Item");
          }
       }
       else {
-         throw new MissingEntityException("Unable to find Menuitem $menuName to delete");
+         throw new MissingEntityException("Unable to find Menu item with id  $menuId to delete");
       }
    }
 

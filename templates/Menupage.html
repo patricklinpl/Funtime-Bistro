@@ -149,6 +149,29 @@ $("#next-page-link").click(function () {
    $("#page-2").fadeIn(1000);
 });
 
+$(".delete-menu-item-btn").click(function () {
+   if (!confirm("Are you sure you want to delete this Menu Item?")) {
+      return;
+   }
+
+   $.ajax({
+      url: "/menuItem/delete",
+      type: "POST",
+      data: {
+         "menu-id": $(this).data("id")
+      },
+      success: function (data) {
+         console.log(data);
+         window.location.replace("/menuItems");
+         alert("Menu Item deletion succeeded.");
+      },
+      error: function (data) {
+         console.log(data);
+         alert("Menu Item deletion failed. Try again.");
+      }
+   });
+});
+
 $(".edit-menu-item-btn").click(function () {
    var url = "/menuItem/update/";
    var menuId = $(this).data("id");
