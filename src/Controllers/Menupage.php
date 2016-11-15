@@ -208,7 +208,13 @@ class Menupage
       $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
 
       if (!empty($validateResult)) {
-         $updateQueryStr = "UPDATE MenuItem SET name = '$newMenuName', price = '$newMenuPrice', category = '$newMenuCat', description = '$newMenuDesc', quantity = '$newMenuQty' WHERE name = '$menuName' AND m_deleted = 'F'";
+         $updateQueryStr = "UPDATE Menuitem " .
+                           "SET name = '$newMenuName', " .
+                           "price = '$newMenuPrice', " . 
+                           "category = '$newMenuCat', " .
+                           "description = '$newMenuDesc', " .
+                           "quantity = '$newMenuQty' " .
+                           "WHERE name = '$menuName' AND m_deleted = 'F'";
 
          $updated = $this->dbProvider->updateQuery($updateQueryStr);
 
@@ -237,11 +243,12 @@ class Menupage
          throw new InvalidArgumentException("Menu item name missing.");
       }
 
-      $validateQueryStr = "SELECT * FROM MenuItem WHERE name = '$menuName'";
+      $validateQueryStr = "SELECT * FROM Menuitem" .
+                          "WHERE name = '$menuName'";
       $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
 
       if (!empty($validateResult)) {
-         $softDeleteQuery = "UPDATE MenuItem " .
+         $softDeleteQuery = "UPDATE Menuitem " .
                             "SET m_deleted = 'T' " .
                             "WHERE name = '$menuName'";
          $softDeleteResult = $this->dbProvider->updateQuery($softDeleteQuery);
