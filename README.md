@@ -16,7 +16,7 @@ Clone this repo
 
 In the root folder, run 'composer update'. This will install project dependencies.
 
-If composer command not found: find the location of composer.phar or redownload and run: 
+If composer command not found, find the location of composer.phar or redownload and run: 
     'sudo mv composer.phar /usr/local/bin/composer'
 
 Navigate to public folder and run 'php -S localhost:8000'.
