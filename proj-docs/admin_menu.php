@@ -2,10 +2,16 @@
 	<html>  
 	<meta>  
 	<title>Funtime Restaurant</title>
+
+	<style>
+        table,tr,th,td
+        {
+            border: 1px solid black;
+        }
+    </style>
+    <p> <font size = "20" color = maroon >  Edit Menu</font></p>
 </head>  
 <body>
-
-	<p> <font size = "20" color = maroon >  Edit Menu</font></p>
 
 	<?php
 
@@ -51,13 +57,13 @@ echo "</table>";
 
 		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($price)) && ctype_digit(trim ($qty))) {//check for correct input
 			
-			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."'");
-			$checkdel = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'T' ");
+			$checkname = $conn->query("SELECT * FROM Menuitem WHERE name = '".$name."'");
+			$checkdel = $conn->query("SELECT * FROM Menuitem WHERE name = '".$name."' AND m_deleted = 'T' ");
 
 			if($checkname->num_rows == 1) {
 
 				if ($checkdel->num_rows == 1) {
-					$insmenuquery = $conn->query("UPDATE MenuItem SET price = '".$price."', category = '".$cat."', description = '".$desc."', quantity = '".$qty."', m_deleted = 'F' WHERE name = '".$name."'");
+					$insmenuquery = $conn->query("UPDATE Menuitem SET price = '".$price."', category = '".$cat."', description = '".$desc."', quantity = '".$qty."', m_deleted = 'F' WHERE name = '".$name."'");
 					echo "<script type='text/javascript'>alert('Menu Item created successfully!')</script>";
 				}
 				else {
@@ -66,7 +72,7 @@ echo "</table>";
 			}
 
 			else {
-				$insmenuquery = $conn->query("INSERT INTO MenuItem (name, price, category, description, quantity, m_deleted) VALUES('".$name."', '".$price."', '".$cat."', '".$desc."', '".$qty."', 'F' )");
+				$insmenuquery = $conn->query("INSERT INTO Menuitem (name, price, category, description, quantity, m_deleted) VALUES('".$name."', '".$price."', '".$cat."', '".$desc."', '".$qty."', 'F' )");
 
 				echo "<script type='text/javascript'>alert('Menu Item added successfully!')</script>";
 			}
@@ -84,14 +90,14 @@ echo "</table>";
 
 		if (ctype_alpha(preg_replace('/\s+/', '', $name))) {//check for correct input
 
-			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' ");
+			$checkname = $conn->query("SELECT * FROM Menuitem WHERE name = '".$name."' AND m_deleted = 'F' ");
 
 			if($checkname->num_rows == 0) {
 				echo "<script type='text/javascript'>alert('Menu Item does not exist!')</script>";
 			}
 
 			else {
-				$delmenuquery = $conn->query("UPDATE MenuItem SET m_deleted = 'T' WHERE name = '".$name."'");
+				$delmenuquery = $conn->query("UPDATE Menuitem SET m_deleted = 'T' WHERE name = '".$name."'");
 				echo "<script type='text/javascript'>alert('Menu Item deleted successfully!')</script>";
 			}
 		} else {
@@ -113,14 +119,14 @@ echo "</table>";
 
 		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_digit(trim ($price)) && ctype_digit(trim ($qty))) {//check for correct input
 
-			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' "); //can't edit a deleted menuitem
+			$checkname = $conn->query("SELECT * FROM Menuitem WHERE name = '".$name."' AND m_deleted = 'F' "); //can't edit a deleted menuitem
 
 			if($checkname->num_rows == 0) {
 				echo "<script type='text/javascript'>alert('Menu Item does not exist! Please try again.')</script>";
 			}
 
 			else {
-				$editmenuquery = $conn->query("UPDATE MenuItem SET price = '".$price."', category = '".$cat."', description = '".$desc."', quantity = '".$qty."' WHERE name = '".$name."'");
+				$editmenuquery = $conn->query("UPDATE Menuitem SET price = '".$price."', category = '".$cat."', description = '".$desc."', quantity = '".$qty."' WHERE name = '".$name."'");
 				echo "<script type='text/javascript'>alert('Menu Item edited successfully!')</script>";
 			}
 		}else {
@@ -136,8 +142,8 @@ echo "</table>";
 
 		if (ctype_alpha(preg_replace('/\s+/', '', $name)) && ctype_alpha(preg_replace('/\s+/', '', $newname))) {//check for correct input
 
-			$checkname = $conn->query("SELECT * FROM MenuItem WHERE name = '".$name."' AND m_deleted = 'F' "); //can't edit name of deleted menuitem
-			$checkname2 = $conn->query("SELECT * FROM MenuItem WHERE name = '".$newname."' ");
+			$checkname = $conn->query("SELECT * FROM Menuitem WHERE name = '".$name."' AND m_deleted = 'F' "); //can't edit name of deleted menuitem
+			$checkname2 = $conn->query("SELECT * FROM Menuitem WHERE name = '".$newname."' ");
 
 			if($checkname->num_rows == 0) {
 				echo "<script type='text/javascript'>alert('Menu Item does not exist!')</script>";
@@ -148,7 +154,7 @@ echo "</table>";
 			}
 
 			else {
-				$editmenuquery = $conn->query("UPDATE MenuItem SET name = '".$newname."' WHERE name = '".$name."'");
+				$editmenuquery = $conn->query("UPDATE Menuitem SET name = '".$newname."' WHERE name = '".$name."'");
 				echo "<script type='text/javascript'>alert('Menu Item edited successfully!')</script>";
 			}
 		}else {
@@ -157,7 +163,7 @@ echo "</table>";
 	}
 
 // Query database for all Menu Items
-	$menu_sql = "SELECT * FROM MenuItem";
+	$menu_sql = "SELECT * FROM Menuitem";
 	$menu_result = $conn->query($menu_sql);
 	printResult($menu_result);
 
@@ -197,7 +203,7 @@ echo "</table>";
 				<input type="text" name="edPrice" size="18" pattern="*[0-9]" placeholder="New Price" required>
 				<input type="text" name="edCat" size="18" placeholder="New Category">
 				<input type="text" name="edDescr" size="18" pattern="*[A-Za-z]" placeholder="New Description">
-				<input type="text" name="edqty" size="18" pattern="*[A-Za-z]" placeholder="Quantity">
+				<input type="text" name="edqty" size="18" pattern="*[0-9]" placeholder="Quantity">
 				<!--define two variables to pass the value-->
 				<input type="submit" value="update" name="editevry"></p>
 			</form>

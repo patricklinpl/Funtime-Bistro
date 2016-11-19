@@ -1,4 +1,8 @@
 <?php
+require "base.php";
+?>
+
+<?php
 
 // create the array (for viewing the form)
 $form = array( 
@@ -50,7 +54,7 @@ if(isset($_POST['select'])) {
     // remvove the last comma from select statement
     $att = rtrim("$name $price $cat $desc $qty", ', '); 
 
-    $query = "SELECT $att FROM MenuItem WHERE $col $operator $num AND m_deleted = 'F'";
+    $query = "SELECT $att FROM Menuitem WHERE $col $operator $num AND m_deleted = 'F'";
 
     $search_result = filterTable($query);
 } 
@@ -60,23 +64,30 @@ if(isset($_POST['select'])) {
 if(isset($_POST['vegan'])) {
     
     $query = "SELECT DISTINCT name, price, category, description, quantity 
-              FROM MenuItem m
+              FROM Menuitem m
               WHERE m_deleted = 'F' AND NOT EXISTS (SELECT DISTINCT menuItem_name 
-                                                     FROM MADEOF mo
+                                                     FROM MadeOf mo
                                                      WHERE m.name = mo.menuItem_name AND ingredient_name IN (SELECT name 
-                                                     FROM INGREDIENT WHERE type = 'Meat'))";
+                                                     FROM Ingredient WHERE type = 'Meat'))";
     $search_result = filterTable($query);
 }
 
 else {
-    $query = "SELECT name, price, category, description, quantity FROM MenuItem WHERE m_deleted = 'F'";
+    $query = "SELECT name, price, category, description, quantity FROM Menuitem WHERE m_deleted = 'F'";
     $search_result = filterTable($query);
 }
 
 // function to connect and execute the query
 function filterTable($query)
 {
-    require "base.php";
+    $dbhost = "funtime.cue09nzmpyxl.us-west-2.rds.amazonaws.com:3306"; // this will ususally be 'localhost', but can sometimes differ
+    $dbname = "funtime"; // the name of the database that you are going to use for this project
+    $dbuser = "awsuser"; // the username that you created, or were given, to access your database
+    $dbpass = "mypassword"; // the password that you created, or were given, to access your database 
+
+    $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+
+
     $filter_Result = $conn->query($query);
     return $filter_Result;
 }
