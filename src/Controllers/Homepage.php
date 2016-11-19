@@ -12,6 +12,8 @@ class Homepage
     private $response;
     private $renderer;
 
+    private $templateDir = '';
+
     public function __construct(Request $request, Response $response, FrontendRenderer $renderer)
     {
        $this->request = $request;
@@ -24,7 +26,7 @@ class Homepage
        $data = [
           'name' => $this->request->getParameter('name', 'stranger'),
        ];
-       $html = $this->renderer->render('Homepage', $data);
+       $html = $this->renderer->render($this->templateDir, 'Homepage', $data);
        $this->response->setContent($html);
     }
 

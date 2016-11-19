@@ -1,4 +1,4 @@
-{% extends "ChefFormpage.html" %}
+{% extends "Account/ChefFormpage.html" %}
 
 {% block form %}
 
@@ -9,7 +9,7 @@
 
     <div id="first-panel">
       <div class="content">
-        <h2 class="content-head is-center">Creating a chef account</h2>
+        <h2 class="content-head is-center">Editing a chef account</h2>
         <hr>
 
         <form class="pure-form pure-form-stacked">
@@ -21,8 +21,8 @@
               </div>
 
               <div class="pure-u-1 pure-u-md-10-24">
-                <label for="chef-name">Name <b style="color: red;">*</b></label>
-                <input id="chef-name" class="pure-u-20-24" name="chef-name" type="text" placeholder="Name">
+                <label for="chef-username">Username <b style="color: red;">*</b></label>
+                <input id="chef-username" class="pure-u-20-24" name="chef-username" type="text" placeholder="Username" value="{{ userName }}" disabled>
               </div>
 
               <div class="pure-u-1 pure-u-md-3-24">
@@ -39,17 +39,16 @@
               </div>
 
               <div class="pure-u-1 pure-u-md-10-24">
-                <label for="chef-username">Username <b style="color: red;">*</b></label>
-                <input id="chef-username" class="pure-u-20-24" name="chef-username" type="text" placeholder="Username">
+                <label for="chef-name">Name <b style="color: red;">*</b></label>
+                <input id="chef-name" class="pure-u-20-24" name="chef-name" type="text" placeholder="Name" value="{{ name }}">
               </div>
-
 
               <div class="pure-u-1 pure-u-md-3-24">
               </div>
 
               <div class="pure-u-1 pure-u-md-10-24">
-                <label for="chef-phone">Phone</label>
-                <input id="chef-phone" class="pure-u-20-24" name="chef-phone" type="text" placeholder="Phone">
+                <label for="chef-employee-id">Employee Id <b style="color: red;">*</b></label>
+                <input id="chef-employee-id" class="pure-u-20-24" name="chef-employee-id" type="number" placeholder="Employee Id" value="{{ employee_id }}">
               </div>
 
 
@@ -59,16 +58,16 @@
               </div>
 
               <div class="pure-u-1 pure-u-md-10-24">
-                <label for="chef-password">Password <b style="color: red;">*</b></label>
-                <input id="chef-password" class="pure-u-20-24" name="chef-password" type="password" placeholder="Password">
+                <label for="chef-phone">Phone</label>
+                <input id="chef-phone" class="pure-u-20-24" name="chef-phone" type="text" placeholder="Phone"  value="{{ phone }}">
               </div>
 
               <div class="pure-u-1 pure-u-md-3-24">
               </div>
 
               <div class="pure-u-1 pure-u-md-10-24">
-                <label for="chef-address">Address</label>
-                <input id="chef-address" class="pure-u-20-24" name="chef-address" type="text" placeholder="Address">
+                <label for="chef-ss-num">Social Security Number</label>
+                <input id="chef-ss-num" class="pure-u-20-24" name="chef-ss-num" type="number" value="{{ ssNum }}" placeholder="Social Security Number">
               </div>
 
 
@@ -78,19 +77,21 @@
               </div>
 
               <div class="pure-u-1 pure-u-md-10-24">
-                <label for="chef-confirm-password">Confirm Password <b style="color: red;">*</b></label>
-                <input id="chef-confirm-password" class="pure-u-20-24" name="chef-confirm-password" type="password" placeholder="Confirm Password">
+                <label for="chef-address">Address</label>
+                <input id="chef-address" class="pure-u-20-24" name="chef-address" type="text" placeholder="Address" value="{{ address }}">
               </div>
 
               <div class="pure-u-1 pure-u-md-3-24">
               </div>
 
               <div class="pure-u-1 pure-u-md-10-24">
-                <label for="chef-ss-num">Social Security Number</label>
-                <input id="chef-ss-num" class="pure-u-20-24" name="chef-ss-num" type="number" placeholder="Social Security Number">
               </div>
 
 <!-- row -->
+
+              <div class="pure-u-1 pure-u-md-14-24">
+              </div>
+
 
             </div>
 
@@ -125,36 +126,30 @@
 $("#save-btn").click(function () {
    if ($("#chef-name").val().trim() === '' ||
        $("#chef-username").val().trim() === '' ||
-       $("#chef-password").val().trim() === '' ||
-       $("#chef-confirm-password").val().trim() === '') {
+       $("#chef-employee-id").val().trim() === '') {
       alert("Required input is missing. Fill out and try again.");
       return;
    }
 
-   if ($("#chef-password").val() !== $("#chef-confirm-password").val()) {
-      alert("Passwords differ. Try again.");
-      return;
-   }
-
    $.ajax({
-      url: "/account/chef/create",
+      url: "/account/chef/update",
       type: "POST",
       data: {
          "chef-name": $("#chef-name").val(),
          "chef-username": $("#chef-username").val(),
-         "chef-password": $("#chef-password").val(),
          "chef-phone": $("#chef-phone").val(),
          "chef-address": $("#chef-address").val(),
+         "chef-employee-id": $("#chef-employee-id").val(),
          "chef-ssNum": $("#chef-ss-num").val()
       },
       success: function (data) {
          console.log(data);
          window.location.replace("/account/chef/all");
-         alert('Account creation succeeded.');
+         alert('Account changes succeeded.');
       },
       error: function (data) {
          console.log(data);
-         alert('Account creation failed. Try again.');
+         alert('Account changes failed. Try again.');
       }
    });
 });

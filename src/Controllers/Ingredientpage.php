@@ -21,6 +21,8 @@ class Ingredientpage
    private $dbProvider;
    private $session;
 
+   private $templateDir = 'Ingredient';
+
    public function __construct(
       Request $request,
       Response $response,
@@ -58,7 +60,7 @@ class Ingredientpage
       $data = [
          'ingredients' => $ingredResult
       ];
-      $html = $this->renderer->render($page, $data);
+      $html = $this->renderer->render($this->templateDir, $page, $data);
       $this->response->setContent($html);
    }
 

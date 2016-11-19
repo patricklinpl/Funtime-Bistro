@@ -19,6 +19,8 @@ class Loginpage
    private $dbProvider;
    private $session;
 
+   private $templateDir = 'Login';
+
    public function __construct(
       Request $request,
       Response $response,
@@ -35,7 +37,7 @@ class Loginpage
 
    public function show()
    {
-      $html = $this->renderer->render('Loginpage');
+      $html = $this->renderer->render($this->templateDir, 'Loginpage');
       $this->response->setContent($html);
    }
 

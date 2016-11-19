@@ -18,7 +18,7 @@ class FrontendTwigRenderer implements FrontendRenderer
       $this->session = $session;
    }
 
-   public function render($template, $data = []) : string
+   public function render($dir, $template, $data = []) : string
    {
       $accType = $this->session->getValue('accType');
 
@@ -27,6 +27,6 @@ class FrontendTwigRenderer implements FrontendRenderer
          'accType' => $accType
       ]);
 
-      return $this->renderer->render($template, $data);
+      return $this->renderer->render($dir, $template, $data);
    }
 }

@@ -13,8 +13,9 @@ class TwigRenderer implements Renderer
       $this->renderer = $renderer;
    }
 
-   public function render($template, $data = []) : string
+   public function render($dir, $template, $data = []) : string
    {
-      return $this->renderer->render("$template" . ".html", $data);
+      $path = $dir . '/' . $template . '.html';
+      return $this->renderer->render($path, $data);
    }
 }

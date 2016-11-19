@@ -21,6 +21,8 @@ class Menupage
    private $dbProvider;
    private $session;
 
+   private $templateDir = 'Menu';
+
    public function __construct(
       Request $request,
       Response $response,
@@ -103,7 +105,7 @@ class Menupage
          'others' => $others
       ];
 
-      $html = $this->renderer->render('Menupage', $data);
+      $html = $this->renderer->render($this->templateDir, 'Menupage', $data);
       $this->response->setContent($html);
    }
 
@@ -113,7 +115,7 @@ class Menupage
          'action' => 'create'
       ];
 
-      $html = $this->renderer->render('MenuItemFormpage', $data);
+      $html = $this->renderer->render($this->templateDir, 'MenuItemFormpage', $data);
       $this->response->setContent($html);
    }
 
@@ -202,7 +204,7 @@ class Menupage
          'description' => $menuItemResult['description']
       ];
 
-      $html = $this->renderer->render('MenuItemFormpage', $data);
+      $html = $this->renderer->render($this->templateDir, 'MenuItemFormpage', $data);
       $this->response->setContent($html);
    }
 
@@ -295,13 +297,13 @@ class Menupage
 
    public function showMenuItemSearchForm()
    {
-      $html = $this->renderer->render('SearchMenuFormpage');
+      $html = $this->renderer->render($this->templateDir, 'SearchMenuFormpage');
       $this->response->setContent($html);
    }
 
    public function showMenuItemSearchResult()
    {
-      $html = $this->renderer->render('SearchMenuResultpage');
+      $html = $this->renderer->render($this->templateDir, 'SearchMenuResultpage');
       $this->response->setContent($html);
    }
 }

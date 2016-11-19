@@ -21,6 +21,8 @@ class Accountpage
    private $dbProvider;
    private $session;
 
+   private $templateDir = 'Account';
+
    public function __construct(
       Request $request,
       Response $response,
@@ -74,7 +76,7 @@ class Accountpage
          ]);
       }
 
-      $html = $this->renderer->render('Accountpage', $data);
+      $html = $this->renderer->render($this->templateDir, 'Accountpage', $data);
       $this->response->setContent($html);
    }
 
@@ -134,7 +136,7 @@ class Accountpage
          'chefs' => $chefResult
       ];
 
-      $html = $this->renderer->render('ManageChefpage', $data);
+      $html = $this->renderer->render($this->templateDir, 'ManageChefpage', $data);
       $this->response->setContent($html);
    }
 
@@ -148,7 +150,7 @@ class Accountpage
 
       $data = [];
       
-      $html = $this->renderer->render('CreateChefFormpage', $data);
+      $html = $this->renderer->render($this->templateDir, 'CreateChefFormpage', $data);
       $this->response->setContent($html);      
    }
 
@@ -223,7 +225,7 @@ class Accountpage
 
    public function showEditChefForm($routeParams)
    {
-      $username = $routeParams["username"];
+      $username = $routeParams['username'];
 
       $currentAccType = $this->session->getValue('accType');
       if (is_null($currentAccType) || strcasecmp($currentAccType, 'admin') != 0) {
@@ -250,7 +252,7 @@ class Accountpage
          'ssNum' => $chefResult["ssNum"]
       ];
 
-      $html = $this->renderer->render('EditChefFormpage', $data);
+      $html = $this->renderer->render($this->templateDir, 'EditChefFormpage', $data);
       $this->response->setContent($html);
    }
 

@@ -4,5 +4,5 @@ namespace ProjectFunTime\Template;
 
 interface Renderer
 {
-   public function render($template, $data = []) : string;
+   public function render($dir, $template, $data = []) : string;
 }
