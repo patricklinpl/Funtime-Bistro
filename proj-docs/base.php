@@ -11,10 +11,10 @@ session_start();
 // $dbpass = "a32029134"; // the password that you created, or were given, to access your database
 
 // connection to mysql
-$dbhost = "127.0.0.1"; // this will ususally be 'localhost', but can sometimes differ
+$dbhost = "funtime.cue09nzmpyxl.us-west-2.rds.amazonaws.com:3306"; // this will ususally be 'localhost', but can sometimes differ
 $dbname = "funtime"; // the name of the database that you are going to use for this project
-$dbuser = "root"; // the username that you created, or were given, to access your database
-$dbpass = "harryzhi"; // the password that you created, or were given, to access your database 
+$dbuser = "awsuser"; // the username that you created, or were given, to access your database
+$dbpass = "mypassword"; // the password that you created, or were given, to access your database 
 
 try{
 	$conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
