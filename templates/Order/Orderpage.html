@@ -37,6 +37,13 @@
             </th>
           </tr>
           {% endfor %}
+          <tr style="border-top: 1px solid #cbcbcb;">
+            <th>-</th>
+            <th>-</th>
+            <th>-</th>
+            <th>Total Quantity: {{ totalQuantity }}</th>
+            <th>Total Price: ${{ totalPrice|number_format(2, '.') }}</th>
+          </tr>
         </tbody>
       </table>
 
@@ -101,13 +108,15 @@ $("#purchase-btn").click(function () {
       return;
    }
 
-   var orderValues = [];
+   var containsMinItems = false;
 
+   var orderValues = [];
    var i = 1;
    while (i > 0) {
       var quantityLeft = $("#quantity-left-" + i);
       var quantityInOrder = $("#quantity-in-order-" + i);
       if (quantityLeft.length == 1 && quantityInOrder.length == 1) {
+         containsMinItems = true;
          if (parseInt(quantityInOrder.val()) > parseInt(quantityLeft.text())) {
             alert("A quantity in order is larger than quantity left. Try again.");
             return;
@@ -124,6 +133,11 @@ $("#purchase-btn").click(function () {
       else {
          i = -1;
       }
+   }
+
+   if (!containsMinItems) {
+      alert("Need at least one menu item in order to purchase order.");
+      return;
    }
 
    $.ajax({

@@ -97,8 +97,21 @@ class Orderpage {
                              "AND c.name = m.name";
          $menuItemQueryResult = $this->dbProvider->selectMultipleRowsQuery($menuItemQueryStr);
 
+         $totalPriceQueryStr = "SELECT SUM(c.qty) AS numOfItems, " .
+                               "SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 " .
+                                                        "ELSE m.price * c.qty END) AS totalPrice " .
+                        "FROM Orders o, Contains c, Menuitem m " .
+                        "WHERE o.order_id = c.order_id " .
+                        "AND c.name = m.name " .
+                        "AND o.customer_userName = '$user' " .
+                        "AND o.order_id = $orderId " .
+                        "GROUP BY o.order_id";
+         $totalPriceQueryResult = $this->dbProvider->selectQuery($totalPriceQueryStr);
+
          $data = [
-            'orderMenuItems' => $menuItemQueryResult
+            'orderMenuItems' => $menuItemQueryResult,
+            'totalQuantity' => $totalPriceQueryResult['numOfItems'],
+            'totalPrice' => $totalPriceQueryResult['totalPrice']
          ];
 
          $html = $this->renderer->render($this->templateDir, 'Orderpage', $data);
