@@ -321,42 +321,37 @@ class Menupage
          throw new InvalidArgumentException("required form input missing. Name, Category, Price, Quantity and Description must be valid.");
       }
 
+      $name = "";
+      $price = "";
+      $cat = "";
+      $desc = "";
+      $qty = "";
+
       //projection
-      $name = "name,";
-      $price = "price,";
-      $cat = "category,";
-      $desc = "description,";
-      $qty = "quantity,";
+      $checkName = trim($this->request->getParameter('name'));
+      $checkPrice = trim($this->request->getParameter('price'));
+      $checkCat = trim($this->request->getParameter('category'));
+      $checkDesc = trim($this->request->getParameter('description'));
+      $checkQty = trim($this->request->getParameter('quantity'));
 
-      // if form checkbox isn't checked 
-      //        make variable = ""
-      //        uncheck the box 
-      //        eg. of form for front end
-      //            default $form['namebox'] => true
-      //            <input type="checkbox" name="selname" <?php echo $form['namebox'] ? 'checked' : '' ? > 
-      if(!isset($_POST['selname'])) {
-        $name = "";
-        $form['namebox'] = false;
+      if ($checkName == 'checked') {
+          $name = "name,";
       } 
 
-      if(!isset($_POST['selprice'])) {
-        $price = "";
-        $form['pricebox'] = false;
-     } 
-
-      if(!isset($_POST['selcat'])) {
-        $img = "";
-        $form['catbox'] = false;
+      if ($checkPrice == 'checked') {
+          $price = "price,";
       } 
 
-      if(!isset($_POST['seldesc'])) {
-        $desc = "";
-        $form['descbox'] = false;
+      if ($checkCat == 'checked') {
+          $cat = "category,";
       } 
 
-      if(!isset($_POST['selqty'])) {
-        $qty = "";
-        $form['qtybox'] = false;
+      if ($checkDesc == 'checked') {
+          $desc = "description,";
+      } 
+
+      if ($checkQty == 'checked') {
+          $qty = "quantity,";
       } 
 
       // remvove the last comma from select statement
