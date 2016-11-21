@@ -1,50 +1,9 @@
 {% extends "Layout.html" %}
 {% block content %}
-
-<style>
-.menu-item {
-   width: 100%;
-   background-color: white;
-   margin: 15px 0;
-}
-
-.menu-item-info {
-   border: 2px solid #93a1a1;
-}
-
-.menu-item-title {
-   text-decoration: underline;
-   font-size: 1.5em;
-}
-
-.menu-item-info-bar {
-   border-top: 2px solid #93a1a1;
-}
-
-.add-to-order-btn, .edit-menu-item-btn, .delete-menu-item-btn {
-   margin-right: 10px;
-}
-
-#prev-page-link {
-   height: 100%;
-   line-height: 100px;
-   margin: 0 50px;
-   display: none;
-}
-
-#next-page-link {
-   height: 100%;
-   line-height: 100px;
-   margin: 0 50px;
-   float: right;
-}
-
-</style>
-
 <div class="pure-g">
 
   <div class="pure-u-1-3">
-    <h1 id="prev-page-link">Previous Page</h1>
+    <h1 id="prev-page-link"><i class="fa fa-chevron-left" aria-hidden="true"></i> Previous</h1>
   </div>
 
   <div class="pure-u-1-3">
@@ -53,7 +12,7 @@
   </div>
 
   <div class="pure-u-1-3">
-    <h1 id="next-page-link">Next Page</h1>
+    <h1 id="next-page-link">Next <i class="fa fa-chevron-right" aria-hidden="true"></i></h1>
   </div>
 
   <div class="pure-u-1-1">
@@ -142,7 +101,7 @@ $("#prev-page-link").click(function () {
 });
 
 $("#next-page-link").click(function () {
-   $("#prev-page-link").fadeIn(600);
+   $("#prev-page-link").fadeIn(600).css("display", "inline-block");
    $("#next-page-link").fadeOut(800);
 
    $("#page-1").hide();
