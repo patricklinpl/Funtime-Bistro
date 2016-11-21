@@ -109,10 +109,16 @@ class Orderpage {
          $totalPriceQueryResult = $this->dbProvider->selectQuery($totalPriceQueryStr);
 
          $data = [
-            'orderMenuItems' => $menuItemQueryResult,
-            'totalQuantity' => $totalPriceQueryResult['numOfItems'],
-            'totalPrice' => $totalPriceQueryResult['totalPrice']
+            'orderMenuItems' => $menuItemQueryResult
          ];
+
+         if (array_key_exists('numOfItems', $totalPriceQueryResult)) {
+            $data['totalQuantity'] = $totalPriceQueryResult['numOfItems'];
+         }
+
+         if (array_key_exists('totalPrice', $totalPriceQueryResult)) {
+            $data['totalPrice'] = $totalPriceQueryResult['totalPrice'];
+         }
 
          $html = $this->renderer->render($this->templateDir, 'Orderpage', $data);
          $this->response->setContent($html);

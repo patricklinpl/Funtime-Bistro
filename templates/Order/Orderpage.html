@@ -29,8 +29,8 @@
           <tr>
             <th>{{ orderMenuItem.name }}</th>
             <th>{{ orderMenuItem.price }}</th>
-            <th>{{ orderMenuItem.qtyLeft }}</th>
-            <th>{{ orderMenuItem.qtyInOrder }}</th>
+            <th><span id="quantity-left-{{ loop.index }}">{{ orderMenuItem.qtyLeft }}</span></th>
+            <th><span id="quantity-in-order-{{ loop.index }}">{{ orderMenuItem.qtyInOrder }}</span></th>
             <th class="btn-table-header">
               <button class="edit-btn" data-id="{{ orderMenuItem.menu_id }}" style="margin: 5px;">Edit</button>
               <button class="delete-btn" data-id="{{ orderMenuItem.menu_id }}" style="margin: 5px;">Delete</button>
