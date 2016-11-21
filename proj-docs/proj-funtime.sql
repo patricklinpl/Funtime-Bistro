@@ -207,6 +207,8 @@ insert into Contains values (3, 'Deep-fried Protein Powder', 10);
 
 insert into Contains values (3, 'Sushi Surprise', 2);
 
+insert into Contains values (4, 'Deluxe Burger', 2);
+
 
 insert into MadeOf values ('Shrimp Fried Rice', 'Rice');
 
