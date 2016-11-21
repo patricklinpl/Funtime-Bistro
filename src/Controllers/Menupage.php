@@ -371,7 +371,7 @@ class Menupage
                throw InvalidArugmentException('quantity op not recognized.');
          }
 
-         $whereClause .= " quantity $quantityOpChar $quantityVal, ";
+         $whereClause .= " quantity $quantityOpChar $quantityVal AND ";
       }
 
       if (array_key_exists('priceOp', $params) && array_key_exists('priceVal', $params)) {
@@ -402,9 +402,8 @@ class Menupage
                throw InvalidArgumentException('price op not recognized.');
          }
 
-         $whereClause .= " price $priceOpChar $priceVal, ";
+         $whereClause .= " price $priceOpChar $priceVal AND ";
       }
-      $whereClause = rtrim($whereClause, ', ');
 
       $selectClause = '';
       if (array_key_exists('name', $params) && strcmp($params['name'], 'checked') == 0) {
@@ -435,8 +434,9 @@ class Menupage
       else {
          $menuQueryStr = "SELECT $selectClause FROM Menuitem " .
                          "WHERE $whereClause " .
-                         "AND m_deleted = 'F'";
+                         "m_deleted = 'F'";
       }
+
       $menuResult = $this->dbProvider->selectMultipleRowsQuery($menuQueryStr);
 
       $menuResult = $this->flagHealthyMenuItems($menuResult);
