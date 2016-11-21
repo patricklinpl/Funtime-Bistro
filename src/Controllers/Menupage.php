@@ -47,19 +47,24 @@ class Menupage
       return false;
    }
 
-   private function filterCategoryArray($arr, $category) : array
+   private function filterArray($arr, $key, $val) : array
    {
       $result = [];
 
       for ($i = 0; $i < count($arr); $i++) {
          $element = $arr[$i];
 
-         if (strcasecmp($element['category'], $category) == 0) {
+         if (strcasecmp($element[$key], $val) == 0) {
             $result[] = $element;
          }
       }
 
       return $result;
+   }
+
+   private function filterCategoryArray($arr, $category) : array
+   {
+      return $this->filterArray($arr, 'category', $category);
    }
 
    private function filterOtherCategoryArray($arr, $categoryArr) : array
@@ -77,6 +82,29 @@ class Menupage
       return $result;
    }
 
+   private function flagHealthyMenuItems($menuItems) : array
+   {
+      $healthyOptionQuery = "SELECT DISTINCT name, price, category, description, quantity " .
+                            "FROM Menuitem m " .
+                            "WHERE m_deleted = 'F' " .
+                            "AND NOT EXISTS " .
+                            "(SELECT DISTINCT menuItem_name " .
+                            "FROM MadeOf mo " .
+                            "WHERE m.name = mo.menuItem_name " .
+                            "AND ingredient_name IN " .
+                               "(SELECT name " .
+                                "FROM Ingredient WHERE type = 'Meat'))";
+      $healthyOptionResult = $this->dbProvider->selectMultipleRowsQuery($healthyOptionQuery);
+
+      foreach ($menuItems as $index => $menuItem) {
+         if (!empty($this->filterArray($healthyOptionResult, 'name', $menuItem['name']))) {
+            $menuItems[$index]['healthy'] = 'true';
+         }
+      }
+
+      return $menuItems;
+   }
+
    public function showAllMenuItems()
    {
       $accType = $this->session->getValue('accType');
@@ -90,6 +118,8 @@ class Menupage
                       "WHERE m_deleted = 'F'";
       $menuResult = $this->dbProvider->selectMultipleRowsQuery($menuQueryStr);
 
+      $menuResult = $this->flagHealthyMenuItems($menuResult);
+
       $appetizers = $this->filterCategoryArray($menuResult, 'appetizer');
       $entrees = $this->filterCategoryArray($menuResult, 'entree');
       $desserts = $this->filterCategoryArray($menuResult, 'dessert');
@@ -102,7 +132,8 @@ class Menupage
          'entrees' => $entrees,
          'desserts' => $desserts,
          'drinks' => $drinks,
-         'others' => $others
+         'others' => $others,
+         'action' => 'viewMenu'
       ];
 
       $html = $this->renderer->render($this->templateDir, 'Menupage', $data);
@@ -303,7 +334,7 @@ class Menupage
 
    public function showMenuItemSearchResult()
    {
-
+      $params = $this->request->getParameters();
       $accType = $this->session->getValue('accType');
 
       if (is_null($accType)) {
@@ -311,116 +342,117 @@ class Menupage
          exit();
       }
 
-      //selection
-      $searchAtt = trim($this->request->getParameter('search-attribute'));
-      $searchOp = trim($this->request->getParameter('search-operator'));
-      $searchNum = trim($this->request->getParameter('search-number'));
+      $whereClause = '';
+      if (array_key_exists('qtyOp', $params) && array_key_exists('qtyVal', $params)) {
+         $quantityOp = $params['qtyOp'];
+         $quantityVal = $params['qtyVal'];
 
-       if (is_null($searchNum) || strlen($searchNum) == 0 ||
-          !is_numeric($searchNum)) {
-         throw new InvalidArgumentException("required form input missing. Name, Category, Price, Quantity and Description must be valid.");
+         if (is_null($quantityOp) || strlen($quantityOp) == 0 ||
+             is_null($quantityVal) || strlen($quantityVal) == 0) {
+            throw new InvalidArgumentException('required form input missing. Either quantity op or value');
+         }
+
+         if (!is_numeric($quantityVal)) {
+            throw new InvalidArgumentException('quantity value is invalid.');
+         }
+
+         $quantityOpChar = '';
+         switch ($quantityOp) {
+            case 'gt':
+               $quantityOpChar = '>';
+               break;
+            case 'lt':
+               $quantityOpChar = '<';
+               break;
+            case 'eq':
+               $quantityOpChar = '=';
+               break;
+            default:
+               throw InvalidArugmentException('quantity op not recognized.');
+         }
+
+         $whereClause .= " quantity $quantityOpChar $quantityVal, ";
       }
 
-      $name = "";
-      $price = "";
-      $cat = "";
-      $desc = "";
-      $qty = "";
+      if (array_key_exists('priceOp', $params) && array_key_exists('priceVal', $params)) {
+         $priceOp = $params['priceOp'];
+         $priceVal = $params['priceVal'];
 
-      //projection
-      $checkName = trim($this->request->getParameter('name'));
-      $checkPrice = trim($this->request->getParameter('price'));
-      $checkCat = trim($this->request->getParameter('category'));
-      $checkDesc = trim($this->request->getParameter('description'));
-      $checkQty = trim($this->request->getParameter('quantity'));
+         if (is_null($priceOp) || strlen($priceOp) == 0 ||
+             is_null($priceVal) || strlen($priceVal) == 0) {
+            throw new InvalidArgumentException('required form input missing. Either price op or value');
+         }
 
-      if ($checkName == 'checked') {
-          $name = "name,";
-      } 
+         if (!is_numeric($priceVal)) {
+            throw new InvalidArgumentException('price value is invalid.');
+         }
 
-      if ($checkPrice == 'checked') {
-          $price = "price,";
-      } 
+         $priceOpChar = '';
+         switch ($priceOp) {
+            case 'gt':
+               $priceOpChar = '>';
+               break;
+            case 'lt':
+               $priceOpChar = '<';
+               break;
+            case 'eq':
+               $priceOpChar = '=';
+               break;
+            default:
+               throw InvalidArgumentException('price op not recognized.');
+         }
 
-      if ($checkCat == 'checked') {
-          $cat = "category,";
-      } 
+         $whereClause .= " price $priceOpChar $priceVal, ";
+      }
+      $whereClause = rtrim($whereClause, ', ');
 
-      if ($checkDesc == 'checked') {
-          $desc = "description,";
-      } 
+      $selectClause = '';
+      if (array_key_exists('name', $params) && strcmp($params['name'], 'checked') == 0) {
+         $selectClause .= 'name, ';
+      }
+      if (array_key_exists('category', $params) && strcmp($params['category'], 'checked') == 0) {
+         $selectClause .= 'category, ';
+      }
+      if (array_key_exists('quantity', $params) && strcmp($params['quantity'], 'checked') == 0) {
+         $selectClause .= 'quantity, ';
+      }
+      if (array_key_exists('price', $params) && strcmp($params['price'], 'checked') == 0) {
+         $selectClause .= 'price, ';
+      }
+      if (array_key_exists('description', $params) && strcmp($params['description'], 'checked') == 0) {
+         $selectClause .= 'description, ';
+      }
+      $selectClause = rtrim($selectClause, ', ');
 
-      if ($checkQty == 'checked') {
-          $qty = "quantity,";
-      } 
-
-      // remvove the last comma from select statement
-      $att = rtrim("$name $price $cat $desc $qty", ', '); 
-
-      $menuQueryStr = "SELECT $att FROM Menuitem " .
-                      "WHERE $searchAtt $searchOp $searchNum " .
-                      "AND m_deleted = 'F' ";
-
-
+      $menuQueryStr = '';
+      if (strcmp($selectClause, '') == 0) {
+         throw new InvalidArgumentException('Invalid details to show. Select at least one.');
+      }
+      if (strcmp($whereClause, '') == 0) {
+         $menuQueryStr = "SELECT $selectClause FROM Menuitem " .
+                         "WHERE m_deleted = 'F'";
+      }
+      else {
+         $menuQueryStr = "SELECT $selectClause FROM Menuitem " .
+                         "WHERE $whereClause " .
+                         "AND m_deleted = 'F'";
+      }
       $menuResult = $this->dbProvider->selectMultipleRowsQuery($menuQueryStr);
 
-      $appetizers = $this->filterCategoryArray($menuResult, 'appetizer');
-      $entrees = $this->filterCategoryArray($menuResult, 'entree');
-      $desserts = $this->filterCategoryArray($menuResult, 'dessert');
-      $drinks = $this->filterCategoryArray($menuResult, 'drink');
-      $others = $this->filterOtherCategoryArray($menuResult, ['appetizer', 'entree', 'dessert', 'drink']);
+      $menuResult = $this->flagHealthyMenuItems($menuResult);
+
+      $len = count($menuResult);
+      $mid = ceil($len / 2);
+
+      $menuCol1 = array_slice($menuResult, 0, $mid);
+      $menuCol2 = array_slice($menuResult, (int) $mid);
 
       $data = [
-         'appetizers' => $appetizers,
-         'entrees' => $entrees,
-         'desserts' => $desserts,
-         'drinks' => $drinks,
-         'others' => $others
+         'column1' => $menuCol1,
+         'column2' => $menuCol2,
+         'action' => 'search'
       ];
-
       $html = $this->renderer->render($this->templateDir, 'SearchMenuResultpage', $data);
-      $this->response->setContent($html);
-   }
-
-   // added function for veggie option
-   public function showMenuItemSearchVeggieResult()
-   {
-
-    $accType = $this->session->getValue('accType');
-
-      if (is_null($accType)) {
-         header('Location: /');
-         exit();
-      }
-
-    $veggieMenuQuery = "SELECT DISTINCT name, price, category, description, quantity" . 
-                       "FROM Menuitem m" .
-                       "WHERE m_deleted = 'F' " .
-                       "AND NOT EXISTS " . 
-                       "(SELECT DISTINCT menuItem_name " .
-                                "FROM MadeOf mo" .
-                                "WHERE m.name = mo.menuItem_name " .
-                                "AND ingredient_name IN " .
-                                "(SELECT name " .
-                                        "FROM Ingredient WHERE type = 'Meat'))";
-
-      $menuResult = $this->dbProvider->selectMultipleRowsQuery($veggieMenuQuery);
-
-      $appetizers = $this->filterCategoryArray($menuResult, 'appetizer');
-      $entrees = $this->filterCategoryArray($menuResult, 'entree');
-      $desserts = $this->filterCategoryArray($menuResult, 'dessert');
-      $drinks = $this->filterCategoryArray($menuResult, 'drink');
-      $others = $this->filterOtherCategoryArray($menuResult, ['appetizer', 'entree', 'dessert', 'drink']);
-
-      $data = [
-         'appetizers' => $appetizers,
-         'entrees' => $entrees,
-         'desserts' => $desserts,
-         'drinks' => $drinks,
-         'others' => $others
-      ];
-
-      $html = $this->renderer->render($this->templateDir, 'SearchMenuVeggieResultpage', $data);
       $this->response->setContent($html);
    }
 
