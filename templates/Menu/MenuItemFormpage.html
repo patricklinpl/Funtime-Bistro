@@ -44,11 +44,11 @@ select:invalid {
                   {% if action == "create" %}
                   <option value="" disabled selected hidden>Select a Category</option>
                   {% endif %}
-                  <option {{ category == "appetizer" ? selected : "" }} value="Appetizer">Appetizer</option>
-                  <option {{ category == "entree" ? selected : "" }} value="Entree">Entree</option>
-                  <option {{ category == "dessert" ? selected : "" }} value="Dessert">Dessert</option>
-                  <option {{ category == "drink" ? selected : "" }} value="Drink">Drink</option>
-                  <option {{ category == "other" ? selected : "" }} value="Other">Other</option>
+                  <option {{ category|lower == "appetizer" ? ' selected ' : "" }} value="Appetizer">Appetizer</option>
+                  <option {{ category|lower == "entree" ? ' selected ' : "" }} value="Entree">Entree</option>
+                  <option {{ category|lower == "dessert" ? ' selected ' : "" }} value="Dessert">Dessert</option>
+                  <option {{ category|lower == "drink" ? ' selected ' : "" }} value="Drink">Drink</option>
+                  <option {{ category|lower == "other" ? ' selected ' : "" }} value="Other">Other</option>
                 </select>
               </div>
 
