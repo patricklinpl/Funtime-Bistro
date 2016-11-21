@@ -146,8 +146,6 @@ class Orderpage {
          throw new MissingEntityException('Unable to find menu item information');
       }
 
-var_dump($menuItemQueryResult);
-
       $data = [
          'action' => 'update',
          'id' => $menuId,
@@ -170,7 +168,6 @@ var_dump($menuItemQueryResult);
       }
 
       $user = $this->session->getValue('userName');
-      var_dump($user);
       $this->createOrderHelper($user);
    }
 
@@ -289,7 +286,7 @@ var_dump($menuItemQueryResult);
 
       $orderId = $this->getOpenOrderId($userName);
       $menuName = $this->getMenuNameFromMenuId($menuId);
-var_dump($menuName);
+
       if (is_null($menuId) || strlen($menuId) == 0 || !ctype_digit($menuId)) {
          throw new InvalidArgumentException("required form input missing. Invalid menu item name or order Id.");
       }
@@ -385,7 +382,6 @@ var_dump($menuName);
                     "AND o.customer_userName = '$userName'";
       $priceResult = $this->dbProvider->selectQuery($priceQuery);
       $price = $priceResult['price'];
-//var_dump($price);
 
       //check if there are enough qty in menuitems for purchase
       $check_avai_query = "SELECT m.name FROM Menuitem m, Contains c " .
