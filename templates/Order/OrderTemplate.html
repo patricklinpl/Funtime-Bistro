@@ -5,23 +5,28 @@
 
   <div>
     <span class="order-detail">
-      # of items: 4
+      # of Items: {{ order.numOfItems }}
     </span>
 
     <span class="order-detail">
-      Total cost: $15.04
+      Total Cost: ${{ order.totalPrice|number_format(2, '.') }}
     </span>
 
     <span class="order-detail">
-      Created: 04/06/2014
+      Created Date: {{ order.orderDate }}
     </span>
 
     <span class="order-detail">
-      Status: Started
+      Cooked Status: {{ order.cookedStatus }}
     </span>
 
     <span class="order-detail">
-      Cooked by: Paul Tran
+      Cooked by:
+      {% if order.chef == null %}
+      N/A
+      {% else %}
+      {{ order.chef }}
+      {% endif %}
     </span>
   </div>
 </div>

@@ -20,7 +20,7 @@ class MySQLDatabaseProvider implements DatabaseProvider
    public function selectQuery($query) : array
    {
       $queryResult = $this->dbProvider->query($query);
-      $queryArr = \mysqli_fetch_array($queryResult);
+      $queryArr = \mysqli_fetch_array($queryResult, MYSQLI_ASSOC);
 
       if (is_null($queryArr)) {
          return [];

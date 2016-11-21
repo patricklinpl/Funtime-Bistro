@@ -14,7 +14,9 @@ class ArrayMenuReader implements MenuReader
             ['href' => '#', 'text' => 'Menu',
              'children' => [['href' => '/menuItems', 'text' => 'View'],
                             ['href' => '/menuItem/search', 'text' => 'Search']]],
-            ['href' => '/orders', 'text' => 'Orders'],
+            ['href' => '#', 'text' => 'Orders',
+             'children' => [['href' => '/order/current', 'text' => 'Current'],
+                            ['href' => '/orders/paid', 'text' => 'History']]],
             ['href' => '/ingredients', 'text' => 'Ingredients'],
             ['href' => '/account', 'text' => 'Account']
          ];
@@ -26,7 +28,9 @@ class ArrayMenuReader implements MenuReader
              'children' => [['href' => '/menuItems', 'text' => 'View'],
                             ['href' => '/menuItem/search', 'text' => 'Search'],
                             ['href' => '/menuItem/create', 'text' => 'Create']]],
-            ['href' => '/orders', 'text' => 'Orders'],
+            ['href' => '#', 'text' => 'Orders',
+             'children' => [['href' => '/order/current', 'text' => 'Current'],
+                            ['href' => '/orders/paid', 'text' => 'History']]],
             ['href' => '/ingredients', 'text' => 'Ingredients'],
             ['href' => '/account', 'text' => 'Account']
          ];

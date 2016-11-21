@@ -30,12 +30,14 @@ return [
     ['POST', '/ingredient/delete', ['ProjectFunTime\Controllers\Ingredientpage', 'delete']],
 
 // order page
-    ['GET', '/orders', ['ProjectFunTime\Controllers\Orderpage', 'show']],
-    ['POST', '/order/create', ['ProjectFunTime\Controllers\Orderpage', 'create']],
-    ['POST', '/order/{id:\d+}/addMenuItem{menuItemId:\d+}', ['ProjectFunTime\Controllers\Orderpage', 'addMenuItem']],
-    ['POST', '/order/{id:\d+}/updateMenuItem{menuItemId:\d+}', ['ProjectFunTime\Controllers\Orderpage', 'updateMenuItemQuantity']],
-    ['POST', '/order/{id:\d+}/removeMenuItem{menuItemId:\d+}', ['ProjectFunTime\Controllers\Orderpage', 'removeMenuItem']],
-    ['POST', '/purchase/order', ['ProjectFunTime\Controllers\Orderpage', 'purchase']],
+    ['GET', '/orders/paid', ['ProjectFunTime\Controllers\Orderpage', 'showPaidOrders']],
+    ['GET', '/order/current', ['ProjectFunTime\Controllers\Orderpage', 'showCurrentOrder']],
+    ['GET', '/order/update/menuItem/{id}', ['ProjectFunTime\Controllers\Orderpage', 'showOrderMenuItemForm']],
+    ['POST', '/order/create', ['ProjectFunTime\Controllers\Orderpage', 'createOrder']],
+    ['POST', '/order/addMenuItem', ['ProjectFunTime\Controllers\Orderpage', 'addMenuItem']],
+    ['POST', '/order/update/menuItem', ['ProjectFunTime\Controllers\Orderpage', 'updateMenuItemQuantity']],
+    ['POST', '/order/removeMenuItem', ['ProjectFunTime\Controllers\Orderpage', 'removeMenuItem']],
+    ['POST', '/order/purchase', ['ProjectFunTime\Controllers\Orderpage', 'purchase']],
 
 // account page
     ['GET', '/account', ['ProjectFunTime\Controllers\Accountpage', 'show']],

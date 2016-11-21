@@ -138,24 +138,24 @@ $(".edit-menu-item-btn").click(function () {
 });
 
 $(".add-to-order-btn").click(function () {
-   var menuItemName = $(this).data("name");
+   var menuId = $(this).data("id");
 
-//   $.ajax({
-//      url: "/ingredient/delete",
-//      type: "POST",
-//      data: {
-//         "ingredient-name": $(this).data("name")
-//      },
-//      success: function (data) {
-//         console.log(data);
-//         window.location.replace("/ingredients");
-//         alert("Ingredient deletion succeeded.");
-//      },
-//      error: function (data) {
-//         console.log(data);
-//         alert("Ingredient deletion failed. Try again.");
-//      }
-//   });
+   $.ajax({
+      url: "/order/addMenuItem",
+      type: "POST",
+      data: {
+         "menu-id": menuId
+      },
+      success: function (data) {
+         console.log(data);
+         window.location.replace("/menuItems");
+         alert("Adding menu item to order succeeded.");
+      },
+      error: function (data) {
+         console.log(data);
+         alert("Adding menu item to order failed. Try again.");
+      }
+   });
 });
 
 </script>
