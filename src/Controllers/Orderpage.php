@@ -133,7 +133,7 @@ class Orderpage {
          throw new MissingEntityException('Unable to find menu item information');
       }
 
-var_dump($menuItemQueryResult);
+//var_dump($menuItemQueryResult);
 
       $data = [
          'action' => 'update',
@@ -157,7 +157,7 @@ var_dump($menuItemQueryResult);
       }
 
       $user = $this->session->getValue('userName');
-      var_dump($user);
+      //var_dump($user);
       $this->createOrderHelper($user);
    }
 
@@ -276,7 +276,7 @@ var_dump($menuItemQueryResult);
 
       $orderId = $this->getOpenOrderId($userName);
       $menuName = $this->getMenuNameFromMenuId($menuId);
-var_dump($menuName);
+//var_dump($menuName);
       if (is_null($menuId) || strlen($menuId) == 0 || !ctype_digit($menuId)) {
          throw new InvalidArgumentException("required form input missing. Invalid menu item name or order Id.");
       }
