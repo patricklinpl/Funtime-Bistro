@@ -366,15 +366,20 @@ class Accountpage
                               "WHERE chef_userName = '$username'";
       $validateChefResult = $this->dbProvider->selectQuery($validateChefQueryStr);
 
-      if (!empty($validateUserResult) && !empty($validateChefResult)) {
-         $softDeleteQuery = "UPDATE Users " .
-                            "SET u_deleted = 'T'" .
-                            "WHERE userName = '$username' AND type = 'chef'";
-         $softDeleteResult = $this->dbProvider->updateQuery($softDeleteQuery);
+      $validateNoOpenOrder = "SELECT * FROM Orders " .
+                             "WHERE chef_userName = '$username' " .
+                             "AND cookedStatus <> 'cooked'";
+      $validateNoOpenResult = $this->dbProvider->selectQuery($validateNoOpenOrder);
 
-         if (!$softDeleteResult) {
-            throw new SQLException("Failed to (soft-)delete Chef account");
+      if (!empty($validateUserResult) && !empty($validateChefResult) && empty($validateNoOpenResult)) {
+         $deleteQuery = "DELETE FROM Users " .
+                        "WHERE userName = '$username' AND type = 'chef'";
+         $deleteResult = $this->dbProvider->updateQuery($deleteQuery);
+
+         if (!$deleteResult) {
+            throw new SQLException("Failed to delete Chefs account");
          }
+
       }
       else {
          throw new MissingEntityException("Unable to find User or Chef $username to delete");

@@ -1,6 +1,12 @@
 # ProjectFunTime
 CPSC 304 project - PHP webpage management system for database
 
+## Platforms
+
+- Amazon Relational Database Service for MySQL 5.7
+- Composer 1.2.2
+- PHP 7.0.0
+
 ## Steps to get this running on your system (Linux/MacOSX)
 
 Make sure you have php version >=7.0.0 and composer version >=1.1.0
