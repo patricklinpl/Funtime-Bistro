@@ -36,7 +36,7 @@ CREATE TABLE Chef
 CREATE TABLE Orders
 	(order_id INT AUTO_INCREMENT,
 	customer_userName VARCHAR(20) NOT NULL,
-	chef_userName VARCHAR(20),
+	chef_userName VARCHAR(20) NULL,
 	orderdate DATE NOT NULL,
 	cookeddate DATE NULL, 
 	paymentStatus VARCHAR(20) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE Menuitem
 	name VARCHAR(80),
 	price DECIMAL(5, 2) NOT NULL,
 	category VARCHAR(30) NOT NULL,
-	description VARCHAR(100) NULL,
+	description VARCHAR(300) NULL,
 	quantity INT NOT NULL,
 	m_deleted CHAR(1) NOT NULL,
 	UNIQUE (menu_id),
@@ -105,23 +105,17 @@ insert into Users values ('newuser2', 'customer', 'random', 'John Doe', '8329123
 
 insert into Users values ('chef1', 'chef', 'cooking', 'Rordon Gamsey', '8329192919', '1514 Las Vegas St.', DATE '2016-11-02', 'F');
 
-insert into Users values ('chef2', 'chef', 'cooking', 'Jamie Oliver', '8329192919', '1514 Las Vegas St.', DATE '2016-11-02', 'F');
-
 
 insert into Chef (chef_userName, admin_userName, ssNum) values ('chef1', 'omgitzme', 234213205);
 
 insert into Chef (chef_userName, admin_userName, ssNum) values ('Wewic', 'omgitzme', 234013005);
 
-insert into Chef (chef_userName, admin_userName, ssNum) values ('chef2', 'omgitzme', 234013035);
 
-
-insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('newuser', 'chef1', DATE '2016-11-01', DATE '2016-11-01', 'paid', 'open');
+insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('newuser', NULL, DATE '2016-11-01', DATE '2016-11-01', 'paid', 'open');
 
 insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('ptlin', 'Wewic', DATE '2016-11-02', DATE '2016-11-01', 'paid', 'in progress');
 
 insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('quanbao', 'Wewic', DATE '2016-11-01', DATE '2016-11-01', 'paid', 'cooked');
-
-insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('newuser2', 'chef2', DATE '2016-11-01', DATE '2016-11-01', 'paid', 'cooked');
 
 
 insert into Invoice values (1, 'newuser', 48.85, DATE '2016-11-01', 'credit');
@@ -206,8 +200,6 @@ insert into Contains values (2, 'Mushroom Forest', 1);
 insert into Contains values (3, 'Deep-fried Protein Powder', 10);
 
 insert into Contains values (3, 'Sushi Surprise', 2);
-
-insert into Contains values (4, 'Deluxe Burger', 2);
 
 
 insert into MadeOf values ('Shrimp Fried Rice', 'Rice');
