@@ -71,7 +71,7 @@
             <th>{{ order.paymentStatus }}</th>
             <th>{{ order.cookedStatus}}</th>
             <th class="btn-table-header">
-              <button class="-btn" data-username="{{ chef.userName }}" style="margin: 5px;">Complete</button>
+              <button class="complete-btn" data-orderid="{{ order.order_id  }}" style="margin: 5px;">Complete</button>
             </th>
           </tr>
           {% endfor %}
@@ -104,6 +104,28 @@ $(".start-btn").click(function () {
        },
        error: function () {
           alert("Order cannot be started. Try again.");
+       }
+    });
+
+});
+
+$(".complete-btn").click(function () {
+   if (!confirm("Are you sure you want to complete this order?")) {
+      return;
+   }
+
+    $.ajax({
+       url: "/order/current/complete",
+       type: "POST",
+       data: {
+          "order-id": $(this).data("orderid")
+       },
+       success: function () {
+          window.location.replace("/order/current/all");
+          alert("Order Completed.");
+       },
+       error: function () {
+          alert("Order cannot be completed. Try again.");
        }
     });
 

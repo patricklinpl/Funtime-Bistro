@@ -35,6 +35,7 @@ return [
     ['GET', '/order/update/menuItem/{id}', ['ProjectFunTime\Controllers\Orderpage', 'showOrderMenuItemForm']],
     ['GET', '/order/current/all', ['ProjectFunTime\Controllers\Orderpage', 'showAllChefOrder']],
     ['POST', '/order/current/start', ['ProjectFunTime\Controllers\Orderpage', 'chefStartOrder']],
+    ['POST', '/order/current/complete', ['ProjectFunTime\Controllers\Orderpage', 'chefCompleteOrder']],
     ['POST', '/order/create', ['ProjectFunTime\Controllers\Orderpage', 'createOrder']],
     ['POST', '/order/addMenuItem', ['ProjectFunTime\Controllers\Orderpage', 'addMenuItem']],
     ['POST', '/order/update/menuItem', ['ProjectFunTime\Controllers\Orderpage', 'updateMenuItemQuantity']],

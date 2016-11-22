@@ -512,4 +512,31 @@ class Orderpage {
             throw new SQLException("Failed to start order");
          }
     }
+
+    public function chefCompleteOrder ($routeParams) {
+
+      $chefuser = $this->session->getValue('userName');
+      $orderid = $this->request->getParameter('order-id');
+
+      $accType = $this->session->getValue('accType');
+      if (is_null($accType) || strcasecmp($accType, 'chef') != 0) {
+         throw new PermissionException("Must be Chef in order to delete chef account");
+      }
+
+      if (is_null($chefuser) || strlen($chefuser) == 0) {
+         throw new InvalidArgumentException("Username missing.");
+      }
+
+      $orderToUpdateQueryStr = "UPDATE Orders " .
+                               "SET cookeddate = now(), cookedStatus = 'cooked' " .
+                               "WHERE order_id = $orderid " .
+                               "AND cookedStatus = 'in progress' ".
+                               "AND paymentStatus = 'paid'";
+
+      $orderToUpdateResult = $this->dbProvider->updateQuery($orderToUpdateQueryStr);
+
+      if (!$orderToUpdateResult) {
+            throw new SQLException("Failed to start order");
+         }
+    }
 }
