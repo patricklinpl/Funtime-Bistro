@@ -1,6 +1,11 @@
 <div class="order-wrapper">
   <div class="order-box">
-    <span class="order-index">{{ loop.index }}</span>
+    {% if order.mostExpensive == 'true' %}
+    <div style="position: relative; top: -24px; color: #8C5353; margin-bottom: -28px;">Most Expensive</div>
+    {% elseif order.leastExpensive == 'true' %}
+    <div style="position: relative; top: -24px; color: #5C888B;">Least Expensive</div>
+    {% endif %}
+    <span class="order-index" style="color: black;">{{ loop.index }}</span>
   </div>
 
   <div>

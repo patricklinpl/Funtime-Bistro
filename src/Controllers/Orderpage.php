@@ -59,8 +59,24 @@ class Orderpage {
                        "AND o.paymentStatus = 'paid' " .
                        "AND o.customer_userName = '$user' " .
                        "GROUP BY o.order_id";
-
       $paidOrderResult = $this->dbProvider->selectMultipleRowsQuery($paidOrder_sql);
+
+      $mostExpensiveOrderStr = "SELECT order_id, price FROM (SELECT o.order_id, SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 ELSE m.price * c.qty END) as price FROM Orders o, Contains c, Menuitem m WHERE o.order_id = c.order_id AND c.name = m.name GROUP BY o.order_id) as order_price WHERE price =(SELECT max(price) FROM (SELECT o.order_id, SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 ELSE m.price * c.qty END) as price FROM Orders o, Contains c, Menuitem m WHERE o.order_id = c.order_id AND c.name = m.name AND o.customer_userName = '$user' AND o.paymentStatus = 'paid' GROUP BY o.order_id) AS order_prices)";
+      $mostExpensiveOrderResult = $this->dbProvider->selectQuery($mostExpensiveOrderStr);
+
+/**
+      $leastExpensiveOrderStr = "SELECT order_id, price FROM (SELECT o.order_id, SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 ELSE m.price * c.qty END) as price FROM Orders o, Contains c, Menuitem m WHERE o.order_id = c.order_id AND c.name = m.name GROUP BY o.order_id) as order_price WHERE price = (SELECT min(price) FROM (SELECT o.order_id, SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 ELSE m.price * c.qty END) as price FROM Orders o, Contains c, Menuitem m WHERE o.order_id = c.order_id AND c.name = m.name AND o.customer_userName = '$user' AND o.paymentStatus = 'paid' GROUP BY o.order_id) AS order_prices)";
+      $leastExpensiveOrderResult = $this->dbProvider->selectQuery($mostExpensiveOrderStr);
+*/
+
+      foreach ($paidOrderResult as $index => $order) {
+         if ($mostExpensiveOrderResult['order_id'] == $order['orderId']) {
+            $paidOrderResult[$index]['mostExpensive'] = 'true';
+         }
+//         if ($leastExpensiveOrderResult['order_id'] == $order['orderId']) {
+//            $paidOrderResult[$index]['leastExpensive'] = 'true';
+//         }
+      }
 
       $data = [
          'paidOrders' => $paidOrderResult
