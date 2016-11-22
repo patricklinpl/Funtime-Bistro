@@ -151,6 +151,10 @@ insert into Menuitem (name, price, category, description, quantity, m_deleted) v
 
 insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Mushroom Forest', 10.50, 'Entree', 'An assortment of mushrooms seasoned with herbs.', 73, 'F');
 
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Frozen Fire Ball', 13.99, 'Other', 'Ice cream made from Sichuan pepper corn soup wrapped in mochi skin.', 50, 'F');
+
+insert into Menuitem (name, price, category, description, quantity, m_deleted) values ('Zesty Nachos', 9.99, 'Appetizer', 'Nacho chips drizzled with chilli cheese, olives, sour cream, and fresh guacamole.', 50, 'F');
+
 
 insert into Ingredient (name, type, i_deleted) values ('Lettuce', 'Vegetable', 'F');
 
@@ -256,3 +260,6 @@ insert into MadeOf values ('Mushroom Forest', 'White Mushroom');
 
 insert into MadeOf values ('Mushroom Forest', 'Portabello Mushroom');
 
+insert into MadeOf values ('Frozen Fire Ball', 'Ice cream');
+	
+insert into MadeOf values ('Zesty Nachos', 'Ground Beef')	
