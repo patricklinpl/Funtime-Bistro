@@ -461,7 +461,7 @@ class Orderpage {
    public function showAllChefOrder () {
 
     $accType = $this->session->getValue('accType');
-      if (is_null($accType) || strcasecmp($accType, 'admin') != 0) {
+      if (is_null($accType) || strcasecmp($accType, 'chef' ) != 0) {
          header('Location: /');
          exit();
       }
