@@ -142,8 +142,13 @@ class Menupage
 
    public function showCreateMenuItemForm()
    {
+      $ingredQueryStr = "SELECT ing_id, name, type FROM Ingredient " .
+                        "WHERE i_deleted = 'F'";
+      $ingredQueryResult = $this->dbProvider->selectMultipleRowsQuery($ingredQueryStr);
+
       $data = [
-         'action' => 'create'
+         'action' => 'create',
+         'ingredients' => $ingredQueryResult
       ];
 
       $html = $this->renderer->render($this->templateDir, 'MenuItemFormpage', $data);
@@ -157,6 +162,16 @@ class Menupage
       $menuPrice = trim($this->request->getParameter('menu-item-price'));
       $menuQty = trim($this->request->getParameter('menu-item-quantity'));
       $menuDesc = trim($this->request->getParameter('menu-item-description'));
+      $menuItemIngreds = $this->request->getParameter('menu-item-ingredients');
+
+      $ingredNames = [];
+      foreach ($menuItemIngreds as $ingred) {
+         if (is_null($ingred['ingredName']) || strlen(trim($ingred['ingredName'])) == 0) {
+            throw new InvalidArgumentException("ingredient input invalid.");
+         }
+
+         array_push($ingredNames, trim($ingred['ingredName']));
+      }
 
       $accType = $this->session->getValue('accType');
 
@@ -209,6 +224,23 @@ class Menupage
       
       if (!$created) { 
          throw new SQLException("Failed to create Menu item with $menuName");
+      }
+
+      $madeOfQueryStr = "INSERT INTO MadeOf " .
+                        "(menuItem_name, ingredient_name) " .
+                        "VALUES ";
+
+      $valuesClause = '';
+      foreach($ingredNames as $ingredName) {
+         $valuesClause .= "('$menuName', '$ingredName'), ";
+      }
+      $valuesClause = rtrim($valuesClause, ', ');
+
+      $madeOfQueryStr = $madeOfQueryStr . $valuesClause;
+      $insertQueryResult = $this->dbProvider->insertQuery($madeOfQueryStr);
+
+      if (!$insertQueryResult) {
+         throw new SQLException("Failed to associate Menu item with ingredients");
       }
    }
 

@@ -25,9 +25,9 @@ class ArrayMenuReader implements MenuReader
               strcasecmp($accType, 'admin') == 0) {
          return [
             ['href' => '#', 'text' => 'Menu',
-             'children' => [['href' => '/menuItems', 'text' => 'View'],
-                            ['href' => '/menuItem/search', 'text' => 'Search'],
-                            ['href' => '/menuItem/create', 'text' => 'Create']]],
+             'children' => [['href' => '/menuItem/create', 'text' => 'Create'],
+                            ['href' => '/menuItems', 'text' => 'View'],
+                            ['href' => '/menuItem/search', 'text' => 'Search']]],
             ['href' => '#', 'text' => 'Orders',
              'children' => [['href' => '/order/current', 'text' => 'Current'],
                             ['href' => '/orders/paid', 'text' => 'History']]],

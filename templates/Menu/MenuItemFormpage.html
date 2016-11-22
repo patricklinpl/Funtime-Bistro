@@ -6,6 +6,12 @@ select:invalid {
    color: gray;
 }
 
+nav ul {
+   height:200px;
+   width:18%;
+   overflow:hidden;
+   overflow-y:scroll;
+}
 </style>
 
 <div class="pure-g">
@@ -81,6 +87,34 @@ select:invalid {
                 <label for="menu-item-description">Description</label>
                 <textarea id="menu-item-description" class="pure-u-22-24" name="menu-item-description" placeholder="Menu Item Description" rows="4">{{ description }}</textarea>
               </div>
+
+              <!-- row -->
+
+
+              {% if action == "create" %}
+              <div class="pure-u-1 pure-u-md-1-24">
+              </div>
+
+              <div class="pure-u-1 pure-u-md-21-24">
+                <label>Ingredients</label>
+                <nav>
+                  <ul style="width: 100%; list-style-type: none;">
+                    {% for ingredient in ingredients %}
+                    <li>
+                      <label class="search-label">
+                        <input id="ingred-{{ loop.index }}" class="search-chkbox" data-id="{{ ingredient.ing_id }}" data-name="{{ ingredient.name }}" type="checkbox" /> {{ ingredient.name }} - Category: {{ ingredient.type }}
+                      </label>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </nav>
+              </div>
+
+              <div class="pure-u-1 pure-u-md-2-24">
+              </div>
+
+
+              {% endif %}
 
               <!-- row -->
             </div>
@@ -160,6 +194,29 @@ $("#create-btn").click(function () {
       return;
    }
 
+   var ingredValues = [];
+   var i = 1;
+   while (i > 0) {
+      var ingred = $("#ingred-" + i);
+      if (ingred.length == 1) {
+
+         if (ingred.is(":checked")) {
+            var ingredValue = {
+               "ingredId": ingred.data("id"),
+               "ingredName": ingred.data("name")
+            };
+
+            ingredValues.push(ingredValue);
+         }
+
+         i += 1;
+      }
+      else {
+         i = -1;
+      }
+   }
+
+
    $.ajax({
       url: "/menuItem/create",
       type: "POST",
@@ -168,7 +225,8 @@ $("#create-btn").click(function () {
          "menu-item-category": $("#menu-item-category").val(),
          "menu-item-price": $("#menu-item-price").val(),
          "menu-item-quantity": $("#menu-item-quantity").val(),
-         "menu-item-description": $("#menu-item-description").val()
+         "menu-item-description": $("#menu-item-description").val(),
+         "menu-item-ingredients": ingredValues
       },
       success: function (data) {
          console.log(data);
