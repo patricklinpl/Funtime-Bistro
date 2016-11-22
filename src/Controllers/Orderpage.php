@@ -484,4 +484,39 @@ class Orderpage {
       $html = $this->renderer->render($this->templateDir, 'ChefOrderpage', $data);
       $this->response->setContent($html);
       }
+
+  public function chefStartOrder ($routeParams) {
+
+      $chefuser = $this->session->getValue('userName');
+      $orderid = $this->request->getParameter('order-id');
+
+      //change account type chef/admin?
+      $accType = $this->session->getValue('accType');
+      if (is_null($accType) || strcasecmp($accType, 'admin') != 0) {
+         throw new PermissionException("Must be admin in order to delete chef account");
+      }
+
+      if (is_null($username) || strlen($username) == 0) {
+         throw new InvalidArgumentException("Username missing.");
+      }
+
+      $orderToUpdateQueryStr = "UPDATE Orders " .
+                               "SET cookedStatus = 'in progress' " .
+                               ", chef_userName = '$chefuser' " .
+                               "WHERE order_id = '$orderid' " .
+                               "AND paymentStatus = 'paid' " .
+                               "AND cookedStatus = 'open' ";
+
+      $orderToUpdateResult = $this->dbProvider->selectQuery($orderToUpdateQueryStr);
+
+      if (!$orderToUpdateResult) {
+            throw new SQLException("Failed to start order");
+         }
+
+      else {
+         throw new MissingEntityException("Unable to find User or Chef $username to start");
+      }
+
+      
+      }
 }
