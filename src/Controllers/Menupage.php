@@ -253,6 +253,12 @@ class Menupage
                           "AND m_deleted = 'F'";
       $menuItemResult = $this->dbProvider->selectQuery($menuItemQueryStr);
 
+      $ingredQueryStr = "SELECT i.name, i.type FROM Ingredient i, MadeOf mo, Menuitem m " .
+                        "WHERE mo.menuItem_name = m.name " .
+                        "AND m.menu_id = $menuId " .
+                        "AND mo.ingredient_name = i.name";
+      $ingredQueryResult = $this->dbProvider->selectMultipleRowsQuery($ingredQueryStr);
+
       if (empty($menuItemResult)) {
          throw new MissingEntityException('Unable to find menu item information');
       }
@@ -264,7 +270,8 @@ class Menupage
          'category' => $menuItemResult['category'],
          'price' => $menuItemResult['price'],
          'quantity' => $menuItemResult['quantity'],
-         'description' => $menuItemResult['description']
+         'description' => $menuItemResult['description'],
+         'ingredients' => $ingredQueryResult
       ];
 
       $html = $this->renderer->render($this->templateDir, 'MenuItemFormpage', $data);
