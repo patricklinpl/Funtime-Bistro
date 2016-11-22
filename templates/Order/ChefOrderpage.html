@@ -93,13 +93,13 @@ $(".start-btn").click(function () {
    }
 
     $.ajax({
-       url: "/order/current/all/start",
+       url: "/order/current/start",
        type: "POST",
        data: {
           "order-id": $(this).data("orderid")
        },
        success: function () {
-          window.location.replace("/order/current/all/");
+          window.location.replace("/order/current/all");
           alert("Order started.");
        },
        error: function () {

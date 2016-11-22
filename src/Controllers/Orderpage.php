@@ -490,6 +490,7 @@ class Orderpage {
       $chefuser = $this->session->getValue('userName');
       $orderid = $this->request->getParameter('order-id');
 
+      echo '<script>console.log("$orderid")</script>';
       //change account type chef/admin?
       $accType = $this->session->getValue('accType');
       if (is_null($accType) || strcasecmp($accType, 'admin') != 0) {
@@ -507,7 +508,7 @@ class Orderpage {
                                "AND paymentStatus = 'paid' " .
                                "AND cookedStatus = 'open' ";
 
-      $orderToUpdateResult = $this->dbProvider->selectQuery($orderToUpdateQueryStr);
+      $orderToUpdateResult = $this->dbProvider->updateQuery($orderToUpdateQueryStr);
 
       if (!$orderToUpdateResult) {
             throw new SQLException("Failed to start order");
@@ -516,7 +517,5 @@ class Orderpage {
       else {
          throw new MissingEntityException("Unable to find User or Chef $username to start");
       }
-
-      
-      }
+    }
 }
