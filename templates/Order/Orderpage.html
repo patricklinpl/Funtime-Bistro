@@ -64,6 +64,11 @@
       </div>
 
       {% endif %}
+
+      <br/> <hr>
+      {% if accType|lower == "admin" %}
+      <a href="/order/current/all" style="float: right;">Click here to Cook Orders</a>
+      {% endif %}
     </div>
   </div>
   <div class="pure-u-6-24">

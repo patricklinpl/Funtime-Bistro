@@ -33,6 +33,7 @@ return [
     ['GET', '/orders/paid', ['ProjectFunTime\Controllers\Orderpage', 'showPaidOrders']],
     ['GET', '/order/current', ['ProjectFunTime\Controllers\Orderpage', 'showCurrentOrder']],
     ['GET', '/order/update/menuItem/{id}', ['ProjectFunTime\Controllers\Orderpage', 'showOrderMenuItemForm']],
+    ['GET', '/order/current/all', ['ProjectFunTime\Controllers\Orderpage', 'showOpenOrder']],
     ['POST', '/order/create', ['ProjectFunTime\Controllers\Orderpage', 'createOrder']],
     ['POST', '/order/addMenuItem', ['ProjectFunTime\Controllers\Orderpage', 'addMenuItem']],
     ['POST', '/order/update/menuItem', ['ProjectFunTime\Controllers\Orderpage', 'updateMenuItemQuantity']],
