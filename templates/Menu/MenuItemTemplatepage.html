@@ -28,12 +28,14 @@
         {% endif %}
       </div>
       <div class="pure-u-14-24">
-        <div style="float: right;">
+        <div style="float: right; text-align: right;">
           {% if accType|lower == "chef" or accType|lower == "admin" %}
-          <button class="delete-menu-item-btn" data-id="{{ menuItem.menu_id }}">Delete</button>
-          <button class="edit-menu-item-btn" data-id="{{ menuItem.menu_id }}">Edit</button>
+          <div style="margin: 5px 0; display: inline-block;">
+            <button class="delete-menu-item-btn" data-id="{{ menuItem.menu_id }}">Delete</button>
+            <button class="edit-menu-item-btn" data-id="{{ menuItem.menu_id }}">Edit</button>
+          </div>
           {% endif %}
-          <button class="add-to-order-btn" data-id="{{ menuItem.menu_id }}">Add to Order</button>
+          <button class="add-to-order-btn" data-id="{{ menuItem.menu_id }}" style="margin-top: 5px;">Add to Order</button>
         </div>
       </div>
     </div>

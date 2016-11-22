@@ -22,19 +22,19 @@
 }
 
 #prev-page-link {
-   height: 100%;
-   line-height: 100px;
-   margin: 0 50px;
+   margin: 46px 50px 0 50px;
    display: none;
    cursor: pointer;
+   font-size: 2em;
+   white-space: nowrap;
 }
 
 #next-page-link {
-   height: 100%;
-   line-height: 100px;
-   margin: 0 50px;
+   margin: 46px 50px 0 50px;
    float: right;
    cursor: pointer;
+   font-size: 2em;
+   white-space: nowrap;
 }
 
 .menu-item-detail {
