@@ -490,14 +490,12 @@ class Orderpage {
       $chefuser = $this->session->getValue('userName');
       $orderid = $this->request->getParameter('order-id');
 
-      echo '<script>console.log("$orderid")</script>';
-      //change account type chef/admin?
       $accType = $this->session->getValue('accType');
-      if (is_null($accType) || strcasecmp($accType, 'admin') != 0) {
-         throw new PermissionException("Must be admin in order to delete chef account");
+      if (is_null($accType) || strcasecmp($accType, 'chef') != 0) {
+         throw new PermissionException("Must be Chef in order to delete chef account");
       }
 
-      if (is_null($username) || strlen($username) == 0) {
+      if (is_null($chefuser) || strlen($chefuser) == 0) {
          throw new InvalidArgumentException("Username missing.");
       }
 
@@ -513,9 +511,5 @@ class Orderpage {
       if (!$orderToUpdateResult) {
             throw new SQLException("Failed to start order");
          }
-
-      else {
-         throw new MissingEntityException("Unable to find User or Chef $username to start");
-      }
     }
 }
