@@ -33,20 +33,17 @@ nav ul {
 
             <div class="pure-g">
 
-              <div class="pure-u-1 pure-u-md-1-24">
-              </div>
-
               <div class="pure-u-1 pure-u-md-10-24">
                 <label for="menu-item-name">Name <b style="color: red;">*</b></label>
-                <input id="menu-item-name" class="pure-u-20-24" name="menu-item-name" type="text" placeholder="Menu Item Name" value="{{ name }}">
+                <input id="menu-item-name" class="pure-u-1-1" name="menu-item-name" type="text" placeholder="Menu Item Name" value="{{ name }}">
               </div>
 
-              <div class="pure-u-1 pure-u-md-3-24">
+              <div class="pure-u-1 pure-u-md-4-24">
               </div>
 
               <div class="pure-u-1 pure-u-md-10-24">
                 <label for="menu-item-category">Category <b style="color: red;">*</b></label>
-                <select id="menu-item-category" class="pure-u-20-24" name="menu-item-category" type="text" required>
+                <select id="menu-item-category" class="pure-u-1-1" name="menu-item-category" type="text" required>
                   {% if action == "create" %}
                   <option value="" disabled selected hidden>Select a Category</option>
                   {% endif %}
@@ -60,40 +57,31 @@ nav ul {
 
               <!-- one row -->
 
-              <div class="pure-u-1 pure-u-md-1-24">
-              </div>
-
               <div class="pure-u-1 pure-u-md-10-24">
                 <label for="menu-item-price">Price <b style="color: red;">*</b></label>
-                <input id="menu-item-price" class="pure-u-20-24" name="menu-item-price" type="number" step="0.01" min="0" placeholder="Menu Item Price" value="{{ price }}">
+                <input id="menu-item-price" class="pure-u-1-1" name="menu-item-price" type="number" step="0.01" min="0" placeholder="Menu Item Price" value="{{ price }}">
               </div>
 
 
-              <div class="pure-u-1 pure-u-md-3-24">
+              <div class="pure-u-1 pure-u-md-4-24">
               </div>
 
               <div class="pure-u-1 pure-u-md-10-24">
                 <label for="menu-item-quantity">Quantity <b style="color: red;">*</b></label>
-                <input id="menu-item-quantity" class="pure-u-20-24" name="menu-item-quantity" type="number" min="0" placeholder="Menu Item Quantity" value="{{ quantity }}">
+                <input id="menu-item-quantity" class="pure-u-1-1" name="menu-item-quantity" type="number" min="0" placeholder="Menu Item Quantity" value="{{ quantity }}">
               </div>
 
 
               <!-- other row -->
 
-              <div class="pure-u-1 pure-u-md-1-24">
-              </div>
-
-              <div class="pure-u-1 pure-u-md-23-24">
+              <div class="pure-u-1 pure-u-md-1-1">
                 <label for="menu-item-description">Description</label>
-                <textarea id="menu-item-description" class="pure-u-22-24" name="menu-item-description" placeholder="Menu Item Description" rows="4">{{ description }}</textarea>
+                <textarea id="menu-item-description" class="pure-u-1-1" name="menu-item-description" placeholder="Menu Item Description" rows="4">{{ description }}</textarea>
               </div>
 
               <!-- row -->
 
-              <div class="pure-u-1 pure-u-md-1-24">
-              </div>
-
-              <div class="pure-u-1 pure-u-md-21-24">
+              <div class="pure-u-1 pure-u-md-1-1">
                 <label style="margin: 1em 0 0;">Ingredients</label>
                 <nav style="border: 1px solid #a4a4a4; background-color: white;">
                   <ul style="width: 100%; list-style-type: none; margin: 3px 0 3px 0; padding-left: 15px;">
@@ -112,8 +100,6 @@ nav ul {
                 </nav>
               </div>
 
-              <div class="pure-u-1 pure-u-md-2-24">
-              </div>
 
               <!-- row -->
             </div>
