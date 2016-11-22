@@ -28,3 +28,10 @@ If composer command not found, find the location of composer.phar or redownload 
 Navigate to public folder and run 'php -S localhost:8000'.
 
 Goto localhost:8000 on your favorite web browser.
+
+## Project By
+
+- Harry Zhi
+- Patrick Lin
+- Eric Wu
+- Paul Tran
