@@ -442,4 +442,24 @@ class Orderpage {
 
    }
 
+   public function showOpenOrder () {
+
+    $accType = $this->session->getValue('accType');
+      if (is_null($accType) || strcasecmp($accType, 'admin') != 0) {
+         header('Location: /');
+         exit();
+      }
+
+      $openOrderQueryStr = "SELECT * FROM Orders " . 
+                           "WHERE cookedStatus = 'open'";
+      $openOrderResult = $this->dbProvider->selectMultipleRowsQuery($openOrderQueryStr);
+
+      $data = [
+         'openOrder' => $openOrderResult
+      ];
+
+      $html = $this->renderer->render($this->templateDir, 'ChefOrderpage', $data);
+      $this->response->setContent($html);
+      }
+
 }
