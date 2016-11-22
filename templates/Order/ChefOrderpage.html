@@ -1,0 +1,114 @@
+{% extends "Layout.html" %}
+
+{% block content %}
+<style>
+.edit-btn, .delete-btn {
+   display: inline-block;
+}
+</style>
+
+<div class="pure-g">
+  <div class="pure-u-2-24">
+  </div>
+  <div class="pure-u-20-24">
+    <div class="content">
+      <h2 class="content-head is-center">Open Orders</h2>
+
+      <hr>
+      <table class="pure-table" style="width: 100%; margin: 2em auto;">
+        <thead>
+          <tr>
+            <th>Customer Username</th>
+            <th>Chef Username</th>
+            <th>Order Date</th>
+            <th>Cooked Date</th>
+            <th>Payment Status</th>
+            <th>Cooked Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody style="background-color: white;">
+          {% for order in openOrder %}
+          <tr>
+            <th>{{ order.customer_userName }}</th>
+            <th>{{ order.chef_userName }}</th>
+            <th>{{ order.orderdate }}</th>
+            <th>{{ order.cookeddate }}</th>
+            <th>{{ order.paymentStatus }}</th>
+            <th>{{ order.cookedStatus}}</th>
+            <th class="btn-table-header">
+              <button class="start-btn" data-username="{{ chef.userName }}" style="margin: 5px;">Start</button>
+            </th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <h2 class="content-head is-center">In Progress Orders</h2>
+
+      <hr>
+      <table class="pure-table" style="width: 100%; margin: 2em auto;">
+        <thead>
+          <tr>
+            <th>Customer Username</th>
+            <th>Chef Username</th>
+            <th>Order Date</th>
+            <th>Cooked Date</th>
+            <th>Payment Status</th>
+            <th>Cooked Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody style="background-color: white;">
+          {% for order in openOrder %}
+          <tr>
+            <th>{{ order.customer_userName }}</th>
+            <th>{{ order.chef_userName }}</th>
+            <th>{{ order.orderdate }}</th>
+            <th>{{ order.cookeddate }}</th>
+            <th>{{ order.paymentStatus }}</th>
+            <th>{{ order.cookedStatus}}</th>
+            <th class="btn-table-header">
+              <button class="-btn" data-username="{{ chef.userName }}" style="margin: 5px;">Complete</button>
+            </th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+
+    </div>
+  </div>
+  <div class="pure-u-2-24">
+  </div>
+</div>
+
+<script>
+
+$(".start-btn").click(function () {
+   if (!confirm("Are you sure you want to start this order?")) {
+      return;
+   }
+
+    $.ajax({
+       url: "/account/chef/delete",
+   //    type: "POST",
+   //    data: {
+   //       "chef-username": $(this).data("username")
+   //    },
+   //    success: function () {
+   //       window.location.replace("/account/chef/all");
+   //       alert("Account deletion succeeded.");
+   //    },
+   //    error: function () {
+   //       alert("Account deletion failed. Try again.");
+   //    }
+   // });
+
+});
+
+</script>
+
+{% endblock %}
