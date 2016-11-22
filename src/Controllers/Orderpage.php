@@ -37,151 +37,64 @@ class Orderpage {
 
    }
 
-   public function showPaidOrders() {
+   public function show() {
       $accType = $this->session->getValue('accType');
+
       if (is_null($accType)) {
          header('Location: /');
          exit();
       }
+
       $user = $this->session->getValue('userName');
 
-      $paidOrder_sql = "SELECT o.order_id AS orderId, " .
-                              "SUM(c.qty) AS numOfItems, " .
-                              "o.cookeddate AS cookedDate, " .
-                              "o.cookedStatus AS cookedStatus, " .
-                              "o.orderdate AS orderDate, " .
-                              "o.chef_userName AS chef, " .
-                              "SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 " .
-                                                        "ELSE m.price * c.qty END) AS totalPrice " .
+      $unpaidOrder_sql = "SELECT o.order_id, SUM(Case When c.qty >= 2 " .
+                       "Then m.price * c.qty * 0.9 ELSE m.price * c.qty END) " .
+                       "as price, o.customer_userName " .
                        "FROM Orders o, Contains c, Menuitem m " .
                        "WHERE o.order_id = c.order_id " .
                        "AND c.name = m.name " .
-                       "AND o.paymentStatus = 'paid' " .
+                       "AND o.paymentStatus != 'paid' " .
                        "AND o.customer_userName = '$user' " .
                        "GROUP BY o.order_id";
 
+      $paidOrder_sql = "SELECT o.order_id, SUM(Case When c.qty >= 2 " .
+                         "Then m.price * c.qty * 0.9 ELSE m.price * c.qty END) " .
+                         "as price, o.customer_userName " .
+                         "FROM Orders o, Contains c, Menuitem m " .
+                         "WHERE o.order_id = c.order_id " .
+                         "AND c.name = m.name " .
+                         "AND o.paymentStatus = 'paid' " .
+                         "AND o.customer_userName = '$user' " .
+                         "GROUP BY o.order_id";
+
+      $unpaidOrderResult = $this->dbProvider->selectMultipleRowsQuery($unpaidOrder_sql);
       $paidOrderResult = $this->dbProvider->selectMultipleRowsQuery($paidOrder_sql);
 
       $data = [
+         'unpaidOrders' => $unpaidOrderResult,
          'paidOrders' => $paidOrderResult
       ];
 
-      $html = $this->renderer->render($this->templateDir, 'PaidOrderpage', $data);
+      $html = $this->renderer->render($this->templateDir, 'Orderpage', $data);
       $this->response->setContent($html);
    }
 
-   public function showCurrentOrder() {
-      $accType = $this->session->getValue('accType');
-      if (is_null($accType)) {
-         header('Location: /');
-         exit();
-      }
+   public function create() {
 
       $user = $this->session->getValue('userName');
 
-      $orderExists = $this->checkOpenOrderExists($user);
-      if (!$orderExists) {
-         $data = [
-            'createButton' => 'show'
-         ];
-
-         $html = $this->renderer->render($this->templateDir, 'Orderpage', $data);
-         $this->response->setContent($html);
-      }
-      else {
-         $orderId = $this->getOpenOrderId($user);
-
-         $menuItemQueryStr = "SELECT m.menu_id, m.name, m.price, m.quantity AS qtyLeft, " .
-                             "c.qty AS qtyInOrder FROM Menuitem m, Contains c " .
-                             "WHERE c.order_id = $orderId " .
-                             "AND c.name = m.name";
-         $menuItemQueryResult = $this->dbProvider->selectMultipleRowsQuery($menuItemQueryStr);
-
-         $totalPriceQueryStr = "SELECT SUM(c.qty) AS numOfItems, " .
-                               "SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 " .
-                                                        "ELSE m.price * c.qty END) AS totalPrice " .
-                        "FROM Orders o, Contains c, Menuitem m " .
-                        "WHERE o.order_id = c.order_id " .
-                        "AND c.name = m.name " .
-                        "AND o.customer_userName = '$user' " .
-                        "AND o.order_id = $orderId " .
-                        "GROUP BY o.order_id";
-         $totalPriceQueryResult = $this->dbProvider->selectQuery($totalPriceQueryStr);
-
-         $data = [
-            'orderMenuItems' => $menuItemQueryResult
-         ];
-
-         if (array_key_exists('numOfItems', $totalPriceQueryResult)) {
-            $data['totalQuantity'] = $totalPriceQueryResult['numOfItems'];
-         }
-
-         if (array_key_exists('totalPrice', $totalPriceQueryResult)) {
-            $data['totalPrice'] = $totalPriceQueryResult['totalPrice'];
-         }
-
-         $html = $this->renderer->render($this->templateDir, 'Orderpage', $data);
-         $this->response->setContent($html);
-      }
-   }
-
-   public function showOrderMenuItemForm($routeParams) {
-      $menuId = $routeParams['id'];
+      $accType = $this->session->getValue('accType');
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType)) {
-         header('Location: /');
-         exit();
-      }
-      $user = $this->session->getValue('userName');
-
-      $orderExists = $this->checkOpenOrderExists($user);
-      if (!$orderExists) {
-         $this->createOrderHelper($user);
-      }
-      $orderId = $this->getOpenOrderId($user);
-
-      $menuItemQueryStr = "SELECT m.name, m.category, m.price, m.quantity AS qtyLeft, " .
-                          "c.qty AS qtyInOrder, m.description FROM Menuitem m, Contains c " .
-                          "WHERE c.order_id = $orderId " .
-                          "AND c.name = m.name " .
-                          "AND m.menu_id = $menuId";
-      $menuItemQueryResult = $this->dbProvider->selectQuery($menuItemQueryStr);
-
-      if (empty($menuItemQueryResult)) {
-         throw new MissingEntityException('Unable to find menu item information');
+         throw new PermissionException("Must be logged in to create order");
       }
 
-      $data = [
-         'action' => 'update',
-         'id' => $menuId,
-         'name' => $menuItemQueryResult['name'],
-         'category' => $menuItemQueryResult['category'],
-         'price' => $menuItemQueryResult['price'],
-         'qtyLeft' => $menuItemQueryResult['qtyLeft'],
-         'qtyInOrder' => $menuItemQueryResult['qtyInOrder'],
-         'description' => $menuItemQueryResult['description']
-      ];
-
-      $html = $this->renderer->render($this->templateDir, 'OrderMenuItemFormpage', $data);
-      $this->response->setContent($html);
-   }
-
-   public function createOrder() {
-      $accType = $this->session->getValue('accType');
-      if (is_null($accType)) {
-         throw new PermissionException("Must be logged in to add menuitem in order");
-      }
-
-      $user = $this->session->getValue('userName');
-      $this->createOrderHelper($user);
-   }
-
-   private function createOrderHelper($user) {
       $newOrderQueryStr = "INSERT INTO Orders " .
-                          "(customer_userName, orderdate, paymentStatus, cookedStatus) " .
+                          "(customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) " .
                           "VALUE " .
-                          "('$user', now(), 'open', 'open')";
+                          "('$user ', NULL, now(), NULL, 'open', 'open')";
+
       $newOrderQueryResult = $this->dbProvider->insertQuery($newOrderQueryStr);
 
       if (!$newOrderQueryResult) {
@@ -189,167 +102,86 @@ class Orderpage {
       }
    }
 
-   private function checkOpenOrderExists($user)
-   {
-      $openOrderQueryStr = "SELECT * FROM Orders " .
-                           "WHERE customer_userName = '$user' " .
-                           "AND paymentStatus = 'open'";
-      $openOrderQueryResult = $this->dbProvider->selectQuery($openOrderQueryStr);
-
-      if (!$openOrderQueryResult) {
-         return false;
-      }
-      else {
-         return true;
-      }
-   }
-
-   private function getOpenOrderId($user)
-   {
-      $openOrderQueryStr = "SELECT * FROM Orders " .
-                           "WHERE customer_userName = '$user' " .
-                           "AND paymentStatus = 'open'";
-      $openOrderQueryResult = $this->dbProvider->selectQuery($openOrderQueryStr);
-
-      if (!$openOrderQueryResult) {
-         throw new SQLException('Unable to find open order.');
-      }
-      else {
-         return $openOrderQueryResult['order_id'];
-      }
-   }
-
-   private function getMenuNameFromMenuId($menuId)
-   {
-      $menuQueryStr = "SELECT * FROM Menuitem " .
-                      "WHERE menu_id = $menuId";
-      $menuQueryResult = $this->dbProvider->selectQuery($menuQueryStr);
-
-      if (!$menuQueryResult) {
-         throw new SQLException('Unable to find Menuitem from id.');
-      }
-      else {
-         return $menuQueryResult['name'];
-      }
-   }
-
    public function addMenuItem() {
+      $menuName = trim($this->request->getParameter('menu-name'));
+      $orderid = trim($this->request->getParameter('order-id'));
+
       $accType = $this->session->getValue('accType');
       if (is_null($accType)) {
-         throw new PermissionException("Must be logged in to add menuitem in order");
+         throw new PermissionException("Must be logged in to add menuitem to order");
       }
 
-      $menuId = trim($this->request->getParameter('menu-id'));
-
-      if (is_null($menuId) || strlen($menuId) == 0) {
-         throw new InvalidArgumentException("Invalid menu id.");
+      if (is_null($menuName) || strlen($menuName) == 0 || is_null($orderid) || strlen($orderid) == 0 ||
+         !ctype_digit($orderid)) {
+         throw new InvalidArgumentException("required form input missing. Invalid menu item name or order Id.");
       }
 
-      $user = $this->session->getValue('userName');
-      $orderExists = $this->checkOpenOrderExists($user);
+   $validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";   
+   $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
 
-      if (!$orderExists) {
-         $this->createOrderHelper($user);
-      }
+   if (empty($validateResult)) {
+      $addQueryStr = "INSERT INTO Contains (order_id, name, qty) VALUES('$orderid', '$menuName', '1')"; 
+      $addResult = $this->dbProvider->insertQuery($addQueryStr);
 
-      $orderId = $this->getOpenOrderId($user);
-      $menuName = $this->getMenuNameFromMenuId($menuId);
-
-      $validateQueryStr = "SELECT * FROM Contains " .
-                          "WHERE name = '$menuName' " .
-                          "AND order_id = '$orderId'";
-      $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
-
-      if (empty($validateResult)) {
-         $addQueryStr = "INSERT INTO Contains " .
-                        "(order_id, name, qty) " .
-                        "VALUE " .
-                        "($orderId, '$menuName', '1')";
-         $addResult = $this->dbProvider->insertQuery($addQueryStr);
-
-         if (!$addResult) {
-            throw new SQLException("Failed to add item into order");
-         }
-      }
-      else {
-         throw new EntityExistsException("Item already in Order.");
+      if (!$addResult) {
+         throw new SQLException("Failed to add item into order ");
       }
    }
+   else {
+      throw new MissingEntityException("Item already in Order!");
+   }
+}
 
    public function updateMenuItemQuantity() {
-      $menuId = trim($this->request->getParameter('menu-id'));
-      $newQty = trim($this->request->getParameter('new-quantity'));
+      $menuName = trim($this->request->getParameter('menu-name'));
+      $orderid = trim($this->request->getParameter('order-id'));
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType)) {
          throw new PermissionException("Must be logged in to update menuitem in order");
       }
 
-      $userName = $this->session->getValue('userName');
-      if (is_null($userName)) {
-         throw new PermissionException("Must be logged in to purchase order");
-      }
-
-      $orderId = $this->getOpenOrderId($userName);
-      $menuName = $this->getMenuNameFromMenuId($menuId);
-
-      if (is_null($menuId) || strlen($menuId) == 0 || !ctype_digit($menuId)) {
+      if (is_null($menuName) || strlen($menuName) == 0 || is_null($orderid) || strlen($orderid) == 0 ||
+         !ctype_digit($orderid)) {
          throw new InvalidArgumentException("required form input missing. Invalid menu item name or order Id.");
       }
 
-      $validateQueryStr = "SELECT * FROM Contains " .
-                          "WHERE name = '$menuName' " .
-                          "AND order_id = $orderId";
+      $validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";   
       $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
 
       if (!empty($validateResult)) {
-         $updateQueryStr = "UPDATE Contains " .
-                           "SET qty = $newQty " .
-                           "WHERE order_id = $orderId " .
-                           "AND name = '$menuName'";
+         $updateQueryStr = "UPDATE Contains SET qty = '$newItemQuantity' WHERE order_id = '$orderid' AND name = '$menuName'";
          $updated = $this->dbProvider->updateQuery($updateQueryStr);
 
          if (!$updated) {
-            throw new SQLException("Failed to update item $menuName in order $orderId with quantity of $newItemQuantity ");
+            throw new SQLException("Failed to update item $menuName in order $orderid with quantity of $newItemQuantity ");
          }
       }
       else {
          throw new MissingEntityException("Item not in Order, quantity cannot be changed!");
       }
-
    }
 
    public function removeMenuItem() {
-      $menuId = trim($this->request->getParameter('menu-id'));
+      $menuName = trim($this->request->getParameter('menu-name'));
+      $orderid = trim($this->request->getParameter('order-id'));
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType)) {
          throw new PermissionException("Must be logged in to remove menuitem from order");
       }
 
-      $userName = $this->session->getValue('userName');
-      if (is_null($userName)) {
-         throw new PermissionException("Must be logged in to purchase order");
+      if (is_null($menuName) || strlen($menuName) == 0 ||
+         is_null($orderid) || strlen($orderid) == 0 ||
+         !ctype_digit($orderid)) {
+         throw new InvalidArgumentException("Menu item name and order id missing.");
       }
 
-      $orderId = $this->getOpenOrderId($userName);
-
-      if (is_null($menuId) || strlen($menuId) == 0 || !ctype_digit($menuId)) {
-         throw new InvalidArgumentException("Menu id missing.");
-      }
-
-      $menuName = $this->getMenuNameFromMenuId($menuId);
-
-      $validateQueryStr = "SELECT * FROM Contains " .
-                          "WHERE name = '$menuName' " .
-                          "AND order_id = $orderId";
+      $validateQueryStr = "SELECT * FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";
       $validateResult = $this->dbProvider->selectQuery($validateQueryStr);
 
       if (!empty($validateResult)) {
-         $deleteQueryStr = "DELETE FROM Contains " .
-                           "WHERE name = '$menuName' " .
-                           "AND order_id = $orderId";
-
+         $deleteQueryStr = "DELETE FROM Contains WHERE name = '$menuName' AND order_id = '$orderid'";
          $deleteResult = $this->dbProvider->updateQuery($deleteQueryStr);
 
          if (!$deleteResult) {
@@ -363,7 +195,8 @@ class Orderpage {
 
    public function purchase()
    {
-      $paymentType = trim($this->request->getParameter('paymentType'));
+      $orderId = trim($this->request->getParameter('order-id'));
+      $paymentType = trim($this->request->getParameter('payment-type'));
 
       $accType = $this->session->getValue('accType');
       if (is_null($accType)) {
@@ -375,49 +208,26 @@ class Orderpage {
          throw new PermissionException("Must be logged in to purchase order");
       }
 
-      $orderId = $this->getOpenOrderId($userName);
-
       //retrieves price of order by $orderId and gives price 10% discount of customer ordered the same item more than once
-      $priceQuery = "SELECT SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 " .
-                       "ELSE m.price * c.qty END) as price " .
-                    "FROM Orders o, Contains c, Menuitem m " .
-                    "WHERE o.order_id = $orderId " .
-                    "AND o.order_id = c.order_id " .
-                    "AND c.name = m.name " .
-                    "AND o.paymentStatus != 'paid' " .
-                    "AND o.customer_userName = '$userName'";
-      $priceResult = $this->dbProvider->selectQuery($priceQuery);
-      $price = $priceResult['price'];
+      $priceQuery = "SELECT SUM(Case When c.qty >= 2 Then m.price * c.qty * 0.9 ELSE m.price * c.qty END) as price 
+      FROM orders o, contains c, menuitem m WHERE o.order_id = '".$orderId."' 
+      AND o.order_id = c.order_id AND c.name = m.name AND o.paymentStatus != 'paid' AND o.customer_userName = '".$userName."'";
+      $price = $this->dbProvider->selectQuery($priceQuery);
 
       //check if there are enough qty in menuitems for purchase
-      $check_avai_query = "SELECT m.name FROM Menuitem m, Contains c " .
-                          "WHERE m.name = c.name " .
-                          "AND c.order_id = $orderId " .
-                          "AND m.quantity - c.qty >= 0";
-      $check_avai = $this->dbProvider->selectQuery($check_avai_query);
+      $check_avai = $this->dbProvider->selectQuery("SELECT m.name FROM menuitem m, contains c WHERE m.name = c.name AND c.order_id = '".$orderId."' AND m.quantity - c.qty >= 0");
 
       //updates qty in menuitems
-      $del_qty_sql = "UPDATE Menuitem m, Contains c " .
-                     "SET m.quantity = m.quantity - c.qty " .
-                     "WHERE m.name = c.name " .
-                     "AND c.order_id = $orderId " .
-                     "AND m.quantity - c.qty >= 0";
-
+      $del_qty_sql = ("UPDATE menuitem m, contains c SET m.quantity= m.quantity - c.qty WHERE m.name = c.name AND c.order_id = '".$orderId."' AND m.quantity - c.qty >= 0");
 
       //create invoice
-      $create_invoice_sql = "INSERT INTO Invoice " .
-                            "(order_id, customer_userName, cost, createdate, paymentType) " .
-                            "VALUE " .
-                            "($orderId, '$userName', $price, now(), '$paymentType')";
+      $create_invoice_sql = "INSERT INTO Invoice VALUES ('".$orderId."', '".$userName."', '".$price."', now(), '".$paymentType."')";
 
       //soft deletes order from order table
-      $del_order_sql = "UPDATE Orders " .
-                       "SET paymentStatus = 'paid' " .
-                       "WHERE order_id = $orderId";
+      $del_order_sql = "UPDATE Orders SET status = 'paid' WHERE order_id = '".$orderId."'";
 
-      if(count($check_avai) > 0) {
+      if($check_avai->num_rows > 0) {
          $del_order_query = $this->dbProvider->updateQuery($del_order_sql);
-
          if ($del_order_query) {
             $create_invoice_query = $this->dbProvider->insertQuery($create_invoice_sql);
             if ($create_invoice_query) {
@@ -430,36 +240,13 @@ class Orderpage {
             }
             else {
                throw new SQLException("Error creating invoice");
-            }
+            }  
          }
-         else {
-            throw new SQLException("Error deleting order");
-         }
+         else throw new SQLException("Error deleting order");
       }
       else {
          throw new SQLException("Not enough quantity, please change your order");
       }
-
    }
-
-   public function showOpenOrder () {
-
-    $accType = $this->session->getValue('accType');
-      if (is_null($accType) || strcasecmp($accType, 'admin') != 0) {
-         header('Location: /');
-         exit();
-      }
-
-      $openOrderQueryStr = "SELECT * FROM Orders " . 
-                           "WHERE cookedStatus = 'open'";
-      $openOrderResult = $this->dbProvider->selectMultipleRowsQuery($openOrderQueryStr);
-
-      $data = [
-         'openOrder' => $openOrderResult
-      ];
-
-      $html = $this->renderer->render($this->templateDir, 'ChefOrderpage', $data);
-      $this->response->setContent($html);
-      }
 
 }
