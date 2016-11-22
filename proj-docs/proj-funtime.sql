@@ -36,7 +36,7 @@ CREATE TABLE Chef
 CREATE TABLE Orders
 	(order_id INT AUTO_INCREMENT,
 	customer_userName VARCHAR(20) NOT NULL,
-	chef_userName VARCHAR(20),
+	chef_userName VARCHAR(20) NULL,
 	orderdate DATE NOT NULL,
 	cookeddate DATE NULL, 
 	paymentStatus VARCHAR(20) NOT NULL,
@@ -115,7 +115,7 @@ insert into Chef (chef_userName, admin_userName, ssNum) values ('Wewic', 'omgitz
 insert into Chef (chef_userName, admin_userName, ssNum) values ('chef2', 'omgitzme', 234013035);
 
 
-insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('newuser', 'chef1', DATE '2016-11-01', DATE '2016-11-01', 'paid', 'open');
+insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('newuser', NULL, DATE '2016-11-01', DATE '2016-11-01', 'paid', 'open');
 
 insert into Orders (customer_userName, chef_userName, orderdate, cookeddate, paymentStatus, cookedStatus) values ('ptlin', 'Wewic', DATE '2016-11-02', DATE '2016-11-01', 'paid', 'in progress');
 

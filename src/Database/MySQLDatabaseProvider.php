@@ -9,9 +9,9 @@ class MySQLDatabaseProvider implements DatabaseProvider
    public function __construct()
    {
 // change to match your environment
-      $dbhost = "localhost";
-      $dbuser = "FTBistro";
-      $dbpass = "donaldtrump";
+      $dbhost = "funtime.cue09nzmpyxl.us-west-2.rds.amazonaws.com:3306";
+      $dbuser = "awsuser";
+      $dbpass = "mypassword";
       $dbname = "funtime";
 
       $this->dbProvider = new \mysqli($dbhost, $dbuser, $dbpass, $dbname);
