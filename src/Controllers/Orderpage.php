@@ -458,7 +458,7 @@ class Orderpage {
 
    }
 
-   public function showOpenOrder () {
+   public function showAllChefOrder () {
 
     $accType = $this->session->getValue('accType');
       if (is_null($accType) || strcasecmp($accType, 'admin') != 0) {
@@ -470,12 +470,16 @@ class Orderpage {
                            "WHERE cookedStatus = 'open'";
       $openOrderResult = $this->dbProvider->selectMultipleRowsQuery($openOrderQueryStr);
 
+      $inProgOrderQueryStr = "SELECT * FROM Orders " . 
+                             "WHERE cookedStatus = 'in progress' ";
+      $inProgOrderResult = $this->dbProvider->selectMultipleRowsQuery($inProgOrderQueryStr);
+
       $data = [
-         'openOrder' => $openOrderResult
+         'openOrder' => $openOrderResult,
+         'inProgOrder' => $inProgOrderResult
       ];
 
       $html = $this->renderer->render($this->templateDir, 'ChefOrderpage', $data);
       $this->response->setContent($html);
       }
-
 }
