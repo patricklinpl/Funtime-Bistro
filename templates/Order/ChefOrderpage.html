@@ -38,7 +38,7 @@
             <th>{{ order.paymentStatus }}</th>
             <th>{{ order.cookedStatus}}</th>
             <th class="btn-table-header">
-              <button class="start-btn" data-username="{{ chef.userName }}" style="margin: 5px;">Start</button>
+              <button class="start-btn" data-orderid="{{ order.order_id }}" style="margin: 5px;">Start</button>
             </th>
           </tr>
           {% endfor %}
@@ -93,19 +93,19 @@ $(".start-btn").click(function () {
    }
 
     $.ajax({
-       url: "/account/chef/delete",
-   //    type: "POST",
-   //    data: {
-   //       "chef-username": $(this).data("username")
-   //    },
-   //    success: function () {
-   //       window.location.replace("/account/chef/all");
-   //       alert("Account deletion succeeded.");
-   //    },
-   //    error: function () {
-   //       alert("Account deletion failed. Try again.");
-   //    }
-   // });
+       url: "/order/current/all/start",
+       type: "POST",
+       data: {
+          "order-id": $(this).data("orderid")
+       },
+       success: function () {
+          window.location.replace("/order/current/all/");
+          alert("Order started.");
+       },
+       error: function () {
+          alert("Order cannot be started. Try again.");
+       }
+    });
 
 });
 
