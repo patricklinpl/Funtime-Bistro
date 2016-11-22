@@ -467,11 +467,13 @@ class Orderpage {
       }
 
       $openOrderQueryStr = "SELECT * FROM Orders " . 
-                           "WHERE cookedStatus = 'open'";
+                           "WHERE cookedStatus = 'open' " .
+                           "AND paymentStatus = 'paid'";
       $openOrderResult = $this->dbProvider->selectMultipleRowsQuery($openOrderQueryStr);
 
       $inProgOrderQueryStr = "SELECT * FROM Orders " . 
-                             "WHERE cookedStatus = 'in progress' ";
+                             "WHERE cookedStatus = 'in progress'" . 
+                             "AND paymentStatus = 'paid'";
       $inProgOrderResult = $this->dbProvider->selectMultipleRowsQuery($inProgOrderQueryStr);
 
       $data = [
