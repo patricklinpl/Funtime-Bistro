@@ -9,7 +9,7 @@ class MySQLDatabaseProvider implements DatabaseProvider
    public function __construct()
    {
 // change to match your environment
-      $dbhost = "funtime.cue09nzmpyxl.us-west-2.rds.amazonaws.com:3306";
+      $dbhost = "funtime.cue09nzmpyxl.us-west-2.rds.amazonaws.com";
       $dbuser = "awsuser";
       $dbpass = "mypassword";
       $dbname = "funtime";
